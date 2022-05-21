@@ -108,7 +108,13 @@ export default function Layout({ children }) {
   );
 
   return (
-    <Box sx={{ display: "flex", background: "#192A3A" }}>
+    <Box
+      sx={{
+        display: "flex",
+        // background: "#192A3A",
+        backgroundImage: "url(/background.png)",
+      }}
+    >
       <CssBaseline />
       <AppBar
         position="fixed"

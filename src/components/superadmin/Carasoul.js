@@ -30,7 +30,7 @@ const Carasoul = () => {
         sx={{
           minHeight: "75vh",
           borderRadius: "20px",
-          backgroundColor: "rgba(102,111,120, 0.2)",
+          backgroundColor: "rgba(109,124,137, 0.5)",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
@@ -77,6 +77,12 @@ const Carasoul = () => {
             left: "16px",
             paddingLeft: "4px",
             top: "-43px",
+            color: "black",
+          },
+        }}
+        activeIndicatorIconButtonProps={{
+          style: {
+            color: "white",
           },
         }}
       >

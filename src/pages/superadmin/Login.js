@@ -39,12 +39,8 @@ const Login = () => {
     <>
       <Box
         sx={{
-          background: "#192A3A",
           minHeight: "100vh",
-          // backgroundImage:
-          //   "url(/assets/background.png), linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6))",
-          // backgroundSize: "cover",
-          // backgroundBlendMode: "overlay",
+          backgroundImage: "url(/background.png)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
