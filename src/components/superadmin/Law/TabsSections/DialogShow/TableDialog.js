@@ -4,7 +4,7 @@ import CancelPresentationIcon from "@mui/icons-material/CancelPresentation";
 
 const TableDialog = ({ open, close }) => {
   const [url, setUrl] = React.useState(
-    "http://www.africau.edu/images/default/sample.pdf"
+    "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
   );
 
   //   const handleClickOpen = (link) => () => {
