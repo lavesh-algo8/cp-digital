@@ -21,7 +21,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import LawIdFetch from "../../components/superadmin/Law/Tabs";
 import { Outlet } from "react-router-dom";
 
-const Laws = () => {
+const Calculator = () => {
   const [open, setOpen] = React.useState(false);
   const [expanded, setExpanded] = React.useState("");
   const handleExpandClick = (index) => {
@@ -47,14 +47,12 @@ const Laws = () => {
                 <Typography
                   sx={{ py: 4, px: 2, fontWeight: "bold", fontSize: "20px" }}
                 >
-                  Laws
+                  Calculator
                 </Typography>
                 <Box sx={{ overflow: "scroll", height: "85vh" }}>
                   {[
-                    "Corporate Law",
-                    "Foreign Exchange Law",
-                    "Insolvency Law",
-                    "Tax Law",
+                    "Fees & Figures Calculator",
+                    "Eligibility & Date Check",
                   ].map((value, index) => (
                     <>
                       <ListItemButton onClick={() => handleExpandClick(index)}>
@@ -67,9 +65,15 @@ const Laws = () => {
                         unmountOnExit
                       >
                         <List component="div" disablePadding>
-                          {[1, 2, 3, 4].map((index) => (
+                          {[
+                            "Penalty Calculator",
+                            "Calculate Effective Capital",
+                            "Calculate Net Profits",
+                            "Calculate Net worth",
+                            "ROC Fees Calculator",
+                          ].map((value, index) => (
                             <ListItemButton key={index} sx={{ pl: 4 }}>
-                              <ListItemText primary="Company Act 2013 " />
+                              <ListItemText primary={value} />
                               <ChevronRightIcon />
                             </ListItemButton>
                           ))}
@@ -86,9 +90,10 @@ const Laws = () => {
                   marginTop: "100px",
                   mx: 3,
                   borderRadius: "10px",
+                  minHeight: "100vh",
                 }}
               >
-                <LawIdFetch />
+                <Typography>Calculators</Typography>
               </Card>
             </Grid>
           </Grid>
@@ -98,4 +103,4 @@ const Laws = () => {
   );
 };
 
-export default Laws;
+export default Calculator;

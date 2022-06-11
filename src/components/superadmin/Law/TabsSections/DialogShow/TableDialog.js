@@ -4,7 +4,7 @@ import CancelPresentationIcon from "@mui/icons-material/CancelPresentation";
 
 const TableDialog = ({ open, close }) => {
   const [url, setUrl] = React.useState(
-    "https://drive.google.com/file/d/1Hp1ARYpeUAfHjjox0meTfdBTLmgsileO/preview?usp=sharing"
+    "http://www.africau.edu/images/default/sample.pdf"
   );
 
   //   const handleClickOpen = (link) => () => {
@@ -31,7 +31,7 @@ const TableDialog = ({ open, close }) => {
         <AppBar sx={{ position: "relative" }}>
           <Toolbar>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Reading Material
+              Document
             </Typography>
             <IconButton
               edge="start"

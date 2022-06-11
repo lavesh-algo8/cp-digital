@@ -16,6 +16,7 @@ import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import SearchIcon from "@mui/icons-material/Search";
 // import { Link } from "react-router-dom";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import CalculateIcon from "@mui/icons-material/Calculate";
 
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -108,6 +109,31 @@ export default function Layout({ children }) {
                 fontSize: 30,
                 border: 0,
                 color: currentLocation.startsWith("/superadmin/laws")
+                  ? "#192a3a"
+                  : "",
+              }}
+            />
+          </ListItemIcon>
+        </ListItem>
+
+        <ListItem
+          button
+          sx={{
+            mt: 3,
+            color: "#c9c7c7",
+            display: "flex",
+            flexDirection: "column",
+            borderLeft: currentLocation.startsWith("/superadmin/calculator")
+              ? "4px solid #192a3a"
+              : "",
+          }}
+        >
+          <ListItemIcon sx={{ display: "flex", justifyContent: "center" }}>
+            <CalculateIcon
+              sx={{
+                fontSize: 30,
+                border: 0,
+                color: currentLocation.startsWith("/superadmin/calculator")
                   ? "#192a3a"
                   : "",
               }}

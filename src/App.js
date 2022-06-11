@@ -5,6 +5,7 @@ import Login from "./pages/superadmin/Login";
 import Admins from "./pages/superadmin/Admins";
 import Dashboard from "./pages/superadmin/Dashboard";
 import Laws from "./pages/superadmin/Laws";
+import Calculator from "./pages/superadmin/Calculator";
 
 function App() {
   const theme = createTheme({
@@ -40,6 +41,7 @@ function App() {
           <Route path="/superadmin/laws" element={<Laws />}>
             <Route path=":id" element={<Laws />} />
           </Route>
+          <Route path="/superadmin/calculator" element={<Calculator />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
