@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/superadmin/Login";
 import Admins from "./pages/superadmin/Admins";
 import Dashboard from "./pages/superadmin/Dashboard";
+import Laws from "./pages/superadmin/Laws";
 
 function App() {
   const theme = createTheme({
@@ -36,6 +37,9 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/superadmin/admins" element={<Admins />} />
           <Route path="/superadmin/dashboard" element={<Dashboard />} />
+          <Route path="/superadmin/laws" element={<Laws />}>
+            <Route path=":id" element={<Laws />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

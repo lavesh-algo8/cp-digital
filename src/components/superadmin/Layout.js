@@ -97,10 +97,21 @@ export default function Layout({ children }) {
             color: "#c9c7c7",
             display: "flex",
             flexDirection: "column",
+            borderLeft: currentLocation.startsWith("/superadmin/laws")
+              ? "4px solid #192a3a"
+              : "",
           }}
         >
           <ListItemIcon sx={{ display: "flex", justifyContent: "center" }}>
-            <AccountBalanceIcon sx={{ fontSize: 30, border: 0 }} />
+            <AccountBalanceIcon
+              sx={{
+                fontSize: 30,
+                border: 0,
+                color: currentLocation.startsWith("/superadmin/laws")
+                  ? "#192a3a"
+                  : "",
+              }}
+            />
           </ListItemIcon>
         </ListItem>
       </List>
