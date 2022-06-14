@@ -28,12 +28,13 @@ import {
   OutlinedInput,
 } from "@mui/material";
 import Badge from "@mui/material/Badge";
+import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 120;
 
 export default function Layout({ children }) {
   let currentLocation = window.location.pathname;
-  // console.log(currentLocation);
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
@@ -60,6 +61,7 @@ export default function Layout({ children }) {
             display: "flex",
             flexDirection: "column",
           }}
+          onClick={() => navigate("/superadmin/dashboard")}
         >
           <ListItemIcon sx={{ display: "flex", justifyContent: "center" }}>
             <DashboardIcon sx={{ fontSize: 30, border: 0 }} />
@@ -77,6 +79,7 @@ export default function Layout({ children }) {
               ? "4px solid #192a3a"
               : "",
           }}
+          onClick={() => navigate("/superadmin/admins")}
         >
           <ListItemIcon sx={{ display: "flex", justifyContent: "center" }}>
             <SupervisorAccountIcon
@@ -102,6 +105,7 @@ export default function Layout({ children }) {
               ? "4px solid #192a3a"
               : "",
           }}
+          onClick={() => navigate("/superadmin/laws")}
         >
           <ListItemIcon sx={{ display: "flex", justifyContent: "center" }}>
             <AccountBalanceIcon
@@ -127,6 +131,7 @@ export default function Layout({ children }) {
               ? "4px solid #192a3a"
               : "",
           }}
+          onClick={() => navigate("/superadmin/calculator/calculatenetworth")}
         >
           <ListItemIcon sx={{ display: "flex", justifyContent: "center" }}>
             <CalculateIcon

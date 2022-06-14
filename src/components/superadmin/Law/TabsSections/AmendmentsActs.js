@@ -1,4 +1,12 @@
-import { TableContainer, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  FormControl,
+  MenuItem,
+  Select,
+  TableContainer,
+  Typography,
+} from "@mui/material";
 import React from "react";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 
@@ -74,6 +82,40 @@ const AmendmentsActs = () => {
 
   return (
     <>
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Card
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            backgroundColor: "#192A3A",
+            color: "white",
+            height: "35px",
+            ml: 2,
+          }}
+        >
+          <Typography sx={{ pr: 4, pl: 2 }}>Year</Typography>
+          <FormControl>
+            <Select
+              size="small"
+              color="whitecol"
+              defaultValue="Name"
+              sx={{
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "none",
+                },
+                color: "white",
+                fontSize: "15px",
+                "& .MuiSvgIcon-root": {
+                  color: "white",
+                },
+              }}
+            >
+              <MenuItem value="Name">Select</MenuItem>
+              <MenuItem value="Day Pushlished">Day </MenuItem>
+            </Select>
+          </FormControl>
+        </Card>
+      </Box>
       <TableContainer
         sx={{
           height: `calc(100vh - ${200}px)`,
@@ -102,6 +144,9 @@ const AmendmentsActs = () => {
             "& .MuiDataGrid-cell": {
               borderBottom: "none",
               py: "8px",
+            },
+            "& .MuiDataGrid-columnHeaderTitle": {
+              color: "#bfc0c9",
             },
           }}
         />
