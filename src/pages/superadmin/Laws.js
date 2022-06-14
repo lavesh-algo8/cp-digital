@@ -49,7 +49,7 @@ const Laws = () => {
                 >
                   Laws
                 </Typography>
-                <Box sx={{ overflow: "scroll", height: "85vh" }}>
+                <Box sx={{ overflow: "scroll", height: "85vh", mt: 2 }}>
                   {[
                     "Corporate Law",
                     "Foreign Exchange Law",

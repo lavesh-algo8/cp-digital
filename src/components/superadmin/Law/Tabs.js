@@ -63,7 +63,7 @@ export default function BasicTabs() {
           scrollButtons="auto"
           // variant="fullWidth"
           sx={{
-            background: "#F5F5F5",
+            background: "#eaeaea",
           }}
           TabIndicatorProps={{
             style: {
@@ -79,6 +79,7 @@ export default function BasicTabs() {
                 background: "white",
                 borderRadius: "10px",
               },
+              textTransform: "none",
             }}
           />
           <Tab
@@ -89,6 +90,7 @@ export default function BasicTabs() {
                 background: "white",
                 borderRadius: "10px",
               },
+              textTransform: "none",
             }}
           />
           <Tab
@@ -99,6 +101,7 @@ export default function BasicTabs() {
                 background: "white",
                 borderRadius: "10px",
               },
+              textTransform: "none",
             }}
           />
           <Tab
@@ -109,6 +112,7 @@ export default function BasicTabs() {
                 background: "white",
                 borderRadius: "10px",
               },
+              textTransform: "none",
             }}
           />
           <Tab
@@ -119,6 +123,7 @@ export default function BasicTabs() {
                 background: "white",
                 borderRadius: "10px",
               },
+              textTransform: "none",
             }}
           />
           <Tab
@@ -129,6 +134,7 @@ export default function BasicTabs() {
                 background: "white",
                 borderRadius: "10px",
               },
+              textTransform: "none",
             }}
           />
           <Tab
@@ -139,6 +145,7 @@ export default function BasicTabs() {
                 background: "white",
                 borderRadius: "10px",
               },
+              textTransform: "none",
             }}
           />
           <Tab
@@ -149,6 +156,7 @@ export default function BasicTabs() {
                 background: "white",
                 borderRadius: "10px",
               },
+              textTransform: "none",
             }}
           />
           <Tab
@@ -159,6 +167,7 @@ export default function BasicTabs() {
                 background: "white",
                 borderRadius: "10px",
               },
+              textTransform: "none",
             }}
           />
         </Tabs>

@@ -21,7 +21,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import LawIdFetch from "../../components/superadmin/Law/Tabs";
 import { Outlet } from "react-router-dom";
 
-const Calculator = () => {
+const Calculator = ({ children }) => {
   const [open, setOpen] = React.useState(false);
   const [expanded, setExpanded] = React.useState("");
   const handleExpandClick = (index) => {
@@ -49,7 +49,7 @@ const Calculator = () => {
                 >
                   Calculator
                 </Typography>
-                <Box sx={{ overflow: "scroll", height: "85vh" }}>
+                <Box sx={{ overflow: "scroll", height: "85vh", mt: 2 }}>
                   {[
                     "Fees & Figures Calculator",
                     "Eligibility & Date Check",
@@ -91,9 +91,10 @@ const Calculator = () => {
                   mx: 3,
                   borderRadius: "10px",
                   minHeight: "100vh",
+                  p: 3,
                 }}
               >
-                <Typography>Calculators</Typography>
+                <Typography>{children}</Typography>
               </Card>
             </Grid>
           </Grid>
