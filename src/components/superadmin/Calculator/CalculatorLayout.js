@@ -12,16 +12,16 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import Layout from "../../components/superadmin/Layout";
+import Layout from "../Layout";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import StarBorder from "@mui/icons-material/StarBorder";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import LawIdFetch from "../../components/superadmin/Law/Tabs";
+import LawIdFetch from "../Law/Tabs";
 import { Outlet } from "react-router-dom";
 
-const Calculator = ({ children }) => {
+const CalculatorLayout = ({ children }) => {
   const [open, setOpen] = React.useState(false);
   const [expanded, setExpanded] = React.useState("");
   const handleExpandClick = (index) => {
@@ -104,4 +104,4 @@ const Calculator = ({ children }) => {
   );
 };
 
-export default Calculator;
+export default CalculatorLayout;
