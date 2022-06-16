@@ -6,7 +6,7 @@ import Admins from "./pages/superadmin/Admins";
 import Dashboard from "./pages/superadmin/Dashboard";
 import Laws from "./pages/superadmin/Laws";
 import { CalculateNetWorth } from "./pages/superadmin/Calculator/CalculateNetWorth";
-import ShiftingOfOffice from "./pages/superadmin/Procedure /ShiftingOfOffice";
+import ShiftingOfOffice from "./pages/superadmin/Procedure/ShiftingOfOffice";
 
 function App() {
   const theme = createTheme({
