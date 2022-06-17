@@ -1,10 +1,10 @@
 import { Button, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
-import Calculator from "../Calculator";
 import UploadIcon from "@mui/icons-material/Upload";
 import { useForm } from "react-hook-form";
 import SettingsIcon from "@mui/icons-material/Settings";
+import CalculatorLayout from "../../../components/superadmin/Calculator/CalculatorLayout";
 
 export const CalculateNetWorth = () => {
   const {
@@ -17,7 +17,7 @@ export const CalculateNetWorth = () => {
   };
   return (
     <>
-      <Calculator>
+      <CalculatorLayout>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Typography variant="h6">Calculate Net Worth</Typography>
           <Button variant="contained" sx={{ textTransform: "none" }}>
@@ -159,7 +159,7 @@ export const CalculateNetWorth = () => {
             <TextField size="small" id="results" variant="outlined" />
           </Box>
         </form>
-      </Calculator>
+      </CalculatorLayout>
     </>
   );
 };

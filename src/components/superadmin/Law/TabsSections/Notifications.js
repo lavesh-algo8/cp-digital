@@ -9,8 +9,13 @@ import {
 } from "@mui/material";
 import React from "react";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import TableDialog from "./DialogShow/TableDialog";
 
 const Notifications = () => {
+  const [open, setOpen] = React.useState(false);
+  const handleOpenSection = () => {
+    setOpen(true);
+  };
   const rows = [
     {
       id: "CORPROA1",
@@ -58,6 +63,18 @@ const Notifications = () => {
       field: "notification",
       headerName: "Notifications",
       flex: 1,
+      renderCell: (params) => {
+        return (
+          <Typography
+            sx={{
+              cursor: "pointer",
+            }}
+            onClick={handleOpenSection}
+          >
+            {params.row.notification}
+          </Typography>
+        );
+      },
     },
     {
       field: "status",
@@ -87,6 +104,7 @@ const Notifications = () => {
 
   return (
     <>
+      <TableDialog open={open} close={() => setOpen(false)} />
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Card
           sx={{

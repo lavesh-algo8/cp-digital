@@ -5,8 +5,8 @@ import Login from "./pages/superadmin/Login";
 import Admins from "./pages/superadmin/Admins";
 import Dashboard from "./pages/superadmin/Dashboard";
 import Laws from "./pages/superadmin/Laws";
-import Calculator from "./pages/superadmin/Calculator";
 import { CalculateNetWorth } from "./pages/superadmin/Calculator/CalculateNetWorth";
+import ShiftingOfOffice from "./pages/superadmin/Procedure/ShiftingOfOffice";
 
 function App() {
   const theme = createTheme({
@@ -46,6 +46,9 @@ function App() {
             path="/superadmin/calculator/calculatenetworth"
             element={<CalculateNetWorth />}
           />
+          <Route path="/superadmin/procedure" element={<ShiftingOfOffice />}>
+            <Route path="shiftingofoffice" element={<ShiftingOfOffice />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
