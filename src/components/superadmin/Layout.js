@@ -199,7 +199,6 @@ export default function Layout({ children }) {
           color: "black",
           boxShadow: "none",
           background: "transparent",
-          border: "2px solid red",
         }}
       >
         <Toolbar sx={{ mt: 2, mb: 2 }}>

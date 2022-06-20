@@ -22,7 +22,12 @@ function ROCFeeCalculator() {
     formState: { errors },
   } = useForm();
   return (
-    <Box>
+    <Box
+      sx={{
+        position: "relative",
+        zIndex: 2,
+      }}
+    >
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Typography variant="h6">Roc Fees Calculator</Typography>
         <Box>
