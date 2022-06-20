@@ -86,6 +86,7 @@ const Laws = () => {
                   marginTop: "100px",
                   mx: 3,
                   borderRadius: "10px",
+                  border: "3px solid red",
                 }}
               >
                 <LawIdFetch />
