@@ -1,6 +1,12 @@
 import { createTheme, ThemeProvider } from "@mui/material";
 import "./App.css";
-import Navigation from "./components/common/Navigation/Navigation";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/superadmin/Login";
+import Admins from "./pages/superadmin/Admins";
+import Dashboard from "./pages/superadmin/Dashboard";
+import Laws from "./pages/superadmin/Laws";
+import { CalculateNetWorth } from "./pages/superadmin/Calculator/CalculateNetWorth";
+import ShiftingOfOffice from "./pages/superadmin/Procedure/ShiftingOfOffice";
 
 function App() {
   const theme = createTheme({
@@ -28,7 +34,23 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Navigation />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/superadmin/admins" element={<Admins />} />
+          <Route path="/superadmin/dashboard" element={<Dashboard />} />
+          <Route path="/superadmin/laws" element={<Laws />}>
+            <Route path=":id" element={<Laws />} />
+          </Route>
+          <Route
+            path="/superadmin/calculator/calculatenetworth"
+            element={<CalculateNetWorth />}
+          />
+          <Route path="/superadmin/procedure" element={<ShiftingOfOffice />}>
+            <Route path="shiftingofoffice" element={<ShiftingOfOffice />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }

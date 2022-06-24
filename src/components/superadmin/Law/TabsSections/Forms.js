@@ -9,13 +9,8 @@ import {
 } from "@mui/material";
 import React from "react";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import TableDialog from "./DialogShow/TableDialog";
 
 const Forms = () => {
-  const [open, setOpen] = React.useState(false);
-  const handleOpenSection = () => {
-    setOpen(true);
-  };
   const rows = [
     {
       id: "CORPROA1",
@@ -49,18 +44,6 @@ const Forms = () => {
       field: "form",
       headerName: "Form No",
       flex: 1,
-      renderCell: (params) => {
-        return (
-          <Typography
-            sx={{
-              cursor: "pointer",
-            }}
-            onClick={handleOpenSection}
-          >
-            {params.row.form}
-          </Typography>
-        );
-      },
     },
     {
       field: "status",
@@ -90,7 +73,6 @@ const Forms = () => {
 
   return (
     <>
-      <TableDialog open={open} close={() => setOpen(false)} />
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Card
           sx={{
