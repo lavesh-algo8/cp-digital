@@ -132,7 +132,7 @@ export default function Layout({ children }) {
               ? "4px solid #192a3a"
               : "",
           }}
-          onClick={() => navigate("/superadmin/calculator/calculatenetworth")}
+          onClick={() => navigate("/superadmin/calculator")}
         >
           <ListItemIcon sx={{ display: "flex", justifyContent: "center" }}>
             <CalculateIcon
@@ -194,6 +194,7 @@ export default function Layout({ children }) {
             xl: `calc(100% - ${440}px)`,
             md: `calc(100% - ${300}px)`,
           },
+          zIndex: 1,
           // ml: { sm: `${drawerWidth}px` },
           color: "black",
           boxShadow: "none",
@@ -368,7 +369,7 @@ export default function Layout({ children }) {
         component="main"
         sx={{
           flexGrow: 1,
-          overflow: "hidden",
+          // overflow: "hidden",
           minHeight: "100vh",
         }}
       >
