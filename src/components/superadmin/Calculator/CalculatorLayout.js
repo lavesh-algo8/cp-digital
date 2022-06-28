@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Card,
@@ -42,39 +43,40 @@ const CalculatorLayout = ({ children, id }) => {
   return (
     <>
       <Layout>
-        {/* <Box sx={{ maxHeight: "100vh" }}> */}
-        <Grid container>
-          <Grid
-            item
-            lg={2}
-            md={2}
-            xs={12}
-            sx={{
-              display: {
-                xs: "none",
-                sm: "none",
-                md: "block",
-                height: "100vh",
-                border: "2px solid red",
-                overflow: "hidden",
-              },
-            }}
-          >
-            <Card
-              square={true}
+        <Box sx={{ maxHeight: "100vh" }}>
+          <Grid container>
+            <Grid
+              item
+              lg={2}
+              md={2}
+              xs={12}
               sx={{
-                border: "2px solid blue",
-                overflow: "hidden",
+                display: {
+                  xs: "none",
+                  sm: "none",
+                  md: "block",
+                  // height: "100vh",
+                  // overflow: "hidden",
+                },
               }}
             >
-              <Typography
-                sx={{ py: 4, px: 2, fontWeight: "bold", fontSize: "20px" }}
+              <Card
+                square={true}
+                sx={{
+                  // overflow: "hidden",
+                  minHeight: "100vh",
+                }}
               >
-                Calculator
-              </Typography>
-              <Box sx={{ height: "85vh", mt: 2 }}>
-                {["Fees & Figures Calculator", "Eligibility & Date Check"].map(
-                  (value, index) => (
+                <Typography
+                  sx={{ py: 4, px: 2, fontWeight: "bold", fontSize: "20px" }}
+                >
+                  Calculator
+                </Typography>
+                <Box sx={{ overflow: "scroll", height: "85vh", mt: 2 }}>
+                  {[
+                    "Fees & Figures Calculator",
+                    "Eligibility & Date Check",
+                  ].map((value, index) => (
                     <>
                       <ListItemButton onClick={() => handleExpandClick(index)}>
                         <ListItemText primary={value} />
@@ -134,28 +136,29 @@ const CalculatorLayout = ({ children, id }) => {
                         </List>
                       </Collapse>
                     </>
-                  )
-                )}
-              </Box>
-            </Card>
+                  ))}
+                </Box>
+              </Card>
+            </Grid>
+            <Grid item lg={10} md={10} xs={12}>
+              <Card
+                sx={{
+                  marginTop: "100px",
+                  mx: 3,
+                  borderRadius: "10px",
+                  p: 3,
+                  position: "relative",
+                  zIndex: "12",
+                  height: "80vh",
+                  overflowY: "scroll",
+                }}
+              >
+                {children}
+                {/* {tabList[currentTab]} */}
+              </Card>
+            </Grid>
           </Grid>
-          <Grid item lg={10} md={10} xs={12}>
-            <Card
-              sx={{
-                marginTop: "100px",
-                mx: 3,
-                borderRadius: "10px",
-                minHeight: "100vh",
-                p: 3,
-                // overflow: "scroll",
-              }}
-            >
-              {children}
-              {/* {tabList[currentTab]} */}
-            </Card>
-          </Grid>
-        </Grid>
-        {/* </Box> */}
+        </Box>
       </Layout>
     </>
   );

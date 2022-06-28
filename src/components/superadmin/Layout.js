@@ -1,5 +1,6 @@
-import React, { useContext, useEffect } from "react";
+/* eslint-disable no-unused-vars */
 /** @jsxImportSource @emotion/react */
+import React, { useContext, useEffect } from "react";
 import { css } from "@emotion/react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
