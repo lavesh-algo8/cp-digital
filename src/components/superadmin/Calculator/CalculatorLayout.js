@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Card,
@@ -19,16 +20,24 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import StarBorder from "@mui/icons-material/StarBorder";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import LawIdFetch from "../Law/Tabs";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
+import { CalculateNetWorth } from "../../../pages/superadmin/Calculator/CalculateNetWorth";
 
-const CalculatorLayout = ({ children }) => {
+const CalculatorLayout = ({ children, id }) => {
+  const navigate = useNavigate();
+
   const [open, setOpen] = React.useState(false);
   const [expanded, setExpanded] = React.useState("");
+  const [currentTab, setCurrentTab] = React.useState("CalculateNetworth");
   const handleExpandClick = (index) => {
     expanded === index ? setExpanded("") : setExpanded(index);
   };
   const handleClick = () => {
     setOpen(!open);
+  };
+
+  const tabList = {
+    CalculateNetworth: <CalculateNetWorth />,
   };
 
   return (
@@ -41,9 +50,23 @@ const CalculatorLayout = ({ children }) => {
               lg={2}
               md={2}
               xs={12}
-              sx={{ display: { xs: "none", sm: "none", md: "block" } }}
+              sx={{
+                display: {
+                  xs: "none",
+                  sm: "none",
+                  md: "block",
+                  // height: "100vh",
+                  // overflow: "hidden",
+                },
+              }}
             >
-              <Card square={true} sx={{ minHeight: "100vh" }}>
+              <Card
+                square={true}
+                sx={{
+                  // overflow: "hidden",
+                  minHeight: "100vh",
+                }}
+              >
                 <Typography
                   sx={{ py: 4, px: 2, fontWeight: "bold", fontSize: "20px" }}
                 >
@@ -66,14 +89,47 @@ const CalculatorLayout = ({ children }) => {
                       >
                         <List component="div" disablePadding>
                           {[
-                            "Penalty Calculator",
-                            "Calculate Effective Capital",
-                            "Calculate Net Profits",
-                            "Calculate Net worth",
-                            "ROC Fees Calculator",
+                            {
+                              id: "penaltyCalculator",
+                              name: "Penalty Calculator",
+                            },
+                            {
+                              id: "calculateEffectiveCapital",
+                              name: "Calculate Effective Capital",
+                            },
+                            {
+                              id: "calculateNetProfits",
+                              name: "Calculate Net Profits",
+                            },
+                            {
+                              id: "calculateNetworth",
+                              name: "Calculate Net worth",
+                            },
+                            {
+                              id: "rocFeesCalculator",
+                              name: "ROC Fees Calculator",
+                            },
                           ].map((value, index) => (
-                            <ListItemButton key={index} sx={{ pl: 4 }}>
-                              <ListItemText primary={value} />
+                            <ListItemButton
+                              key={index}
+                              sx={{ pl: 4 }}
+                              onClick={() =>
+                                navigate(`/superadmin/calculator/${value.id}`)
+                              }
+                            >
+                              {/* <ListItemText
+                                sx={{ fontSize: "12px" }}
+                                primary={value.name}
+                              /> */}
+                              <Typography
+                                sx={{
+                                  fontSize: "12px",
+                                  fontWeight:
+                                    id === value?.id ? "bold" : "normal",
+                                }}
+                              >
+                                {value.name}
+                              </Typography>
                               <ChevronRightIcon />
                             </ListItemButton>
                           ))}
@@ -90,11 +146,15 @@ const CalculatorLayout = ({ children }) => {
                   marginTop: "100px",
                   mx: 3,
                   borderRadius: "10px",
-                  minHeight: "100vh",
                   p: 3,
+                  position: "relative",
+                  zIndex: "12",
+                  height: "80vh",
+                  overflowY: "scroll",
                 }}
               >
-                <Typography>{children}</Typography>
+                {children}
+                {/* {tabList[currentTab]} */}
               </Card>
             </Grid>
           </Grid>
