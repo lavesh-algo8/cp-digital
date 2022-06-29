@@ -10,8 +10,7 @@ function TextInput({ type = "text", width = "auto" }) {
       variant="outlined"
       sx={{
         width,
-        ml: 1,
-        mr: 1,
+        m: 1,
         "& .MuiOutlinedInput-notchedOutline": {
           border: "2px solid grey",
         },
