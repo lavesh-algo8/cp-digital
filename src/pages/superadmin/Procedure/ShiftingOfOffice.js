@@ -14,6 +14,7 @@ import Step1 from "../../../components/superadmin/Procedure/ShiftingOfOfficeStep
 import Step2 from "../../../components/superadmin/Procedure/ShiftingOfOfficeSteps/Step2";
 import Step3 from "../../../components/superadmin/Procedure/ShiftingOfOfficeSteps/Step3";
 import Step4 from "../../../components/superadmin/Procedure/ShiftingOfOfficeSteps/Step4";
+import Step5 from "../../../components/superadmin/Procedure/ShiftingOfOfficeSteps/Step5";
 
 const ShiftingOfOffice = () => {
   const steps = ["Step 1", "Step 2", "Step 3", "Step 4", "Step 5"];
@@ -33,11 +34,11 @@ const ShiftingOfOffice = () => {
   };
 
   const stepperContent = {
-    1: <Step1 />,
-    2: <Step2 />,
-    3: <Step3 />,
-    4: <Step4 />,
-    5: <p>Step5</p>,
+    0: <Step1 />,
+    1: <Step2 />,
+    2: <Step3 />,
+    3: <Step4 />,
+    4: <Step5 />,
   };
 
   return (
@@ -95,7 +96,7 @@ const ShiftingOfOffice = () => {
             );
           })}
         </Stepper>
-        {activeStep === steps.length ? (
+        {/* {activeStep === steps.length ? (
           <React.Fragment>
             <Typography sx={{ mt: 2, mb: 1 }}>
               All steps completed - you&apos;re finished
@@ -105,47 +106,30 @@ const ShiftingOfOffice = () => {
               <Button onClick={handleReset}>Reset</Button>
             </Box>
           </React.Fragment>
-        ) : (
-          <React.Fragment>
-            <Grid container item sx={{ mt: 2, mb: 10 }}>
-              {stepperContent[activeStep + 1]}
-            </Grid>
-            <Grid container xs={12} sx={{ justifyContent: "center" }}>
-              <Button
-                variant="contained"
-                sx={{ textTransform: "none", padding: "0.5rem 4rem", mr: 4 }}
-                disabled={activeStep === 0}
-                onClick={handleBack}
-              >
-                BACK
-              </Button>
-              <Button
-                variant="contained"
-                sx={{ textTransform: "none", padding: "0.5rem 4rem", ml: 4 }}
-                onClick={handleNext}
-              >
-                {activeStep === steps.length - 1 ? "DONE" : "NEXT"}
-              </Button>
-            </Grid>
-            {/* <Typography sx={{ mt: 2, mb: 1 }}>
-            </Typography> */}
-            {/* <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-              <Button
-                color="inherit"
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mr: 1 }}
-              >
-                Back
-              </Button>
-              <Box sx={{ flex: "1 1 auto" }} />
-
-              <Button onClick={handleNext}>
-                {activeStep === steps.length - 1 ? "Finish" : "Next"}
-              </Button>
-            </Box> */}
-          </React.Fragment>
-        )}
+        ) : ( */}
+        <React.Fragment>
+          <Grid container item sx={{ mt: 2, mb: 10 }}>
+            {stepperContent[activeStep]}
+          </Grid>
+          <Grid container xs={12} sx={{ justifyContent: "center" }}>
+            <Button
+              variant="contained"
+              sx={{ textTransform: "none", padding: "0.5rem 4rem", mr: 4 }}
+              disabled={activeStep === 0}
+              onClick={handleBack}
+            >
+              BACK
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ textTransform: "none", padding: "0.5rem 4rem", ml: 4 }}
+              onClick={handleNext}
+              disabled={activeStep === steps.length - 1}
+            >
+              NEXT
+            </Button>
+          </Grid>
+        </React.Fragment>
       </Box>
     </Grid>
   );

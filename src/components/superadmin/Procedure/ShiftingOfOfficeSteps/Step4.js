@@ -40,7 +40,7 @@ function Step4() {
           }}
           variant="contained"
         >
-          <FileUploadIcon />
+          <FileDownloadIcon />
           Download FORM INC-22
         </Button>
       </Grid>
@@ -62,7 +62,7 @@ function Step4() {
           }}
         >
           <p>
-            <FileDownloadIcon />
+            <FileUploadIcon />
             UPLOAD FILLED AND SIGNED FORM INC-22
           </p>
           <input

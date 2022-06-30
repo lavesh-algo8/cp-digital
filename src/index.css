@@ -34,3 +34,17 @@ code {
 ::-webkit-scrollbar-thumb:hover {
   background: #474747;
 }
+
+.custom_download {
+  font-size: 14px;
+  text-decoration: underline;
+  padding: 4px 8px;
+  color: #00a2ff;
+  cursor: pointer;
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+.custom_download i {
+  margin-right: 4px;
+}
