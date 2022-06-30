@@ -12,6 +12,8 @@ import EditSharpIcon from "@mui/icons-material/EditSharp";
 import UploadIcon from "@mui/icons-material/Upload";
 import Step1 from "../../../components/superadmin/Procedure/ShiftingOfOfficeSteps/Step1";
 import Step2 from "../../../components/superadmin/Procedure/ShiftingOfOfficeSteps/Step2";
+import Step3 from "../../../components/superadmin/Procedure/ShiftingOfOfficeSteps/Step3";
+import Step4 from "../../../components/superadmin/Procedure/ShiftingOfOfficeSteps/Step4";
 
 const ShiftingOfOffice = () => {
   const steps = ["Step 1", "Step 2", "Step 3", "Step 4", "Step 5"];
@@ -33,8 +35,8 @@ const ShiftingOfOffice = () => {
   const stepperContent = {
     1: <Step1 />,
     2: <Step2 />,
-    3: <p>Step3</p>,
-    4: <p>Step4</p>,
+    3: <Step3 />,
+    4: <Step4 />,
     5: <p>Step5</p>,
   };
 
