@@ -1,12 +1,11 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Admins from "../../../pages/superadmin/Admins";
-import { CalculateNetWorth } from "../../../pages/superadmin/Calculator/CalculateNetWorth";
 import CalculatorPage from "../../../pages/superadmin/Calculator/CalculatorPage";
 import Dashboard from "../../../pages/superadmin/Dashboard";
 import Laws from "../../../pages/superadmin/Laws";
 import Login from "../../../pages/superadmin/Login";
-import ShiftingOfOffice from "../../../pages/superadmin/Procedure/ShiftingOfOffice";
+import ProcedurePage from "../../../pages/superadmin/Procedure/ProcedurePage";
 
 function Navigation() {
   return (
@@ -21,8 +20,8 @@ function Navigation() {
         <Route path="/superadmin/calculator" element={<CalculatorPage />}>
           <Route path=":id" element={<CalculatorPage />} />
         </Route>
-        <Route path="/superadmin/procedure" element={<ShiftingOfOffice />}>
-          <Route path="shiftingofoffice" element={<ShiftingOfOffice />} />
+        <Route path="/superadmin/procedure" element={<ProcedurePage />}>
+          <Route path=":id" element={<ProcedurePage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Card,
@@ -5,9 +6,7 @@ import {
   Grid,
   List,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
-  Tab,
   Tabs,
   Typography,
 } from "@mui/material";
@@ -19,9 +18,11 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import StarBorder from "@mui/icons-material/StarBorder";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import LawIdFetch from "../Law/Tabs";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
-const ProcedureLayout = ({ children }) => {
+const ProcedureLayout = ({ id, children }) => {
+  const navigate = useNavigate();
+
   const [open, setOpen] = React.useState(false);
   const [expanded, setExpanded] = React.useState("");
   const handleExpandClick = (index) => {
@@ -65,14 +66,31 @@ const ProcedureLayout = ({ children }) => {
                           unmountOnExit
                         >
                           <List component="div" disablePadding>
-                            {["Shifting of registered office"].map(
-                              (value, index) => (
-                                <ListItemButton key={index} sx={{ pl: 4 }}>
-                                  <ListItemText primary={value} />
-                                  <ChevronRightIcon />
-                                </ListItemButton>
-                              )
-                            )}
+                            {[
+                              {
+                                id: "shiftingOfOffice",
+                                name: "Shifting of registered office",
+                              },
+                            ].map((value, index) => (
+                              <ListItemButton
+                                key={index}
+                                sx={{ pl: 4 }}
+                                onClick={() =>
+                                  navigate(`/superadmin/procedure/${value.id}`)
+                                }
+                              >
+                                <Typography
+                                  sx={{
+                                    fontSize: "12px",
+                                    fontWeight:
+                                      id === value?.id ? "bold" : "normal",
+                                  }}
+                                >
+                                  {value.name}
+                                </Typography>
+                                <ChevronRightIcon />
+                              </ListItemButton>
+                            ))}
                           </List>
                         </Collapse>
                       </>
@@ -86,12 +104,17 @@ const ProcedureLayout = ({ children }) => {
                 sx={{
                   marginTop: "100px",
                   mx: 3,
+                  position: "relative",
+                  zIndex: "12",
                   borderRadius: "10px",
-                  minHeight: "100vh",
+                  height: "80vh",
+                  overflowY: "scroll",
                   p: 3,
                 }}
               >
-                <Typography>{children}</Typography>
+                {children}
+
+                {/* <Typography>{children}</Typography> */}
               </Card>
             </Grid>
           </Grid>

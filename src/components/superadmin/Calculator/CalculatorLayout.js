@@ -117,10 +117,6 @@ const CalculatorLayout = ({ children, id }) => {
                                 navigate(`/superadmin/calculator/${value.id}`)
                               }
                             >
-                              {/* <ListItemText
-                                sx={{ fontSize: "12px" }}
-                                primary={value.name}
-                              /> */}
                               <Typography
                                 sx={{
                                   fontSize: "12px",
