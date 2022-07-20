@@ -68,14 +68,16 @@ function ROCFeeCalculator() {
         <Grid container sx={{}}>
           <Grid item xs={12} md={4} sx={{ p: 1 }}>
             <FormControl fullWidth>
-              <Typography>Fee Type</Typography>
+              <Typography sx={{ mb: 1 }} variant="body2">
+                Fee Type
+              </Typography>
               <Select
                 size="small"
                 color="whitecol"
                 defaultValue="Name"
                 sx={{
                   "& .MuiOutlinedInput-notchedOutline": {
-                    border: "2px solid grey",
+                    border: "1px solid grey",
                   },
                   color: "grey",
                   fontSize: "15px",
@@ -91,14 +93,16 @@ function ROCFeeCalculator() {
           </Grid>
           <Grid item xs={12} md={8} sx={{ p: 1 }}>
             <FormControl fullWidth>
-              <Typography>Form No</Typography>
+              <Typography sx={{ mb: 1 }} variant="body2">
+                Form No
+              </Typography>
               <Select
                 size="small"
                 color="whitecol"
                 defaultValue="Name"
                 sx={{
                   "& .MuiOutlinedInput-notchedOutline": {
-                    border: "2px solid grey",
+                    border: "1px solid grey",
                   },
                   color: "grey",
                   fontSize: "15px",
@@ -114,14 +118,16 @@ function ROCFeeCalculator() {
           </Grid>
           <Grid item xs={12} md={4} sx={{ p: 1 }}>
             <FormControl fullWidth>
-              <Typography>Select Company</Typography>
+              <Typography sx={{ mb: 1 }} variant="body2">
+                Select Company
+              </Typography>
               <Select
                 size="small"
                 color="whitecol"
                 defaultValue="Name"
                 sx={{
                   "& .MuiOutlinedInput-notchedOutline": {
-                    border: "2px solid grey",
+                    border: "1px solid grey",
                   },
                   color: "grey",
                   fontSize: "15px",
@@ -137,14 +143,16 @@ function ROCFeeCalculator() {
           </Grid>
           <Grid item xs={12} md={4} sx={{ p: 1 }}>
             <FormControl fullWidth>
-              <Typography>Select Type</Typography>
+              <Typography sx={{ mb: 1 }} variant="body2">
+                Select Type
+              </Typography>
               <Select
                 size="small"
                 color="whitecol"
                 defaultValue="Name"
                 sx={{
                   "& .MuiOutlinedInput-notchedOutline": {
-                    border: "2px solid grey",
+                    border: "1px solid grey",
                   },
                   color: "grey",
                   fontSize: "15px",
@@ -160,7 +168,9 @@ function ROCFeeCalculator() {
           </Grid>
           <Grid item xs={12} md={4} sx={{ p: 1 }}>
             <FormControl fullWidth>
-              <Typography>Enter Capital</Typography>
+              <Typography sx={{ mb: 1 }} variant="body2">
+                Enter Capital
+              </Typography>
 
               <TextField
                 size="small"
@@ -173,7 +183,7 @@ function ROCFeeCalculator() {
                 fullWidth
                 sx={{
                   "& .MuiOutlinedInput-notchedOutline": {
-                    border: "2px solid grey",
+                    border: "1px solid grey",
                   },
                   color: "grey",
                   fontSize: "15px",

@@ -23,7 +23,7 @@ export const CalculateNetWorth = () => {
         </Button>
       </Box>
       <Typography sx={{ mt: 2 }}>Description</Typography>
-      <Typography sx={{ mt: 2, mb: 5 }}>
+      <Typography sx={{ mt: 2, mb: 5, ml: 2 }}>
         You can use this tool to calculate your networth.
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>

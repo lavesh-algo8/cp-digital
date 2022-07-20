@@ -1,6 +1,7 @@
 import { FormControl, Grid, MenuItem, Select, Typography } from "@mui/material";
 import React from "react";
 import { GREY } from "../../../../Utility/Colors";
+import CustomSelect from "../../../common/CustomSelect/CustomSelect";
 import TextInput from "../../../common/TextInput/TextInput";
 
 function Step2() {
@@ -38,37 +39,19 @@ function Step2() {
           <TextInput type="date" />
           To the directors. The <TextInput /> meeting of the board Of Directors
           of the company will be held on
-          <FormControl sx={{ width: "150px", ml: 1, mr: 1 }}>
-            <Select
-              size="small"
-              color="whitecol"
-              defaultValue="Name"
-              sx={{
-                "& .MuiOutlinedInput-notchedOutline": {
-                  border: "2px solid grey",
-                },
-                color: "grey",
-                fontSize: "15px",
-                "& .MuiSvgIcon-root": {
-                  color: "grey",
-                },
-              }}
-            >
-              {[
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday",
-              ].map((day, index) => (
-                <MenuItem key={index} value={day}>
-                  {day}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <CustomSelect
+            width="180px"
+            title=""
+            options={[
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+              "Sunday",
+            ]}
+          />
           <TextInput type="date" />
           at
           <TextInput type="time" />

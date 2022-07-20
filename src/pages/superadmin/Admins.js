@@ -171,7 +171,7 @@ const Admins = () => {
                           sx={{
                             background: "white",
                             width: "25ch",
-                            height: "30px",
+                            height: "35px",
                           }}
                           placeholder="Search...."
                         />
@@ -180,7 +180,7 @@ const Admins = () => {
                         <Button
                           variant="contained"
                           sx={{
-                            height: "30px",
+                            height: "35px",
                             textTransform: "none",
                           }}
                           onClick={handleOpenDialog}
@@ -204,7 +204,7 @@ const Admins = () => {
                             alignItems: "center",
                             backgroundColor: "#192A3A",
                             color: "white",
-                            height: "30px",
+                            height: "35px",
                           }}
                         >
                           <Typography sx={{ pl: 2, fontSize: "15px" }}>
@@ -278,7 +278,7 @@ const Admins = () => {
                           sx={{
                             background: "white",
                             width: "25ch",
-                            height: "30px",
+                            height: "35px",
                           }}
                           placeholder="Search...."
                         />
@@ -287,7 +287,7 @@ const Admins = () => {
                         <Button
                           variant="contained"
                           sx={{
-                            height: "30px",
+                            height: "35px",
                             textTransform: "none",
                           }}
                           onClick={handleOpenDialog}
@@ -311,7 +311,7 @@ const Admins = () => {
                             alignItems: "center",
                             backgroundColor: "#192A3A",
                             color: "white",
-                            height: "30px",
+                            height: "35px",
                           }}
                         >
                           <Typography sx={{ pl: 2, fontSize: "15px" }}>
