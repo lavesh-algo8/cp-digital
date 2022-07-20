@@ -24,6 +24,9 @@ function App() {
         main: "#F1F1F1",
       },
     },
+    typography: {
+      fontFamily: ["Open Sans"].join(","),
+    },
   });
 
   return (

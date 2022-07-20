@@ -71,105 +71,30 @@ export default function BasicTabs() {
             },
           }}
         >
-          <Tab
-            label="Sections"
-            {...a11yProps(0)}
-            sx={{
-              "&.Mui-selected": {
-                background: "white",
-                borderRadius: "10px",
-              },
-              textTransform: "none",
-            }}
-          />
-          <Tab
-            label="Rules"
-            {...a11yProps(1)}
-            sx={{
-              "&.Mui-selected": {
-                background: "white",
-                borderRadius: "10px",
-              },
-              textTransform: "none",
-            }}
-          />
-          <Tab
-            label="Notifications"
-            {...a11yProps(2)}
-            sx={{
-              "&.Mui-selected": {
-                background: "white",
-                borderRadius: "10px",
-              },
-              textTransform: "none",
-            }}
-          />
-          <Tab
-            label="Circulars"
-            {...a11yProps(3)}
-            sx={{
-              "&.Mui-selected": {
-                background: "white",
-                borderRadius: "10px",
-              },
-              textTransform: "none",
-            }}
-          />
-          <Tab
-            label="Forms"
-            {...a11yProps(4)}
-            sx={{
-              "&.Mui-selected": {
-                background: "white",
-                borderRadius: "10px",
-              },
-              textTransform: "none",
-            }}
-          />
-          <Tab
-            label="Secretarial Standards"
-            {...a11yProps(5)}
-            sx={{
-              "&.Mui-selected": {
-                background: "white",
-                borderRadius: "10px",
-              },
-              textTransform: "none",
-            }}
-          />
-          <Tab
-            label="Accounting Standards"
-            {...a11yProps(6)}
-            sx={{
-              "&.Mui-selected": {
-                background: "white",
-                borderRadius: "10px",
-              },
-              textTransform: "none",
-            }}
-          />
-          <Tab
-            label="Case Laws"
-            {...a11yProps(7)}
-            sx={{
-              "&.Mui-selected": {
-                background: "white",
-                borderRadius: "10px",
-              },
-              textTransform: "none",
-            }}
-          />
-          <Tab
-            label="Amendments Acts"
-            {...a11yProps(8)}
-            sx={{
-              "&.Mui-selected": {
-                background: "white",
-                borderRadius: "10px",
-              },
-              textTransform: "none",
-            }}
-          />
+          {[
+            "Sections",
+            "Rules",
+            "Notifications",
+            "Circulars",
+            "Forms",
+            "Secretarial Standards",
+            "Accounting Standards",
+            "Case Laws",
+            "Amendments Acts",
+          ].map((label, index) => (
+            <Tab
+              key={index}
+              label={label}
+              {...a11yProps(index)}
+              sx={{
+                "&.Mui-selected": {
+                  background: "white",
+                  borderRadius: "10px",
+                },
+                textTransform: "none",
+              }}
+            />
+          ))}
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>

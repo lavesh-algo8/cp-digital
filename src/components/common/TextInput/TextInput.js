@@ -12,7 +12,7 @@ function TextInput({ type = "text", width = "auto" }) {
         width,
         m: 1,
         "& .MuiOutlinedInput-notchedOutline": {
-          border: "2px solid grey",
+          border: "2px solid #e8e8e8",
         },
         color: "grey",
         fontSize: "15px",

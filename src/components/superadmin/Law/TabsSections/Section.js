@@ -92,7 +92,7 @@ const Section = () => {
         <GridActionsCellItem label="Pulish" showInMenu />,
         <GridActionsCellItem
           //   icon={<MoreVertIcon />}
-          label="UnPulish"
+          label="UnPublish"
           showInMenu
         />,
       ],

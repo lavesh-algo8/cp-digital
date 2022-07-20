@@ -14,6 +14,8 @@ import React from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import { useForm } from "react-hook-form";
 import { GREY } from "../../../../Utility/Colors";
+import TextInput from "../../../common/TextInput/TextInput";
+import CustomSelect from "../../../common/CustomSelect/CustomSelect";
 
 function Step1() {
   const {
@@ -50,26 +52,7 @@ function Step1() {
             <Typography sx={{ color: GREY }} variant="body2">
               CIN No
             </Typography>
-            <TextField
-              size="small"
-              id="sharecapital"
-              variant="outlined"
-              {...register("sharecapital", {
-                required: true,
-              })}
-              error={errors.sharecapital?.type === "required"}
-              fullWidth
-              sx={{
-                "& .MuiOutlinedInput-notchedOutline": {
-                  border: "2px solid grey",
-                },
-                color: "grey",
-                fontSize: "15px",
-                "& .MuiSvgIcon-root": {
-                  color: "grey",
-                },
-              }}
-            />
+            <TextInput width="100%" />
           </FormControl>
         </Grid>
         <Grid item xs={4}></Grid>
@@ -85,26 +68,7 @@ function Step1() {
           <Typography sx={{ color: GREY }} variant="body2">
             Company Name
           </Typography>
-          <TextField
-            size="small"
-            id="sharecapital"
-            variant="outlined"
-            {...register("sharecapital", {
-              required: true,
-            })}
-            error={errors.sharecapital?.type === "required"}
-            fullWidth
-            sx={{
-              "& .MuiOutlinedInput-notchedOutline": {
-                border: "2px solid grey",
-              },
-              color: "grey",
-              fontSize: "15px",
-              "& .MuiSvgIcon-root": {
-                color: "grey",
-              },
-            }}
-          />
+          <TextInput width="100%" />
         </FormControl>
       </Grid>
       <Grid item xs={12} sm={6} md={8} sx={{ pl: 2 }}>
@@ -112,26 +76,7 @@ function Step1() {
           <Typography sx={{ color: GREY }} variant="body2">
             Registered Office Address
           </Typography>
-          <TextField
-            size="small"
-            id="sharecapital"
-            variant="outlined"
-            {...register("sharecapital", {
-              required: true,
-            })}
-            error={errors.sharecapital?.type === "required"}
-            fullWidth
-            sx={{
-              "& .MuiOutlinedInput-notchedOutline": {
-                border: "2px solid grey",
-              },
-              color: "grey",
-              fontSize: "15px",
-              "& .MuiSvgIcon-root": {
-                color: "grey",
-              },
-            }}
-          />
+          <TextInput width="100%" />
         </FormControl>
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
@@ -139,77 +84,20 @@ function Step1() {
           <Typography sx={{ color: GREY }} variant="body2">
             Email ID
           </Typography>
-          <TextField
-            size="small"
-            id="sharecapital"
-            variant="outlined"
-            {...register("sharecapital", {
-              required: true,
-            })}
-            error={errors.sharecapital?.type === "required"}
-            fullWidth
-            sx={{
-              "& .MuiOutlinedInput-notchedOutline": {
-                border: "2px solid grey",
-              },
-              color: "grey",
-              fontSize: "15px",
-              "& .MuiSvgIcon-root": {
-                color: "grey",
-              },
-            }}
-          />
+          <TextInput width="100%" />
         </FormControl>
       </Grid>
       <Grid item xs={12} sm={6} md={4} sx={{ pl: 2 }}>
-        <FormControl fullWidth>
-          <Typography sx={{ color: GREY }} variant="body2">
-            Class of company
-          </Typography>
-          <Select
-            size="small"
-            color="whitecol"
-            defaultValue="Name"
-            sx={{
-              "& .MuiOutlinedInput-notchedOutline": {
-                border: "2px solid grey",
-              },
-              color: "grey",
-              fontSize: "15px",
-              "& .MuiSvgIcon-root": {
-                color: "grey",
-              },
-            }}
-          >
-            <MenuItem value="Name">Class A</MenuItem>
-            <MenuItem value="Day Pushlished">Class B</MenuItem>
-          </Select>
-        </FormControl>
+        <CustomSelect
+          title="Class Of Oompany"
+          options={["Class A", "Class B"]}
+        />
       </Grid>
       <Grid item xs={12} sm={6} md={4} sx={{ pl: 2 }}>
-        <FormControl fullWidth>
-          <Typography sx={{ color: GREY }} variant="body2">
-            Listed/Unlisted
-          </Typography>
-          <Select
-            size="small"
-            color="whitecol"
-            defaultValue="Name"
-            sx={{
-              "& .MuiOutlinedInput-notchedOutline": {
-                border: "2px solid grey",
-              },
-              color: "grey",
-              fontSize: "15px",
-              "& .MuiSvgIcon-root": {
-                color: "grey",
-              },
-            }}
-          >
-            <MenuItem value="Name">Listed</MenuItem>
-            <MenuItem value="Day Pushlished">Unlisted</MenuItem>
-          </Select>
-        </FormControl>
+        <CustomSelect
+          title="Listed/Unlisted"
+          options={["Listed", "Unlisted"]}
+        />
       </Grid>
     </Grid>
   );
