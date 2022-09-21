@@ -19,6 +19,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import CalculateIcon from "@mui/icons-material/Calculate";
 import AssignmentIcon from "@mui/icons-material/Assignment";
+import DifferenceIcon from "@mui/icons-material/Difference";
 
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -167,6 +168,36 @@ export default function Layout({ children }) {
                 fontSize: 30,
                 border: 0,
                 color: currentLocation.startsWith("/superadmin/procedure")
+                  ? "#192a3a"
+                  : "",
+              }}
+            />
+          </ListItemIcon>
+        </ListItem>
+
+        <ListItem
+          button
+          sx={{
+            mt: 3,
+            color: "#c9c7c7",
+            display: "flex",
+            flexDirection: "column",
+            borderLeft: currentLocation.startsWith(
+              "/superadmin/documentGenerator"
+            )
+              ? "4px solid #192a3a"
+              : "",
+          }}
+          onClick={() => navigate("/superadmin/documentGenerator")}
+        >
+          <ListItemIcon sx={{ display: "flex", justifyContent: "center" }}>
+            <DifferenceIcon
+              sx={{
+                fontSize: 30,
+                border: 0,
+                color: currentLocation.startsWith(
+                  "/superadmin/documentGenerator"
+                )
                   ? "#192a3a"
                   : "",
               }}

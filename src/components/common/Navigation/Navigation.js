@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Admins from "../../../pages/superadmin/Admins";
 import CalculatorPage from "../../../pages/superadmin/Calculator/CalculatorPage";
 import Dashboard from "../../../pages/superadmin/Dashboard";
+import DocumentGenerator from "../../../pages/superadmin/DocumentGenerator/DocumentGenerator";
 import Laws from "../../../pages/superadmin/Laws";
 import Login from "../../../pages/superadmin/Login";
 import ProcedurePage from "../../../pages/superadmin/Procedure/ProcedurePage";
@@ -14,6 +15,10 @@ function Navigation() {
         <Route path="/" element={<Login />} />
         <Route path="/superadmin/admins" element={<Admins />} />
         <Route path="/superadmin/dashboard" element={<Dashboard />} />
+        <Route
+          path="/superadmin/documentGenerator"
+          element={<DocumentGenerator />}
+        />
         <Route path="/superadmin/laws" element={<Laws />}>
           <Route path=":id" element={<Laws />} />
         </Route>

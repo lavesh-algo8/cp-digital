@@ -48,3 +48,17 @@ code {
 .custom_download i {
   margin-right: 4px;
 }
+
+.documentGenerator_upload {
+  border: 1px solid #192a3a;
+  padding: 1.5rem;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #00a2ff;
+  display: flex;
+  align-items: center;
+}
+
+.documentGenerator_upload input {
+  display: none;
+}
