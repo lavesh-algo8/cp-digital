@@ -26,7 +26,6 @@ const Dashboard = () => {
         container
         spacing={3}
         sx={{
-          border: "1px solid red",
           marginTop: "100px",
           position: "relative",
           zIndex: "12",
@@ -37,7 +36,7 @@ const Dashboard = () => {
         }}
       >
         <Cards />
-        <Grid container item xs={12} sx={{ border: "2px solid blue", p: 2 }}>
+        <Grid container item xs={12} sx={{ border: "0px solid blue", p: 2 }}>
           <Grid container item xs={12}>
             <Tabs
               value={value}
