@@ -10,16 +10,26 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditAdminDialog from "./EditAdminDialog";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import { useDispatch, useSelector } from "react-redux";
+import { getAdminList } from "../../redux/superAdminReducer/superAdminAction";
 
 const AdminsTable = () => {
+  const dispatch = useDispatch();
+  const { listOfAdmins = [] } = useSelector((state) => state?.SuperAdmin);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [selectedAdmin, setSelectedAdmin] = useState({});
+
   const open = Boolean(anchorEl);
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -30,6 +40,10 @@ const AdminsTable = () => {
   function createData(id, applicant_name, email, role) {
     return { id, applicant_name, email, role };
   }
+
+  useEffect(() => {
+    dispatch(getAdminList());
+  }, []);
 
   const rows = [
     {
@@ -66,11 +80,11 @@ const AdminsTable = () => {
       headerName: "ID No.",
       flex: 1,
     },
-    {
-      field: "admin",
-      headerName: "Admin",
-      flex: 1,
-    },
+    // {
+    //   field: "admin",
+    //   headerName: "Admin",
+    //   flex: 1,
+    // },
     {
       field: "email",
       headerName: "Email",
@@ -86,17 +100,20 @@ const AdminsTable = () => {
       headerName: "Actions",
       type: "actions",
       getActions: (params) => [
-        <GridActionsCellItem icon={<EditIcon />} label="Edit" showInMenu />,
+        <GridActionsCellItem
+          onClick={() => {
+            console.log(params);
+            setSelectedAdmin(params.row);
+            handleOpenDialog();
+          }}
+          icon={<EditIcon />}
+          label="Edit"
+          showInMenu
+        />,
         <GridActionsCellItem icon={<DeleteIcon />} label="Delete" showInMenu />,
       ],
     },
   ];
-
-  const [openDialog, setOpenDialog] = React.useState(false);
-
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
-  };
 
   return (
     <>
@@ -114,11 +131,6 @@ const AdminsTable = () => {
           <EditIcon sx={{ mr: 1 }} />
           Edit
         </MenuItem>
-        <EditAdminDialog
-          openDialog={openDialog}
-          setOpenDialog={setOpenDialog}
-          handleClose={handleClose}
-        />
 
         <MenuItem onClick={handleClose}>
           <DeleteIcon sx={{ mr: 1 }} />
@@ -136,7 +148,7 @@ const AdminsTable = () => {
         <DataGrid
           hideFooter
           rowsPerPageOptions={[]}
-          rows={rows}
+          rows={listOfAdmins}
           columns={columns}
           disableSelectionOnClick
           sx={{
@@ -223,6 +235,12 @@ const AdminsTable = () => {
           </TableBody>
         </Table>
       </TableContainer> */}
+      <EditAdminDialog
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
+        handleClose={handleClose}
+        selectedAdmin={selectedAdmin}
+      />
     </>
   );
 };

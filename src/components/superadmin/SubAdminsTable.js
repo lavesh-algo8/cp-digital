@@ -10,14 +10,20 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditSubAdminDialog from "./EditSubAdminDialog";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import { useDispatch, useSelector } from "react-redux";
+import { getSubAdminList } from "../../redux/superAdminReducer/superAdminAction";
 
 const SubAdminsTable = () => {
+  const dispatch = useDispatch();
+
+  const { listOfSubAdmins = [] } = useSelector((state) => state?.SuperAdmin);
+
   const [openSubAdminDialog, setOpenSubAdminDialog] = React.useState(false);
 
   const handleOpenDialog = () => {
@@ -32,6 +38,10 @@ const SubAdminsTable = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  useEffect(() => {
+    dispatch(getSubAdminList());
+  }, []);
 
   const rows = [
     {
@@ -71,11 +81,11 @@ const SubAdminsTable = () => {
       headerName: "ID No.",
       flex: 1,
     },
-    {
-      field: "admin",
-      headerName: "Admin",
-      flex: 1,
-    },
+    // {
+    //   field: "admin",
+    //   headerName: "Admin",
+    //   flex: 1,
+    // },
     {
       field: "email",
       headerName: "Email",
@@ -139,7 +149,7 @@ const SubAdminsTable = () => {
         <DataGrid
           hideFooter
           rowsPerPageOptions={[]}
-          rows={rows}
+          rows={listOfSubAdmins}
           columns={columns}
           disableSelectionOnClick
           sx={{

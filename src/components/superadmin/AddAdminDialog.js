@@ -16,8 +16,12 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Controller, useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { addAdmin } from "../../redux/superAdminReducer/superAdminAction";
+import { openSnackBar } from "../../redux/utilityReducer/UtilityAction";
 
 const AddAdminDialog = (props) => {
+  const dispatch = useDispatch();
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
   };
@@ -28,8 +32,20 @@ const AddAdminDialog = (props) => {
     control,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    const formData = {
+      id_no: data?.Id_No,
+      name: data?.name,
+      email: data?.email,
+      contact_number: data?.contact,
+      access: data?.access,
+      designation: data?.designation,
+    };
+    let isAdded = await dispatch(addAdmin(formData));
+    console.log(isAdded);
+    if (isAdded) {
+      handleDialogClose();
+    }
   };
 
   const Designation = [
@@ -168,17 +184,17 @@ const AddAdminDialog = (props) => {
                     labelId="demo-multiple-chip-label"
                     id="demo-multiple-chip"
                     label="Access"
-                    multiple
-                    input={
-                      <OutlinedInput id="select-multiple-chip" label="Chip" />
-                    }
-                    renderValue={(selected) => (
-                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                        {selected.map((value) => (
-                          <Chip key={value} label={value} />
-                        ))}
-                      </Box>
-                    )}
+                    // multiple
+                    // input={
+                    //   <OutlinedInput id="select-multiple-chip" label="Chip" />
+                    // }
+                    // renderValue={(selected) => (
+                    //   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                    //     {selected.map((value) => (
+                    //       <Chip key={value} label={value} />
+                    //     ))}
+                    //   </Box>
+                    // )}
                     {...register("access", { required: true })}
                     error={errors.access?.type === "required"}
                   >
