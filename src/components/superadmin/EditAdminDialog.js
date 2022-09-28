@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -16,31 +16,29 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Controller, useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import {
+  getAdminList,
+  updateAdmin,
+} from "../../redux/superAdminReducer/superAdminAction";
 
 const EditAdminDialog = (props) => {
+  const [user, setUser] = useState({});
+  const dispatch = useDispatch();
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
     props.handleClose();
   };
 
-  const preloadedValues = {
-    Id_No: "CORPROA1",
-    name: "Rahul",
-    email: "rahul@corpro.com",
-    contact: "7017539182",
-    designation: "Executive",
-    access: ["Procedures", "Content mangement"],
-  };
-
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm({ defaultValues: preloadedValues });
-  const onSubmit = (data) => {
-    console.log(data);
-    handleDialogClose();
+  const onSubmit = async () => {
+    console.log(user);
+    const resp = await dispatch(updateAdmin(user, user?._id));
+    console.log(resp);
+    if (resp) {
+      dispatch(getAdminList());
+      handleDialogClose();
+    }
+    // handleDialogClose();
   };
 
   const Designation = [
@@ -53,6 +51,19 @@ const EditAdminDialog = (props) => {
   ];
 
   const access = ["Procedures", "Calculators", "Content mangement"];
+
+  useEffect(() => {
+    console.log("Edit Admin");
+    console.log(props?.selectedAdmin);
+    setUser(props?.selectedAdmin);
+  }, [props?.selectedAdmin]);
+
+  const handleChange = (event) => {
+    setUser({
+      ...user,
+      [event.target.name]: event.target.value,
+    });
+  };
 
   return (
     <>
@@ -74,7 +85,7 @@ const EditAdminDialog = (props) => {
           </IconButton>
         </Box>
         <DialogContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <div>
             <Box
               sx={{
                 display: "flex",
@@ -84,129 +95,92 @@ const EditAdminDialog = (props) => {
             >
               <TextField
                 size="small"
-                id="Id_No"
+                name="id_no"
+                value={user?.id_no}
+                onChange={handleChange}
                 label="Id No*"
                 variant="outlined"
-                {...register("Id_No", {
-                  required: true,
-                })}
                 fullWidth
-                error={errors.Id_No?.type === "required"}
               />
 
               <TextField
                 size="small"
                 sx={{ ml: 2 }}
-                id="name"
+                name="name"
+                value={user?.name}
+                onChange={handleChange}
                 label="name*"
                 variant="outlined"
-                {...register("name", { required: true })}
                 fullWidth
-                error={errors.name?.type === "required"}
               />
             </Box>
 
             <TextField
               size="small"
               sx={{ mt: 3 }}
-              id="email"
+              name="email"
+              value={user?.email}
+              onChange={handleChange}
               label="Email Id*"
               variant="outlined"
-              {...register("email", {
-                required: true,
-                pattern: /^\S+@\S+$/i,
-              })}
               fullWidth
-              error={
-                errors.email?.type === "required" ||
-                errors?.email?.type === "pattern"
-              }
             />
 
             <Box sx={{ display: "flex", mt: 3 }}>
-              <Controller
-                name="designation"
-                control={control}
-                type="text"
-                defaultValue={""}
-                render={({ field }) => (
-                  <FormControl fullWidth size="small">
-                    <InputLabel id="demo-simple-select-label">
-                      Designation
-                    </InputLabel>
-                    <Select
-                      {...field}
-                      labelId="demo-simple-select-label"
-                      id="designation"
-                      label="Designation"
-                      {...register("designation", { required: true })}
-                      error={errors.designation?.type === "required"}
-                    >
-                      {Designation.map((desig, index) => (
-                        <MenuItem key={desig.value} value={desig.value}>
-                          {desig.value}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                )}
-              />
+              <FormControl fullWidth size="small">
+                <InputLabel id="demo-simple-select-label">
+                  Designation
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="designation"
+                  label="Designation"
+                  name="designation"
+                  value={user?.designation}
+                  onChange={handleChange}
+                >
+                  {Designation.map((desig, index) => (
+                    <MenuItem key={desig.value} value={desig.value}>
+                      {desig.value}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
 
               <TextField
                 size="small"
                 sx={{ ml: 3 }}
-                id="contact"
+                name="contact_number"
+                value={user?.contact_number}
+                onChange={handleChange}
                 label="contact No*"
                 variant="outlined"
-                {...register("contact", {
-                  required: true,
-                })}
                 fullWidth
-                error={errors.contact?.type === "required"}
               />
             </Box>
 
-            <Controller
-              name="access"
-              control={control}
-              type="text"
-              defaultValue={[]}
-              render={({ field }) => (
-                <FormControl fullWidth sx={{ mt: 3 }}>
-                  <InputLabel
-                    id="demo-multiple-chip-label"
-                    sx={{ background: "white" }}
-                  >
-                    Access
-                  </InputLabel>
-                  <Select
-                    {...field}
-                    labelId="demo-multiple-chip-label"
-                    id="access"
-                    label="Access"
-                    multiple
-                    input={
-                      <OutlinedInput id="select-multiple-chip" label="Chip" />
-                    }
-                    renderValue={(selected) => (
-                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                        {selected.map((value) => (
-                          <Chip key={value} label={value} />
-                        ))}
-                      </Box>
-                    )}
-                    {...register("access", { required: true })}
-                    error={errors.access?.type === "required"}
-                  >
-                    {access.map((desig) => (
-                      <MenuItem key={desig} value={desig}>
-                        {desig}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
-            />
+            <FormControl fullWidth sx={{ mt: 3 }}>
+              <InputLabel
+                id="demo-multiple-chip-label"
+                sx={{ background: "white" }}
+              >
+                Access
+              </InputLabel>
+              <Select
+                labelId="demo-multiple-chip-label"
+                name="access"
+                id="demo-multiple-chip"
+                value={user?.access}
+                onChange={handleChange}
+                label="Access"
+              >
+                {access.map((desig) => (
+                  <MenuItem key={desig} value={desig}>
+                    {desig}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
             <Box sx={{ display: "flex" }}>
               <Button
@@ -236,11 +210,12 @@ const EditAdminDialog = (props) => {
                   textTransform: "none",
                 }}
                 fullWidth
+                onClick={onSubmit}
               >
                 Update
               </Button>
             </Box>
-          </form>
+          </div>
         </DialogContent>
       </Dialog>
       {/* add admins dialog */}

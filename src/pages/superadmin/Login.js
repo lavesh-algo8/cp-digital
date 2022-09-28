@@ -13,9 +13,12 @@ import { useForm } from "react-hook-form";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import Carasoul from "../../components/superadmin/Carasoul";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { superAdminLogin } from "../../redux/superAdminReducer/superAdminAction";
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [showPassword, setshowPassword] = useState(false);
   const {
     register,
@@ -24,7 +27,13 @@ const Login = () => {
   } = useForm();
   const onSubmit = (data) => {
     console.log(data);
-    navigate("/superadmin/admins");
+    dispatch(
+      superAdminLogin({
+        email: data.emailid,
+        password: data.password,
+      })
+    );
+    // navigate("/superadmin/admins");
   };
   const handleClickShowPassword = () => {
     if (showPassword === true) {
