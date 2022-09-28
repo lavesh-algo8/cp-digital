@@ -30,15 +30,6 @@ const EditAdminDialog = (props) => {
     props.handleClose();
   };
 
-  const preloadedValues = {
-    Id_No: "CORPROA1",
-    name: "Rahul",
-    email: "rahul@corpro.com",
-    contact: "7017539182",
-    designation: "Executive",
-    access: ["Procedures", "Content mangement"],
-  };
-
   const onSubmit = async () => {
     console.log(user);
     const resp = await dispatch(updateAdmin(user, user?._id));

@@ -1,3 +1,4 @@
+import { RestorePageTwoTone } from "@mui/icons-material";
 import { callBackend } from "../../services/http.services";
 import { openSnackBar } from "../utilityReducer/UtilityAction";
 
@@ -72,6 +73,21 @@ export const updateAdmin = (formData, id) => async (dispatch) => {
   }
 };
 
+export const deleteAdmin = (id) => async (dispatch) => {
+  try {
+    const resp = await callBackend("delete", `superadmin/deleteadmin/${id}`);
+    if (resp?.message) {
+      dispatch(openSnackBar(resp?.message, "success"));
+      return true;
+    } else {
+      dispatch(openSnackBar(resp?.message, "error"));
+      return false;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 export const getSubAdminList = () => async (dispatch) => {
   try {
     const resp = await callBackend("get", "superadmin/listsubadmins");
@@ -94,6 +110,42 @@ export const addSubAdmin = (formData) => async (dispatch) => {
     );
     console.log(resp);
     if (resp?.message === "sub admin successfully created") {
+      dispatch(openSnackBar(resp?.message, "success"));
+      return true;
+    } else {
+      dispatch(openSnackBar(resp?.message, "error"));
+      return false;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const updateSubAdmin = (formData, id) => async (dispatch) => {
+  try {
+    const resp = await callBackend(
+      "put",
+      `superadmin/updatesubadmin/${id}`,
+      formData
+    );
+    console.log(resp);
+    if (resp?.message === "sub admin updated successfully") {
+      dispatch(openSnackBar(resp?.message, "success"));
+      return true;
+    } else {
+      dispatch(openSnackBar(resp?.message, "error"));
+
+      return false;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const deleteSubAdmin = (id) => async (dispatch) => {
+  try {
+    const resp = await callBackend("delete", `superadmin/deletesubadmin/${id}`);
+    if (resp?.message) {
       dispatch(openSnackBar(resp?.message, "success"));
       return true;
     } else {

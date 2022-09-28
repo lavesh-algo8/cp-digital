@@ -17,7 +17,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditAdminDialog from "./EditAdminDialog";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
-import { getAdminList } from "../../redux/superAdminReducer/superAdminAction";
+import {
+  deleteAdmin,
+  getAdminList,
+} from "../../redux/superAdminReducer/superAdminAction";
 
 const AdminsTable = () => {
   const dispatch = useDispatch();
@@ -40,6 +43,16 @@ const AdminsTable = () => {
   function createData(id, applicant_name, email, role) {
     return { id, applicant_name, email, role };
   }
+
+  const deleteAdminById = async (id) => {
+    const confirm = window.confirm(
+      "Are you sure you want to delete this admin?"
+    );
+    if (confirm) {
+      const resp = await dispatch(deleteAdmin(id));
+      if (resp) dispatch(getAdminList());
+    }
+  };
 
   useEffect(() => {
     dispatch(getAdminList());
@@ -110,7 +123,12 @@ const AdminsTable = () => {
           label="Edit"
           showInMenu
         />,
-        <GridActionsCellItem icon={<DeleteIcon />} label="Delete" showInMenu />,
+        <GridActionsCellItem
+          onClick={() => deleteAdminById(params.row._id)}
+          icon={<DeleteIcon />}
+          label="Delete"
+          showInMenu
+        />,
       ],
     },
   ];

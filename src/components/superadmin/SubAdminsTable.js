@@ -10,14 +10,17 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditSubAdminDialog from "./EditSubAdminDialog";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
-import { getSubAdminList } from "../../redux/superAdminReducer/superAdminAction";
+import {
+  deleteSubAdmin,
+  getSubAdminList,
+} from "../../redux/superAdminReducer/superAdminAction";
 
 const SubAdminsTable = () => {
   const dispatch = useDispatch();
@@ -25,6 +28,7 @@ const SubAdminsTable = () => {
   const { listOfSubAdmins = [] } = useSelector((state) => state?.SuperAdmin);
 
   const [openSubAdminDialog, setOpenSubAdminDialog] = React.useState(false);
+  const [selectedAdmin, setSelectedAdmin] = useState({});
 
   const handleOpenDialog = () => {
     // handleClose();
@@ -106,11 +110,35 @@ const SubAdminsTable = () => {
       headerName: "Actions",
       type: "actions",
       getActions: (params) => [
-        <GridActionsCellItem icon={<EditIcon />} label="Edit" showInMenu />,
-        <GridActionsCellItem icon={<DeleteIcon />} label="Delete" showInMenu />,
+        <GridActionsCellItem
+          onClick={() => {
+            console.log(params);
+            setSelectedAdmin(params.row);
+            handleOpenDialog();
+          }}
+          icon={<EditIcon />}
+          label="Edit"
+          showInMenu
+        />,
+        <GridActionsCellItem
+          onClick={() => deleteSubAdminById(params.row._id)}
+          icon={<DeleteIcon />}
+          label="Delete"
+          showInMenu
+        />,
       ],
     },
   ];
+
+  const deleteSubAdminById = async (id) => {
+    const confirm = window.confirm(
+      "Are you sure you want to delete this sub admin?"
+    );
+    if (confirm) {
+      const resp = await dispatch(deleteSubAdmin(id));
+      if (resp) dispatch(getSubAdminList());
+    }
+  };
 
   return (
     <>
@@ -128,11 +156,7 @@ const SubAdminsTable = () => {
           <EditIcon sx={{ mr: 1 }} />
           Edit
         </MenuItem>
-        <EditSubAdminDialog
-          openSubAdminDialog={openSubAdminDialog}
-          setOpenSubAdminDialog={setOpenSubAdminDialog}
-          handleClose={handleClose}
-        />
+
         <MenuItem onClick={handleClose}>
           <DeleteIcon sx={{ mr: 1 }} />
           Delete
@@ -174,6 +198,12 @@ const SubAdminsTable = () => {
           }}
         />
       </TableContainer>
+      <EditSubAdminDialog
+        openSubAdminDialog={openSubAdminDialog}
+        setOpenSubAdminDialog={setOpenSubAdminDialog}
+        handleClose={handleClose}
+        selectedAdmin={selectedAdmin}
+      />
     </>
   );
 };
