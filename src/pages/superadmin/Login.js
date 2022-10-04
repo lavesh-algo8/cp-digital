@@ -33,7 +33,7 @@ const Login = () => {
         password: data.password,
       })
     );
-    // navigate("/superadmin/admins");
+    navigate("/superadmin/admins");
   };
   const handleClickShowPassword = () => {
     if (showPassword === true) {
