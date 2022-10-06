@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   FormControl,
   // FormLabel,
   Grid,
@@ -15,19 +16,42 @@ import EditSharpIcon from "@mui/icons-material/EditSharp";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { useForm } from "react-hook-form";
 import EditROCFeeCalculator from "../../../components/superadmin/Calculator/EditROCFeeCalculator";
+import { useDispatch } from "react-redux";
+import { saveRocFeeCalculator } from "../../../redux/superAdminReducer/superAdminAction";
 
 function ROCFeeCalculator() {
   const [result, setResult] = useState(false);
   const [openDialog, setOpenDialog] = React.useState(false);
+  const [formData, setFormData] = useState({
+    feeType: "",
+    form: "",
+    company: "",
+    type: "",
+    capital: "",
+    dayscount: "",
+  });
+
+  const dispatch = useDispatch();
+  const [response, setResponse] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
+  const submit = async () => {
+    // console.log(formData);
+    setIsLoading(true);
+    const resp = await dispatch(saveRocFeeCalculator(formData));
+    setResponse(resp);
+    setResult(true);
+    setIsLoading(false);
+  };
+
+  const handleInput = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
-  const {
-    register,
-    // handleSubmit,
-    formState: { errors },
-  } = useForm();
+
   return (
     <>
       {" "}
@@ -85,13 +109,19 @@ function ROCFeeCalculator() {
                     color: "grey",
                   },
                 }}
+                value={formData.feeType}
+                onChange={handleInput}
+                name="feeType"
               >
-                <MenuItem value="Name">Select</MenuItem>
-                <MenuItem value="Day Pushlished">Day Published</MenuItem>
+                {[{ value: "other", title: "Other" }].map((item, index) => (
+                  <MenuItem key={index} value={item?.value}>
+                    {item.title}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} md={8} sx={{ p: 1 }}>
+          <Grid item xs={12} md={4} sx={{ p: 1 }}>
             <FormControl fullWidth>
               <Typography sx={{ mb: 1 }} variant="body2">
                 Form No
@@ -110,9 +140,15 @@ function ROCFeeCalculator() {
                     color: "grey",
                   },
                 }}
+                value={formData.form}
+                onChange={handleInput}
+                name="form"
               >
-                <MenuItem value="Name">Select</MenuItem>
-                <MenuItem value="Day Pushlished">Day Published</MenuItem>
+                {[{ value: "DIR-12", title: "DIR-12" }].map((item, index) => (
+                  <MenuItem key={index} value={item?.value}>
+                    {item.title}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
@@ -135,12 +171,46 @@ function ROCFeeCalculator() {
                     color: "grey",
                   },
                 }}
+                value={formData.company}
+                onChange={handleInput}
+                name="company"
               >
-                <MenuItem value="Name">Select</MenuItem>
-                <MenuItem value="Day Pushlished">Day Published</MenuItem>
+                {[
+                  { value: "With share capital", title: "With Share Capital" },
+                ].map((item, index) => (
+                  <MenuItem key={index} value={item?.value}>
+                    {item.title}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
+          <Grid item xs={12} md={4} sx={{ p: 1 }}>
+            <FormControl fullWidth>
+              <Typography>Enter Capital</Typography>
+
+              <TextField
+                size="small"
+                id="sharecapital"
+                variant="outlined"
+                fullWidth
+                sx={{
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    border: "2px solid grey",
+                  },
+                  color: "grey",
+                  fontSize: "15px",
+                  "& .MuiSvgIcon-root": {
+                    color: "grey",
+                  },
+                }}
+                value={formData.capital}
+                onChange={handleInput}
+                name="capital"
+              />
+            </FormControl>
+          </Grid>
+
           <Grid item xs={12} md={4} sx={{ p: 1 }}>
             <FormControl fullWidth>
               <Typography sx={{ mb: 1 }} variant="body2">
@@ -160,26 +230,28 @@ function ROCFeeCalculator() {
                     color: "grey",
                   },
                 }}
+                value={formData.type}
+                onChange={handleInput}
+                name="type"
               >
-                <MenuItem value="Name">Select</MenuItem>
-                <MenuItem value="Day Pushlished">Day Published</MenuItem>
+                {[{ value: "", title: "N/A" }].map((item, index) => (
+                  <MenuItem key={index} value={item?.value}>
+                    {item.title}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
           <Grid item xs={12} md={4} sx={{ p: 1 }}>
             <FormControl fullWidth>
               <Typography sx={{ mb: 1 }} variant="body2">
-                Enter Capital
+                Days Count
               </Typography>
 
               <TextField
                 size="small"
                 id="sharecapital"
                 variant="outlined"
-                {...register("sharecapital", {
-                  required: true,
-                })}
-                error={errors.sharecapital?.type === "required"}
                 fullWidth
                 sx={{
                   "& .MuiOutlinedInput-notchedOutline": {
@@ -191,6 +263,9 @@ function ROCFeeCalculator() {
                     color: "grey",
                   },
                 }}
+                value={formData.dayscount}
+                onChange={handleInput}
+                name="dayscount"
               />
             </FormControl>
           </Grid>
@@ -202,9 +277,12 @@ function ROCFeeCalculator() {
               type="submit"
               variant="contained"
               sx={{ px: 2 }}
-              onClick={() => setResult(!result)}
+              onClick={submit}
             >
-              Test Run <SettingsIcon sx={{ ml: 2 }} />
+              Test Run
+              {isLoading && (
+                <CircularProgress sx={{ ml: 2 }} color="inherit" size={20} />
+              )}
             </Button>
           </Grid>
           {result && (
@@ -221,12 +299,18 @@ function ROCFeeCalculator() {
               <Grid item xs={12}>
                 <Typography sx={{ mt: 2 }}>Results</Typography>
               </Grid>
-              <ResultItems name={"Event Date"} value={"21-06-2022"} />
-              <ResultItems name={"Today Date"} value={"27-06-2022"} />
-              <ResultItems name={"Last Date"} value={"N/A"} />
-              <ResultItems name={"Normal Fee"} value={"10,000.00"} />
+              <ResultItems
+                name={"Nominal Fees"}
+                value={response?.nominalFees}
+              />
+              <ResultItems
+                name={"Additional Fees"}
+                value={response?.additionalFees}
+              />
+              <ResultItems name={"Total Fees"} value={response?.totalfees} />
+              {/* <ResultItems name={"Normal Fee"} value={"10,000.00"} />
               <ResultItems name={"Additional Fee"} value={"N/A"} />
-              <ResultItems name={"Total Fee"} value={"10,000.00"} />
+              <ResultItems name={"Total Fee"} value={"10,000.00"} /> */}
               <Grid
                 component={Typography}
                 variant="body2"

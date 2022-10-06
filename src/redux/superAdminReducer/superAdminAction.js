@@ -1,5 +1,6 @@
 import { RestorePageTwoTone } from "@mui/icons-material";
-import { callBackend } from "../../services/http.services";
+import axios from "axios";
+import { baseUrl, callBackend } from "../../services/http.services";
 import { openSnackBar } from "../utilityReducer/UtilityAction";
 
 export const superAdminLogin = (formData) => async (dispatch) => {
@@ -152,6 +153,60 @@ export const deleteSubAdmin = (id) => async (dispatch) => {
       dispatch(openSnackBar(resp?.message, "error"));
       return false;
     }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const getDocuments = (law, act) => async (dispatch) => {
+  try {
+    const resp = await callBackend("get", `documents/getDocs/${law}/${act}`);
+    console.log("FILES", resp);
+    dispatch({
+      type: "GET_DOCUMENTS",
+      payload: resp?.file?.map((item, index) => ({
+        ...item,
+        id: index + 1,
+      })),
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const saveDocument = (formData) => async (dispatch) => {
+  try {
+    let config = {
+      method: "post",
+      url: `${baseUrl}/documents/savedocument`,
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+      data: formData,
+    };
+
+    const { data } = await axios(config);
+    console.log("UPLOAD DATA", data);
+    dispatch(openSnackBar(data?.message, "success"));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const saveRocFeeCalculator = (formData) => async (dispatch) => {
+  try {
+    const resp = await callBackend("post", "calculators/roc", formData);
+    resp?.message && dispatch(openSnackBar(resp?.message, ""));
+    return resp;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const saveNetWorthCalculator = (formData) => async (dispatch) => {
+  try {
+    const resp = await callBackend("post", "calculators/networth", formData);
+    return resp;
   } catch (e) {
     console.log(e);
   }

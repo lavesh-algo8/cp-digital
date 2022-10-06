@@ -112,7 +112,7 @@ function EditROCFeeCalculator({ openDialog, setOpenDialog }) {
               </FormControl>
             </Grid>
             {/* form number select */}
-            <Grid item xs={12} md={8} sx={{ p: 1 }}>
+            <Grid item xs={12} md={4} sx={{ p: 1 }}>
               <FormControl fullWidth>
                 <Typography>Form No</Typography>
                 <Select
@@ -133,6 +133,33 @@ function EditROCFeeCalculator({ openDialog, setOpenDialog }) {
                   <MenuItem value="Name">Select</MenuItem>
                   <MenuItem value="Day Pushlished">Day Published</MenuItem>
                 </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} md={4} sx={{ p: 1 }}>
+              <FormControl fullWidth>
+                <Typography>Days Count</Typography>
+
+                <TextField
+                  size="small"
+                  id="sharecapital"
+                  variant="outlined"
+                  {...register("sharecapital", {
+                    required: true,
+                  })}
+                  error={errors.sharecapital?.type === "required"}
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      border: "2px solid grey",
+                    },
+                    color: "grey",
+                    fontSize: "15px",
+                    "& .MuiSvgIcon-root": {
+                      color: "grey",
+                    },
+                  }}
+                />
               </FormControl>
             </Grid>
             {/* line break */}

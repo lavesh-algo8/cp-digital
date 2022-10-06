@@ -1,18 +1,33 @@
-import { Button, TextField, Typography } from "@mui/material";
+import { Button, CircularProgress, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useState } from "react";
 import UploadIcon from "@mui/icons-material/Upload";
 import { useForm } from "react-hook-form";
 import SettingsIcon from "@mui/icons-material/Settings";
+import { useDispatch } from "react-redux";
+import { saveNetWorthCalculator } from "../../../redux/superAdminReducer/superAdminAction";
 
 export const CalculateNetWorth = () => {
+  const dispatch = useDispatch();
+  const [response, setResponse] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    setIsLoading(true);
+    const formData = {
+      PUSC: data?.sharecapital,
+      ROP: data?.reserves,
+      AL: data?.losses,
+      DE: data?.expenditure,
+      ME: data?.miscexpense,
+    };
+    let resp = await dispatch(saveNetWorthCalculator(formData));
+    setResponse(resp);
+    setIsLoading(false);
   };
   return (
     <>
@@ -48,6 +63,7 @@ export const CalculateNetWorth = () => {
                 })}
                 error={errors.sharecapital?.type === "required"}
                 fullWidth
+                type="number"
               />
             </Box>
             <Box
@@ -66,6 +82,7 @@ export const CalculateNetWorth = () => {
                 })}
                 error={errors.reserves?.type === "required"}
                 fullWidth
+                type="number"
               />
             </Box>
           </Box>
@@ -89,6 +106,7 @@ export const CalculateNetWorth = () => {
                 })}
                 error={errors.losses?.type === "required"}
                 fullWidth
+                type="number"
               />
             </Box>
             <Box
@@ -107,6 +125,7 @@ export const CalculateNetWorth = () => {
                 })}
                 error={errors.expenditure?.type === "required"}
                 fullWidth
+                type="number"
               />
             </Box>
           </Box>
@@ -130,6 +149,7 @@ export const CalculateNetWorth = () => {
                 })}
                 error={errors.miscexpense?.type === "required"}
                 fullWidth
+                type="number"
               />
             </Box>
             <Box
@@ -140,7 +160,10 @@ export const CalculateNetWorth = () => {
         </Box>
         <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
           <Button type="submit" variant="contained" sx={{ px: 2 }}>
-            Test Run <SettingsIcon sx={{ ml: 2 }} />
+            Test Run{" "}
+            {isLoading && (
+              <CircularProgress sx={{ ml: 2 }} color="inherit" size={20} />
+            )}
           </Button>
         </Box>
         <Box
@@ -154,7 +177,13 @@ export const CalculateNetWorth = () => {
           <Typography sx={{ mr: 3 }} variant="body2">
             Results
           </Typography>
-          <TextField size="small" id="results" variant="outlined" />
+          <TextField
+            size="small"
+            id="results"
+            variant="outlined"
+            value={response?.result}
+            disabled
+          />
         </Box>
       </form>
     </>

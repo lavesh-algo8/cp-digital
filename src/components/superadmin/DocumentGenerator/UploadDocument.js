@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -18,32 +18,48 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { Controller, useForm } from "react-hook-form";
 import UploadIcon from "@mui/icons-material/Upload";
+import { useDispatch } from "react-redux";
+import { saveDocument } from "../../../redux/superAdminReducer/superAdminAction";
 
 const UploadDocument = (props) => {
+  const dispatch = useDispatch();
+  const [userData, setUserData] = useState({
+    file: null,
+    law: "",
+    act: "",
+  });
+
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
   };
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm();
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = () => {
+    const formData = new FormData();
+    formData.append("file", userData?.file);
+    formData.append("document", userData?.act);
+    formData.append("collection", userData?.law);
+    dispatch(saveDocument(formData));
+    setUserData({
+      file: null,
+      law: "",
+      act: "",
+    });
+    props.refresh();
   };
 
-  const Designation = [
+  const Laws = [
     {
-      value: "Executive",
-    },
-    {
-      value: "Director",
+      title: "Corporate Law",
+      value: "corporatelaw",
     },
   ];
 
-  const access = ["Procedures", "Calculators", "Content mangement"];
+  const Acts = [
+    {
+      title: "Company Act",
+      value: "companyact",
+    },
+  ];
 
   return (
     <>
@@ -65,7 +81,7 @@ const UploadDocument = (props) => {
           </IconButton>
         </Box>
         <DialogContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <div>
             <Box
               sx={{
                 display: "flex",
@@ -75,66 +91,60 @@ const UploadDocument = (props) => {
             ></Box>
 
             <Box sx={{ display: "flex", mt: 3 }}>
-              <Controller
-                name="designation"
-                control={control}
-                type="text"
-                defaultValue={""}
-                render={({ field }) => (
-                  <FormControl fullWidth size="small">
-                    <InputLabel id="demo-simple-select-label">Law</InputLabel>
-                    <Select
-                      {...field}
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      label="Law"
-                      {...register("designation", { required: true })}
-                      error={errors.designation?.type === "required"}
-                    >
-                      {Designation.map((desig, index) => (
-                        <MenuItem key={desig.value} value={desig.value}>
-                          {desig.value}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                )}
-              />
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Law</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="Law"
+                  onChange={(e) =>
+                    setUserData({ ...userData, law: e.target.value })
+                  }
+                  value={userData?.law}
+                >
+                  {Laws.map((desig, index) => (
+                    <MenuItem key={desig.value} value={desig.value}>
+                      {desig.title}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Box>
 
             <Box sx={{ display: "flex", mt: 3 }}>
-              <Controller
-                name="designation"
-                control={control}
-                type="text"
-                defaultValue={""}
-                render={({ field }) => (
-                  <FormControl fullWidth size="small">
-                    <InputLabel id="demo-simple-select-label">Act</InputLabel>
-                    <Select
-                      {...field}
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      label="Act"
-                      {...register("designation", { required: true })}
-                      error={errors.designation?.type === "required"}
-                    >
-                      {Designation.map((desig, index) => (
-                        <MenuItem key={desig.value} value={desig.value}>
-                          {desig.value}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                )}
-              />
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Act</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="Act"
+                  onChange={(e) =>
+                    setUserData({ ...userData, act: e.target.value })
+                  }
+                  value={userData?.act}
+                >
+                  {Acts.map((desig, index) => (
+                    <MenuItem key={desig.value} value={desig.value}>
+                      {desig.title}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Box>
 
             <Box sx={{ display: "flex", mt: 3, flexDirection: "column" }}>
               <Typography variant="body2">Upload</Typography>
               <label className="documentGenerator_upload">
                 <UploadIcon /> Upload .DOCX or .PDF format.
-                <input type="file" />
+                <input
+                  type="file"
+                  onChange={(e) =>
+                    setUserData({
+                      ...userData,
+                      file: e.target.files[0],
+                    })
+                  }
+                />
               </label>
             </Box>
 
@@ -166,11 +176,12 @@ const UploadDocument = (props) => {
                   textTransform: "none",
                 }}
                 fullWidth
+                onClick={onSubmit}
               >
                 Done
               </Button>
             </Box>
-          </form>
+          </div>
         </DialogContent>
       </Dialog>
       {/* add admins dialog */}

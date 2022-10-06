@@ -9,6 +9,11 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Dialog,
+  DialogTitle,
+  Box,
+  IconButton,
+  DialogContent,
 } from "@mui/material";
 import React from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -16,8 +21,14 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import UploadIcon from "@mui/icons-material/Upload";
+import { useSelector } from "react-redux";
+import CloseIcon from "@mui/icons-material/Close";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import parse from "html-react-parser";
 
 const DocumentTables = () => {
+  const { listOfDocuments = [] } = useSelector((state) => state.SuperAdmin);
+  const [selectedRow, setSelectedRow] = React.useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -58,30 +69,45 @@ const DocumentTables = () => {
       flex: 1,
     },
     {
-      field: "date",
-      headerName: "Date",
-      flex: 1,
-    },
-    {
-      field: "title",
+      field: "filename",
       headerName: "Title",
       flex: 1,
     },
-    {
-      field: "menu",
-      headerName: "Menu",
-      flex: 1,
-    },
-    {
-      field: "status",
-      headerName: "Status",
-      flex: 1,
-    },
+    // {
+    //   field: "date",
+    //   headerName: "Date",
+    //   flex: 1,
+    // },
+    // {
+    //   field: "title",
+    //   headerName: "Title",
+    //   flex: 1,
+    // },
+    // {
+    //   field: "menu",
+    //   headerName: "Menu",
+    //   flex: 1,
+    // },
+    // {
+    //   field: "status",
+    //   headerName: "Status",
+    //   flex: 1,
+    // },
     {
       field: "actions",
       headerName: "Actions",
       type: "actions",
       getActions: (params) => [
+        <GridActionsCellItem
+          icon={<VisibilityIcon />}
+          label="View"
+          showInMenu
+          onClick={() => {
+            console.log(params);
+            handleOpenDialog();
+            setSelectedRow(params.row?.fileData);
+          }}
+        />,
         <GridActionsCellItem icon={<EditIcon />} label="Edit" showInMenu />,
         <GridActionsCellItem icon={<DeleteIcon />} label="Delete" showInMenu />,
         <GridActionsCellItem
@@ -99,8 +125,17 @@ const DocumentTables = () => {
     setOpenDialog(true);
   };
 
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+  };
+
   return (
     <>
+      <DocumentViewer
+        openDialog={openDialog}
+        handleDialogClose={handleDialogClose}
+        data={selectedRow}
+      />
       {/* actio menu : edit/delete */}
       {/* <Menu
         id="basic-menu"
@@ -141,7 +176,7 @@ const DocumentTables = () => {
         <DataGrid
           hideFooter
           rowsPerPageOptions={[]}
-          rows={rows}
+          rows={listOfDocuments}
           columns={columns}
           disableSelectionOnClick
           sx={{
@@ -233,3 +268,28 @@ const DocumentTables = () => {
 };
 
 export default DocumentTables;
+
+function DocumentViewer(props) {
+  return (
+    <Dialog
+      open={props.openDialog} // Use value directly here
+      onClose={props.handleDialogClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      PaperProps={{
+        style: { borderRadius: 10, minWidth: 600 },
+      }}
+      maxWidth="lg"
+    >
+      <DialogTitle fontWeight={600}>View Document</DialogTitle>
+      <Box position="absolute" top={5} right={10}>
+        <IconButton onClick={props.handleDialogClose}>
+          <CloseIcon />
+        </IconButton>
+      </Box>
+      <DialogContent>
+        <div>{parse(props.data || "")}</div>
+      </DialogContent>
+    </Dialog>
+  );
+}
