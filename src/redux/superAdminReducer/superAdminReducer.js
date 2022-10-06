@@ -7,6 +7,7 @@ const initialStore = {
   email: null,
   listOfAdmins: [],
   listOfSubAdmins: [],
+  listOfDocuments: [],
 };
 
 const superAdminReducer = (state = initialStore, action) => {
@@ -40,6 +41,11 @@ const superAdminReducer = (state = initialStore, action) => {
       return {
         ...state,
         listOfSubAdmins: action.payload,
+      };
+    case "GET_DOCUMENTS":
+      return {
+        ...state,
+        listOfDocuments: action.payload,
       };
     default:
       return state;

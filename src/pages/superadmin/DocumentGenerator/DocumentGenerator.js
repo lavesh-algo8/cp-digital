@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import UploadIcon from "@mui/icons-material/Upload";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -18,10 +18,30 @@ import Layout from "../../../components/superadmin/Layout";
 import DocumentTables from "../../../components/superadmin/DocumentGenerator/DocumentTables";
 import AddDocument from "../../../components/superadmin/DocumentGenerator/AddDocument";
 import UploadDocument from "../../../components/superadmin/DocumentGenerator/UploadDocument";
+import { useDispatch, useSelector } from "react-redux";
+import { getDocuments } from "../../../redux/superAdminReducer/superAdminAction";
 
 function DocumentGenerator() {
+  const dispatch = useDispatch();
   const [openDialogAdd, setOpenDialogAdd] = useState(false);
   const [openDialogUpload, setOpenDialogUpload] = useState(false);
+  const Laws = [
+    {
+      title: "Corporate Law",
+      value: "corporatelaw",
+    },
+  ];
+
+  const Acts = [
+    {
+      title: "Company Act",
+      value: "companyact",
+    },
+  ];
+
+  useEffect(() => {
+    dispatch(getDocuments(Laws[0]?.value, Acts[0]?.value));
+  }, []);
 
   return (
     <Layout>
@@ -100,8 +120,8 @@ function DocumentGenerator() {
                         },
                       }}
                     >
-                      {["Law 1", "Law 2", "Law 3"].map((label, index) => (
-                        <MenuItem value={label}>{label}</MenuItem>
+                      {Laws.map((label, index) => (
+                        <MenuItem value={label.value}>{label.title}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
@@ -138,14 +158,14 @@ function DocumentGenerator() {
                         },
                       }}
                     >
-                      {["Act 1", "Act 2", "Act 3"].map((label, index) => (
-                        <MenuItem value={label}>{label}</MenuItem>
+                      {Acts.map((label, index) => (
+                        <MenuItem value={label.value}>{label.title}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
                 </Card>
               </Box>
-              <Box
+              {/* <Box
                 sx={{
                   mr: 3,
                 }}
@@ -165,7 +185,7 @@ function DocumentGenerator() {
                   openDialog={openDialogAdd}
                   setOpenDialog={setOpenDialogAdd}
                 />
-              </Box>
+              </Box> */}
               <Box>
                 <Button
                   variant="contained"
@@ -181,6 +201,9 @@ function DocumentGenerator() {
                 <UploadDocument
                   openDialog={openDialogUpload}
                   setOpenDialog={setOpenDialogUpload}
+                  refresh={() =>
+                    dispatch(getDocuments(Laws[0]?.value, Acts[0]?.value))
+                  }
                 />
               </Box>
             </Grid>
