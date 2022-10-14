@@ -16,11 +16,14 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Controller, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 const AddDocument = (props) => {
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
   };
+
+  const navigate = useNavigate();
 
   const {
     register,
@@ -156,6 +159,9 @@ const AddDocument = (props) => {
                   textTransform: "none",
                 }}
                 fullWidth
+                onClick={() =>
+                  navigate("/superadmin/documentGenerator/generatenewdocument")
+                }
               >
                 Create
               </Button>
