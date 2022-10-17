@@ -165,7 +165,7 @@ function DocumentGenerator() {
                   </FormControl>
                 </Card>
               </Box>
-              {/* <Box
+              <Box
                 sx={{
                   mr: 3,
                 }}
@@ -185,7 +185,7 @@ function DocumentGenerator() {
                   openDialog={openDialogAdd}
                   setOpenDialog={setOpenDialogAdd}
                 />
-              </Box> */}
+              </Box>
               <Box>
                 <Button
                   variant="contained"
