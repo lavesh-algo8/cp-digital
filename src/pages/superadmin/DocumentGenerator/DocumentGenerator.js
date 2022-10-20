@@ -39,9 +39,9 @@ function DocumentGenerator() {
     },
   ];
 
-  useEffect(() => {
-    dispatch(getDocuments(Laws[0]?.value, Acts[0]?.value));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getDocuments(Laws[0]?.value, Acts[0]?.value));
+  // }, []);
 
   return (
     <Layout>
@@ -165,7 +165,7 @@ function DocumentGenerator() {
                   </FormControl>
                 </Card>
               </Box>
-              {/* <Box
+              <Box
                 sx={{
                   mr: 3,
                 }}
@@ -185,7 +185,7 @@ function DocumentGenerator() {
                   openDialog={openDialogAdd}
                   setOpenDialog={setOpenDialogAdd}
                 />
-              </Box> */}
+              </Box>
               <Box>
                 <Button
                   variant="contained"

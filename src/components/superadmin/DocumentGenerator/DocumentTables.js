@@ -1,14 +1,5 @@
 import {
-  Button,
-  Menu,
-  MenuItem,
-  Table,
-  TableBody,
-  TableCell,
   TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   Dialog,
   DialogTitle,
   Box,
@@ -16,51 +7,21 @@ import {
   DialogContent,
 } from "@mui/material";
 import React from "react";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import UploadIcon from "@mui/icons-material/Upload";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CloseIcon from "@mui/icons-material/Close";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import parse from "html-react-parser";
+import { useNavigate } from "react-router-dom";
 
 const DocumentTables = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { listOfDocuments = [] } = useSelector((state) => state.SuperAdmin);
   const [selectedRow, setSelectedRow] = React.useState(null);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const rows = [
-    {
-      id: "1",
-      date: new Date().toLocaleDateString(),
-      title: "Document 1",
-      menu: "FORM 32",
-      status: "Pending",
-    },
-    {
-      id: "2",
-      date: new Date().toLocaleDateString(),
-      title: "Document 2",
-      menu: "FORM 32",
-      status: "Published",
-    },
-    {
-      id: "3",
-      date: new Date().toLocaleDateString(),
-      title: "Document 3",
-      menu: "FORM 32",
-      status: "Published",
-    },
-  ];
 
   const columns = [
     {
@@ -69,8 +30,8 @@ const DocumentTables = () => {
       flex: 1,
     },
     {
-      field: "filename",
-      headerName: "Title",
+      field: "procedure",
+      headerName: "Procedure",
       flex: 1,
     },
     // {
@@ -176,9 +137,19 @@ const DocumentTables = () => {
         <DataGrid
           hideFooter
           rowsPerPageOptions={[]}
-          rows={listOfDocuments}
+          rows={listOfDocuments.map((doc, index) => ({
+            id: index + 1,
+            ...doc,
+          }))}
           columns={columns}
           disableSelectionOnClick
+          onRowClick={(e) => {
+            dispatch({
+              type: "SET_SELECT_DOCUMENT",
+              payload: e.row,
+            });
+            navigate(`/superadmin/documentGenerator/viewProcedure`);
+          }}
           sx={{
             boxShadow: 0,
             border: 0,

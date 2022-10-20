@@ -8,6 +8,7 @@ const initialStore = {
   listOfAdmins: [],
   listOfSubAdmins: [],
   listOfDocuments: [],
+  selectedDocument: {},
 };
 
 const superAdminReducer = (state = initialStore, action) => {
@@ -46,6 +47,16 @@ const superAdminReducer = (state = initialStore, action) => {
       return {
         ...state,
         listOfDocuments: action.payload,
+      };
+    case "ADD_DOCUMENTS":
+      return {
+        ...state,
+        listOfDocuments: [...state.listOfDocuments, action.payload],
+      };
+    case "SET_SELECT_DOCUMENT":
+      return {
+        ...state,
+        selectedDocument: action.payload,
       };
     default:
       return state;
