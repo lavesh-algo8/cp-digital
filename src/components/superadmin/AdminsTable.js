@@ -56,7 +56,7 @@ const AdminsTable = () => {
 
   useEffect(() => {
     dispatch(getAdminList());
-  }, []);
+  }, [localStorage.getItem("token")]);
 
   const rows = [
     {

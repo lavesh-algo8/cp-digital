@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
+  Grid,
   IconButton,
   InputLabel,
   MenuItem,
@@ -16,23 +17,42 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Controller, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import AddIcon from "@mui/icons-material/Add";
+import { useDispatch } from "react-redux";
 
 const AddDocument = (props) => {
+  const dispatch = useDispatch();
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
   };
+  const [numOfDocs, setNumOfDocs] = useState(1);
+  const [newDocumentData, setNewDocumentData] = useState({});
+  const [headings, setHeadings] = useState({});
 
-  const navigate = useNavigate();
+  const onSubmit = () => {
+    console.log({
+      ...newDocumentData,
+      numOfDocs,
+      headings,
+    });
+    let subData = [];
+    for (let i = 0; i < Object.keys(headings)?.length; i++) {
+      subData.push({
+        heading: Object.values(headings)[i],
+      });
+    }
+    dispatch({
+      type: "ADD_DOCUMENTS",
+      payload: {
+        ...newDocumentData,
+        numOfDocs,
+        headings: subData,
+      },
+    });
+  };
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm();
-  const onSubmit = (data) => {
-    console.log(data);
+  const onChange = (e) => {
+    setNewDocumentData({ ...newDocumentData, [e.target.name]: e.target.value });
   };
 
   const Designation = [
@@ -65,8 +85,8 @@ const AddDocument = (props) => {
             <CloseIcon />
           </IconButton>
         </Box>
-        <DialogContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
+        <DialogContent style={{ width: "480px" }}>
+          <div style={{ width: "100%" }}>
             <Box
               sx={{
                 display: "flex",
@@ -76,60 +96,123 @@ const AddDocument = (props) => {
             ></Box>
 
             <Box sx={{ display: "flex", mt: 3 }}>
-              <Controller
-                name="designation"
-                control={control}
-                type="text"
-                defaultValue={""}
-                render={({ field }) => (
-                  <FormControl fullWidth size="small">
-                    <InputLabel id="demo-simple-select-label">Law</InputLabel>
-                    <Select
-                      {...field}
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      label="Law"
-                      {...register("designation", { required: true })}
-                      error={errors.designation?.type === "required"}
-                    >
-                      {Designation.map((desig, index) => (
-                        <MenuItem key={desig.value} value={desig.value}>
-                          {desig.value}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                )}
+              <FormControl fullWidth size="small">
+                <InputLabel id="demo-simple-select-label">Law</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="Law"
+                  name="law"
+                  onChange={onChange}
+                  value={newDocumentData.law}
+                >
+                  {Designation.map((desig, index) => (
+                    <MenuItem key={desig.value} value={desig.value}>
+                      {desig.value}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+
+            <Box sx={{ display: "flex", mt: 3 }}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="demo-simple-select-label">Act</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="Act"
+                  name="act"
+                  onChange={onChange}
+                  value={newDocumentData.act}
+                >
+                  {Designation.map((desig, index) => (
+                    <MenuItem key={desig.value} value={desig.value}>
+                      {desig.value}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+
+            <Box sx={{ display: "flex", mt: 3 }}>
+              <TextField
+                size="small"
+                id="procedure"
+                label="Procedure"
+                variant="outlined"
+                fullWidth
+                name="procedure"
+                onChange={onChange}
+                value={newDocumentData.procedure}
               />
             </Box>
 
             <Box sx={{ display: "flex", mt: 3 }}>
-              <Controller
-                name="designation"
-                control={control}
-                type="text"
-                defaultValue={""}
-                render={({ field }) => (
-                  <FormControl fullWidth size="small">
-                    <InputLabel id="demo-simple-select-label">Act</InputLabel>
-                    <Select
-                      {...field}
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      label="Act"
-                      {...register("designation", { required: true })}
-                      error={errors.designation?.type === "required"}
-                    >
-                      {Designation.map((desig, index) => (
-                        <MenuItem key={desig.value} value={desig.value}>
-                          {desig.value}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                )}
+              <TextField
+                size="small"
+                id="type"
+                label="Type (Optional)"
+                variant="outlined"
+                fullWidth
+                name="type"
+                onChange={onChange}
+                value={newDocumentData.type}
               />
             </Box>
+
+            {Array.from({ length: numOfDocs }, (_, key) => (
+              <Grid container sx={{ mt: 3 }}>
+                <Grid item xs={8}>
+                  <Box sx={{ display: "flex" }}>
+                    <TextField
+                      size="small"
+                      id={`Document Heading ${key + 1}`}
+                      label={`Document Heading ${key + 1}`}
+                      name={`Document Heading ${key + 1}`}
+                      variant="outlined"
+                      fullWidth
+                      onChange={(e) => {
+                        setHeadings({
+                          ...headings,
+                          [e.target.name]: e.target.value,
+                        });
+                      }}
+                      value={headings[`Document Heading ${key + 1}`]}
+                    />
+                  </Box>
+                </Grid>
+                {key + 1 === numOfDocs && (
+                  <>
+                    <Grid container item xs={2} style={{ padding: "0 8px" }}>
+                      <Button
+                        size="large"
+                        color="primary"
+                        variant="contained"
+                        onClick={() => setNumOfDocs(numOfDocs + 1)}
+                        disabled={numOfDocs === 4}
+                      >
+                        <AddIcon />
+                      </Button>
+                    </Grid>
+                    <Grid container item xs={2} style={{ padding: "0 8px" }}>
+                      <Button
+                        size="large"
+                        color="primary"
+                        variant="contained"
+                        onClick={() => {
+                          setNumOfDocs(numOfDocs - 1);
+                          delete headings[`Document Heading ${key + 1}`];
+                        }}
+                        disabled={numOfDocs === 1}
+                      >
+                        <CloseIcon />
+                      </Button>
+                    </Grid>
+                  </>
+                )}
+              </Grid>
+            ))}
 
             <Box sx={{ display: "flex" }}>
               <Button
@@ -159,14 +242,12 @@ const AddDocument = (props) => {
                   textTransform: "none",
                 }}
                 fullWidth
-                onClick={() =>
-                  navigate("/superadmin/documentGenerator/generatenewdocument")
-                }
+                onClick={onSubmit}
               >
                 Create
               </Button>
             </Box>
-          </form>
+          </div>
         </DialogContent>
       </Dialog>
       {/* add admins dialog */}

@@ -8,6 +8,7 @@ import GenerateNewDocument from "../../../pages/superadmin/DocumentGenerator/Gen
 import Laws from "../../../pages/superadmin/Laws";
 import Login from "../../../pages/superadmin/Login";
 import ProcedurePage from "../../../pages/superadmin/Procedure/ProcedurePage";
+import PopupTable from "../../superadmin/DocumentGenerator/PopupTable";
 
 function Navigation() {
   return (
@@ -19,6 +20,10 @@ function Navigation() {
         <Route
           path="/superadmin/documentGenerator"
           element={<DocumentGenerator />}
+        />
+        <Route
+          path="/superadmin/documentGenerator/viewProcedure"
+          element={<PopupTable />}
         />
 
         <Route

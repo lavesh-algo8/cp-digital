@@ -5,13 +5,23 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import thunk from "redux-thunk";
 import superAdminReducer from "./superAdminReducer/superAdminReducer";
 import utilityReducer from "./utilityReducer/UtilityReducer";
+import persistReducer from "redux-persist/es/persistReducer";
 
 const RootReducer = combineReducers({
   SuperAdmin: superAdminReducer,
   Util: utilityReducer,
 });
 
+const persistConfig = {
+  key: "root",
+  storage,
+};
+
+const persistedReducer = persistReducer(persistConfig, RootReducer);
+
 export const Store = createStore(
-  RootReducer,
+  persistedReducer,
   composeWithDevTools(applyMiddleware(thunk))
 );
+
+export const persistor = persistStore(Store);

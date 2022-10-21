@@ -39,9 +39,9 @@ function DocumentGenerator() {
     },
   ];
 
-  useEffect(() => {
-    dispatch(getDocuments(Laws[0]?.value, Acts[0]?.value));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getDocuments(Laws[0]?.value, Acts[0]?.value));
+  // }, []);
 
   return (
     <Layout>
