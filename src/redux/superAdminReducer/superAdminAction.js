@@ -2,6 +2,7 @@ import { RestorePageTwoTone } from "@mui/icons-material";
 import axios from "axios";
 import { baseUrl, callBackend } from "../../services/http.services";
 import { openSnackBar } from "../utilityReducer/UtilityAction";
+import qs from "qs";
 
 export const superAdminLogin = (formData) => async (dispatch) => {
   try {
@@ -158,17 +159,55 @@ export const deleteSubAdmin = (id) => async (dispatch) => {
   }
 };
 
-export const getDocuments = (law, act) => async (dispatch) => {
+// export const getDocuments = (law, act) => async (dispatch) => {
+//   try {
+//     const resp = await callBackend("get", `documents/getDocs/${law}/${act}`);
+//     console.log("FILES", resp);
+//     dispatch({
+//       type: "GET_DOCUMENTS",
+//       payload: resp?.file?.map((item, index) => ({
+//         ...item,
+//         id: index + 1,
+//       })),
+//     });
+//   } catch (e) {
+//     console.log(e);
+//   }
+// };
+
+export const getDocuments = () => async (dispatch) => {
   try {
-    const resp = await callBackend("get", `documents/getDocs/${law}/${act}`);
-    console.log("FILES", resp);
+    const resp = await callBackend("get", `docgen/procedures`);
+    console.log(resp);
     dispatch({
       type: "GET_DOCUMENTS",
-      payload: resp?.file?.map((item, index) => ({
-        ...item,
-        id: index + 1,
-      })),
+      payload: resp?.result,
     });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const addDocument = (formData) => async (dispatch) => {
+  try {
+    let config = {
+      method: "POST",
+      url: `${baseUrl}/docgen/createheadings`,
+      headers: {
+        "content-type": "application/x-www-form-urlencoded",
+      },
+      data: qs.stringify(formData),
+    };
+
+    const resp = await axios(config);
+    console.log(resp);
+    if (resp?.data.message === "headings saved successfully") {
+      dispatch(openSnackBar("document successfully created", "success"));
+      return true;
+    } else {
+      dispatch(openSnackBar(resp?.data.message, "error"));
+      return false;
+    }
   } catch (e) {
     console.log(e);
   }

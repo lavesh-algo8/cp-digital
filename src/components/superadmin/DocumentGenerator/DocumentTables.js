@@ -16,12 +16,17 @@ import CloseIcon from "@mui/icons-material/Close";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import parse from "html-react-parser";
 import { useNavigate } from "react-router-dom";
+import { getDocuments } from "../../../redux/superAdminReducer/superAdminAction";
 
 const DocumentTables = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { listOfDocuments = [] } = useSelector((state) => state.SuperAdmin);
+  const { listOfDocuments } = useSelector((state) => state.SuperAdmin);
   const [selectedRow, setSelectedRow] = React.useState(null);
+
+  React.useEffect(() => {
+    dispatch(getDocuments());
+  }, []);
 
   const columns = [
     {
@@ -137,7 +142,7 @@ const DocumentTables = () => {
         <DataGrid
           hideFooter
           rowsPerPageOptions={[]}
-          rows={listOfDocuments.map((doc, index) => ({
+          rows={listOfDocuments?.map((doc, index) => ({
             id: index + 1,
             ...doc,
           }))}
