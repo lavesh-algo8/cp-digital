@@ -10,12 +10,14 @@ import AddSection from "./AddSection";
 
 function PopupTable() {
   const dispatch = useDispatch();
-  const { listOfDocuments = [], selectedDocument = {} } = useSelector(
+  const { listOfDocuments, selectedDocument = {} } = useSelector(
     (state) => state.SuperAdmin
   );
-  const currentDoc = listOfDocuments?.filter(
-    (item) => item?.id === selectedDocument?.id
-  )[0];
+  // const currentDoc = listOfDocuments?.filter(
+  //   (item) => item?.id === selectedDocument?.id
+  // )[0];
+  const currentDoc = listOfDocuments[0];
+  console.log(currentDoc);
   const navigate = useNavigate();
   const [addSection, SetAddSection] = useState(false);
   const [selectedHeading, setSelectedHeading] = useState(null);
@@ -111,7 +113,7 @@ function PopupTable() {
                 Action
               </Grid>
             </Grid>
-            {currentDoc?.headings?.map((item, index) => (
+            {currentDoc?.documentHeadings?.map((item, index) => (
               <DataRow
                 index={index}
                 item={item}
@@ -156,7 +158,7 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
         </Grid>
         <Grid container item xs={6}>
           <Grid container item xs={5}>
-            <h6>{item?.heading}</h6>
+            <h6>{item}</h6>
           </Grid>
           <Grid container item xs={3}>
             <Button
@@ -168,7 +170,8 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
               fullWidth
               onClick={() => {
                 openAddSection();
-                setSelectedHeading(item?.id);
+                // setSelectedHeading(item?.id);
+                setSelectedHeading(item);
               }}
             >
               Add Section

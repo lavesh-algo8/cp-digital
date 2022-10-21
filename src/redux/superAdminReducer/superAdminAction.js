@@ -213,6 +213,32 @@ export const addDocument = (formData) => async (dispatch) => {
   }
 };
 
+export const addSectionDocumentHeading =
+  (heading, sections) => async (dispatch) => {
+    try {
+      let config = {
+        method: "POST",
+        url: `${baseUrl}/docgen/addsections/${heading}`,
+        headers: {
+          "content-type": "application/json",
+        },
+        data: { formTitles: sections },
+      };
+      console.log(config);
+      const resp = await axios(config);
+      console.log(resp);
+      if (resp?.data.message === "sections saved successfully") {
+        dispatch(openSnackBar(resp?.data.message, "success"));
+        return true;
+      } else {
+        dispatch(openSnackBar(resp?.data.message, "error"));
+        return false;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
 export const saveDocument = (formData) => async (dispatch) => {
   try {
     let config = {
