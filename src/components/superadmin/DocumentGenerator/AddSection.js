@@ -18,53 +18,38 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { Controller, useForm } from "react-hook-form";
 import AddIcon from "@mui/icons-material/Add";
-import { useDispatch } from "react-redux";
-import { addDocument } from "../../../redux/superAdminReducer/superAdminAction";
+import { useDispatch, useSelector } from "react-redux";
 
-const AddDocument = (props) => {
+const AddSection = (props) => {
   const dispatch = useDispatch();
+  const { selectedDocument = {} } = useSelector((state) => state.SuperAdmin);
   const handleDialogClose = () => {
-    props.setOpenDialog(false); // Use the prop.
+    props.closeDialog(); // Use the prop.
   };
   const [numOfDocs, setNumOfDocs] = useState(1);
-  const [newDocumentData, setNewDocumentData] = useState({});
-  const [headings, setHeadings] = useState({});
+  const [sections, setSections] = useState({});
 
   const onSubmit = () => {
-    console.log({
-      ...newDocumentData,
-      // numOfDocs,
-      // headings,
-    });
-    newDocumentData.procedure = "Shifting of registered office";
     let subData = [];
-    for (let i = 0; i < Object.keys(headings)?.length; i++) {
+    for (let i = 0; i < Object.keys(sections)?.length; i++) {
       subData.push({
         id: Math.ceil(Math.random() * 10000001),
-        heading: Object.values(headings)[i],
-        sections: [],
+        section: Object.values(sections)[i],
       });
     }
-
+    console.log(subData);
+    dispatch({
+      type: "UPDATE_DOCUMENT",
+      payload: {
+        id: props?.id,
+        sections: subData,
+        doc_id: selectedDocument?.id,
+      },
+    });
+    setNumOfDocs(1);
+    setSections({});
+    props.handleDialogClose();
   };
-
-  const onChange = (e) => {
-    setNewDocumentData({ ...newDocumentData, [e.target.name]: e.target.value });
-  };
-
-  const Law = [
-    {
-      value: "corporatelaw",
-    },
-  ];
-
-  const Act = [
-    {
-      value: "companyact",
-    },
-  ];
-
-  const access = ["Procedures", "Calculators", "Content mangement"];
 
   return (
     <>
@@ -79,7 +64,7 @@ const AddDocument = (props) => {
         }}
         maxWidth="lg"
       >
-        <DialogTitle fontWeight={600}>Add New Document</DialogTitle>
+        <DialogTitle fontWeight={600}>Add Section {props?.id}</DialogTitle>
         <Box position="absolute" top={5} right={10}>
           <IconButton onClick={handleDialogClose}>
             <CloseIcon />
@@ -95,90 +80,24 @@ const AddDocument = (props) => {
               }}
             ></Box>
 
-            <Box sx={{ display: "flex", mt: 3 }}>
-              <FormControl fullWidth size="small">
-                <InputLabel id="demo-simple-select-label">Law</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="Law"
-                  name="law"
-                  onChange={onChange}
-                  value={newDocumentData.law}
-                >
-                  {Law.map((desig, index) => (
-                    <MenuItem key={desig.value} value={desig.value}>
-                      {desig.value}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
-
-            <Box sx={{ display: "flex", mt: 3 }}>
-              <FormControl fullWidth size="small">
-                <InputLabel id="demo-simple-select-label">Act</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="Act"
-                  name="act"
-                  onChange={onChange}
-                  value={newDocumentData.act}
-                >
-                  {Act.map((desig, index) => (
-                    <MenuItem key={desig.value} value={desig.value}>
-                      {desig.value}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
-
-            <Box sx={{ display: "flex", mt: 3 }}>
-              <TextField
-                size="small"
-                id="procedure"
-                label="Procedure"
-                variant="outlined"
-                fullWidth
-                name="procedure"
-                onChange={onChange}
-                value={newDocumentData.procedure}
-              />
-            </Box>
-
-            <Box sx={{ display: "flex", mt: 3 }}>
-              <TextField
-                size="small"
-                id="type"
-                label="Type (Optional)"
-                variant="outlined"
-                fullWidth
-                name="type"
-                onChange={onChange}
-                value={newDocumentData.type}
-              />
-            </Box>
-
             {Array.from({ length: numOfDocs }, (_, key) => (
               <Grid container sx={{ mt: 3 }}>
                 <Grid item xs={8}>
                   <Box sx={{ display: "flex" }}>
                     <TextField
                       size="small"
-                      id={`Document Heading ${key + 1}`}
-                      label={`Document Heading ${key + 1}`}
-                      name={`Document Heading ${key + 1}`}
+                      id={`Section Title ${key + 1}`}
+                      label={`Section Title ${key + 1}`}
+                      name={`Section Title ${key + 1}`}
                       variant="outlined"
                       fullWidth
                       onChange={(e) => {
-                        setHeadings({
-                          ...headings,
+                        setSections({
+                          ...sections,
                           [e.target.name]: e.target.value,
                         });
                       }}
-                      value={headings[`Document Heading ${key + 1}`]}
+                      value={sections[`Section Title ${key + 1}`]}
                     />
                   </Box>
                 </Grid>
@@ -202,7 +121,7 @@ const AddDocument = (props) => {
                         variant="contained"
                         onClick={() => {
                           setNumOfDocs(numOfDocs - 1);
-                          delete headings[`Document Heading ${key + 1}`];
+                          delete sections[`Document Heading ${key + 1}`];
                         }}
                         disabled={numOfDocs === 1}
                       >
@@ -255,4 +174,4 @@ const AddDocument = (props) => {
   );
 };
 
-export default AddDocument;
+export default AddSection;
