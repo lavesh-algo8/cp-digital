@@ -45,7 +45,18 @@ const AddDocument = (props) => {
         sections: [],
       });
     }
-
+    console.log(subData);
+    let docHeadings = [];
+    docHeadings = subData.map((head) => head.heading);
+    console.log(docHeadings);
+    console.log(docHeadings.toString());
+    docHeadings = docHeadings.toString();
+    let finalData = {
+      ...newDocumentData,
+      docHeadings,
+    };
+    console.log(finalData);
+    dispatch(addDocument(finalData));
   };
 
   const onChange = (e) => {
