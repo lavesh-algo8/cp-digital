@@ -48,11 +48,11 @@ const superAdminReducer = (state = initialStore, action) => {
         ...state,
         listOfDocuments: action.payload,
       };
-    case "ADD_DOCUMENTS":
-      return {
-        ...state,
-        listOfDocuments: [...state.listOfDocuments, action.payload],
-      };
+    // case "ADD_DOCUMENTS":
+    //   return {
+    //     ...state,
+    //     listOfDocuments: [...state.listOfDocuments, action.payload],
+    //   };
     case "SET_SELECT_DOCUMENT":
       return {
         ...state,

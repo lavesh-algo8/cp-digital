@@ -19,6 +19,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Controller, useForm } from "react-hook-form";
 import AddIcon from "@mui/icons-material/Add";
 import { useDispatch } from "react-redux";
+import { addDocument } from "../../../redux/superAdminReducer/superAdminAction";
 
 const AddDocument = (props) => {
   const dispatch = useDispatch();
@@ -32,9 +33,10 @@ const AddDocument = (props) => {
   const onSubmit = () => {
     console.log({
       ...newDocumentData,
-      numOfDocs,
-      headings,
+      // numOfDocs,
+      // headings,
     });
+    newDocumentData.procedure = "Shifting of registered office";
     let subData = [];
     for (let i = 0; i < Object.keys(headings)?.length; i++) {
       subData.push({
@@ -43,32 +45,22 @@ const AddDocument = (props) => {
         sections: [],
       });
     }
-    dispatch({
-      type: "ADD_DOCUMENTS",
-      payload: {
-        ...newDocumentData,
-        numOfDocs,
-        headings: subData,
-        id: Math.ceil(Math.random() * 10000001),
-      },
-    });
 
-    setNumOfDocs(1);
-    setNewDocumentData({});
-    setHeadings({});
-    props.handleDialogClose();
   };
 
   const onChange = (e) => {
     setNewDocumentData({ ...newDocumentData, [e.target.name]: e.target.value });
   };
 
-  const Designation = [
+  const Law = [
     {
-      value: "Executive",
+      value: "corporatelaw",
     },
+  ];
+
+  const Act = [
     {
-      value: "Director",
+      value: "companyact",
     },
   ];
 
@@ -114,7 +106,7 @@ const AddDocument = (props) => {
                   onChange={onChange}
                   value={newDocumentData.law}
                 >
-                  {Designation.map((desig, index) => (
+                  {Law.map((desig, index) => (
                     <MenuItem key={desig.value} value={desig.value}>
                       {desig.value}
                     </MenuItem>
@@ -134,7 +126,7 @@ const AddDocument = (props) => {
                   onChange={onChange}
                   value={newDocumentData.act}
                 >
-                  {Designation.map((desig, index) => (
+                  {Act.map((desig, index) => (
                     <MenuItem key={desig.value} value={desig.value}>
                       {desig.value}
                     </MenuItem>
