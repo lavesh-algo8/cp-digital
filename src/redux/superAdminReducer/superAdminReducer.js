@@ -58,9 +58,34 @@ const superAdminReducer = (state = initialStore, action) => {
         ...state,
         selectedDocument: action.payload,
       };
+    case "UPDATE_DOCUMENT":
+      let headingList = state?.listOfDocuments?.filter(
+        (doc) => doc.id === action.payload.doc_id
+      )[0].headings;
+
+      let updatedHeadings = headingList.map((heading) => {
+        if (heading.id === action.payload.id) {
+          return {
+            ...heading,
+            sections: action.payload.sections,
+          };
+        } else {
+          return heading;
+        }
+      });
+
+      console.log(updatedHeadings);
+
+      return {
+        ...state,
+        listOfDocuments: state.listOfDocuments.map((item) =>
+          item.id === action.payload.doc_id
+            ? { ...item, headings: updatedHeadings }
+            : item
+        ),
+      };
     default:
       return state;
   }
 };
-
 export default superAdminReducer;
