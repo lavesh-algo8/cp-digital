@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Layout from "../Layout";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import AddSection from "./AddSection";
 
 function PopupTable() {
@@ -16,7 +16,7 @@ function PopupTable() {
   // const currentDoc = listOfDocuments?.filter(
   //   (item) => item?.id === selectedDocument?.id
   // )[0];
-  const currentDoc = listOfDocuments[0];
+  const currentDoc = listOfDocuments[0][0]?.result?.temp;
   console.log(currentDoc);
   const navigate = useNavigate();
   const [addSection, SetAddSection] = useState(false);
@@ -113,15 +113,18 @@ function PopupTable() {
                 Action
               </Grid>
             </Grid>
-            {currentDoc?.documentHeadings?.map((item, index) => (
-              <DataRow
-                index={index}
-                item={item}
-                key={index}
-                openAddSection={() => SetAddSection(true)}
-                setSelectedHeading={setSelectedHeading}
-              />
-            ))}
+            {currentDoc?.map((item, index) => {
+              console.log(item);
+              return (
+                <DataRow
+                  index={index}
+                  item={item}
+                  key={index}
+                  openAddSection={() => SetAddSection(true)}
+                  setSelectedHeading={setSelectedHeading}
+                />
+              );
+            })}
           </Grid>
         </Grid>
       </Layout>
@@ -138,6 +141,11 @@ export default PopupTable;
 
 function DataRow({ item, index, openAddSection, setSelectedHeading }) {
   const [expand, setExpand] = useState(false);
+  const navigate = useNavigate();
+
+  const onSubmit = (item) => {
+    navigate(`/superadmin/documentGenerator/generatenewdocument/${item}`);
+  };
 
   return (
     <Grid container xs={12} sx={{ margin: "8px 0" }}>
@@ -158,7 +166,7 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
         </Grid>
         <Grid container item xs={6}>
           <Grid container item xs={5}>
-            <h6>{item}</h6>
+            <h6>{item.documentHeadings}</h6>
           </Grid>
           <Grid container item xs={3}>
             <Button
@@ -171,7 +179,7 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
               onClick={() => {
                 openAddSection();
                 // setSelectedHeading(item?.id);
-                setSelectedHeading(item);
+                setSelectedHeading(item.documentHeadings);
               }}
             >
               Add Section
@@ -217,17 +225,17 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
               Action
             </Grid>
           </Grid>
-          {item?.sections?.map((item, index2) => (
+          {item?.titles?.map((item, index2) => (
             <Grid container item xs={12} sx={{ padding: "8px 16px" }}>
               <Grid item xs={2}>
-                <h6>{index + 1}</h6>
+                <h6>{index2 + 1}</h6>
               </Grid>
               <Grid item xs={2}>
                 <h6>{new Date().toDateString()}</h6>
               </Grid>
               <Grid container item xs={6}>
                 <Grid container item xs={5}>
-                  <h6>{item?.section}</h6>
+                  <h6>{item}</h6>
                 </Grid>
                 <Grid container item xs={3}></Grid>
                 <Grid container item xs={1}></Grid>
@@ -240,7 +248,7 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
                       textTransform: "none",
                     }}
                     fullWidth
-                    //   onClick={onSubmit}
+                    onClick={() => onSubmit(item)}
                   >
                     {item?.sections?.length === 0 ? "Edit" : "Generate"}{" "}
                     Document{" "}

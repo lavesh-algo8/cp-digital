@@ -38,6 +38,7 @@ const DocumentTables = () => {
       field: "procedure",
       headerName: "Procedure",
       flex: 1,
+      valueGetter: (params) => params.row[0]?.result?.procedure,
     },
     // {
     //   field: "date",

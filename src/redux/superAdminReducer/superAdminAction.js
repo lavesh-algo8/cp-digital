@@ -178,10 +178,12 @@ export const deleteSubAdmin = (id) => async (dispatch) => {
 export const getDocuments = () => async (dispatch) => {
   try {
     const resp = await callBackend("get", `docgen/procedures`);
+    const reslt = [resp];
     console.log(resp);
+    console.log(reslt);
     dispatch({
       type: "GET_DOCUMENTS",
-      payload: resp?.result,
+      payload: [reslt],
     });
   } catch (e) {
     console.log(e);

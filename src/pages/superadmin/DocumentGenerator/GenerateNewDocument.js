@@ -5,9 +5,12 @@ import Layout from "../../../components/superadmin/Layout";
 import { FormBuilder } from "@formio/react";
 import "formiojs/dist/formio.builder.min.css";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
-const GenerateNewDocument = () => {
-  const [title, setTitle] = useState("");
+const GenerateNewDocument = (props) => {
+  const { name } = useParams();
+
+  const [title, setTitle] = useState(name);
   const schemaRef = useRef();
 
   const onSubmitHandler = async () => {
