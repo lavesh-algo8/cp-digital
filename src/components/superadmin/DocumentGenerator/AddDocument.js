@@ -19,7 +19,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Controller, useForm } from "react-hook-form";
 import AddIcon from "@mui/icons-material/Add";
 import { useDispatch } from "react-redux";
-import { addDocument } from "../../../redux/superAdminReducer/superAdminAction";
+import {
+  addDocument,
+  getDocuments,
+} from "../../../redux/superAdminReducer/superAdminAction";
 
 const AddDocument = (props) => {
   const dispatch = useDispatch();
@@ -36,7 +39,7 @@ const AddDocument = (props) => {
       // numOfDocs,
       // headings,
     });
-    newDocumentData.procedure = "Shifting of registered office";
+    // newDocumentData.procedure = "Shifting of registered office";
     let subData = [];
     for (let i = 0; i < Object.keys(headings)?.length; i++) {
       subData.push({
@@ -57,6 +60,7 @@ const AddDocument = (props) => {
     };
     console.log(finalData);
     dispatch(addDocument(finalData));
+    dispatch(getDocuments());
   };
 
   const onChange = (e) => {

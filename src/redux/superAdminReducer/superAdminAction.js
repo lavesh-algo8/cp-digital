@@ -177,13 +177,11 @@ export const deleteSubAdmin = (id) => async (dispatch) => {
 
 export const getDocuments = () => async (dispatch) => {
   try {
-    const resp = await callBackend("get", `docgen/procedures`);
-    const reslt = [resp];
-    console.log(resp);
-    console.log(reslt);
+    const resp = await callBackend("get", `docgen/fetchprocedures/list`);
+    console.log(resp.result);
     dispatch({
       type: "GET_DOCUMENTS",
-      payload: [reslt],
+      payload: resp.result,
     });
   } catch (e) {
     console.log(e);
@@ -216,15 +214,19 @@ export const addDocument = (formData) => async (dispatch) => {
 };
 
 export const addSectionDocumentHeading =
-  (heading, sections) => async (dispatch) => {
+  (heading, procedure, sections) => async (dispatch) => {
     try {
       let config = {
         method: "POST",
-        url: `${baseUrl}/docgen/addsections/${heading}`,
+        url: `${baseUrl}/docgen/addsections/`,
         headers: {
           "content-type": "application/json",
         },
         data: { formTitles: sections },
+        params: {
+          procedure,
+          heading,
+        },
       };
       console.log(config);
       const resp = await axios(config);
@@ -241,24 +243,49 @@ export const addSectionDocumentHeading =
     }
   };
 
-export const saveDocument = (formData) => async (dispatch) => {
-  try {
-    let config = {
-      method: "post",
-      url: `${baseUrl}/documents/savedocument`,
-      headers: {
-        "content-type": "multipart/form-data",
-      },
-      data: formData,
-    };
+// export const saveDocument = (formData) => async (dispatch) => {
+//   try {
+//     let config = {
+//       method: "post",
+//       url: `${baseUrl}/documents/savedocument`,
+//       headers: {
+//         "content-type": "multipart/form-data",
+//       },
+//       data: formData,
+//     };
 
-    const { data } = await axios(config);
-    console.log("UPLOAD DATA", data);
-    dispatch(openSnackBar(data?.message, "success"));
-  } catch (e) {
-    console.log(e);
-  }
-};
+//     const { data } = await axios(config);
+//     console.log("UPLOAD DATA", data);
+//     dispatch(openSnackBar(data?.message, "success"));
+//   } catch (e) {
+//     console.log(e);
+//   }
+// };
+
+export const saveDocument =
+  (formData, procedure, heading, sectiontitle) => async (dispatch) => {
+    try {
+      let config = {
+        method: "post",
+        url: `${baseUrl}/docgen/savedocument`,
+        headers: {
+          "content-type": "application/json",
+        },
+        data: { docData: formData },
+        params: {
+          procedure,
+          heading,
+          sectiontitle,
+        },
+      };
+      console.log(formData);
+      const data = await axios(config);
+      console.log("UPLOAD DATA", data);
+      dispatch(openSnackBar(data?.data?.message, "success"));
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
 export const saveRocFeeCalculator = (formData) => async (dispatch) => {
   try {

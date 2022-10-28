@@ -38,7 +38,6 @@ const DocumentTables = () => {
       field: "procedure",
       headerName: "Procedure",
       flex: 1,
-      valueGetter: (params) => params.row[0]?.result?.procedure,
     },
     // {
     //   field: "date",
@@ -150,6 +149,8 @@ const DocumentTables = () => {
           columns={columns}
           disableSelectionOnClick
           onRowClick={(e) => {
+            // console.log(e);
+            // alert(e.row.procedure);
             dispatch({
               type: "SET_SELECT_DOCUMENT",
               payload: e.row,

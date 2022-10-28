@@ -39,13 +39,16 @@ const AddSection = (props) => {
       });
     }
     console.log(subData);
+    console.log(props.heading, props.procedure);
     let headingSection = [];
     headingSection = subData.map((head) => head.section);
     console.log(headingSection);
     console.log(headingSection.toString());
     headingSection = headingSection.toString();
-    dispatch(addSectionDocumentHeading(props.id, headingSection));
-    console.log(props.id);
+    dispatch(
+      addSectionDocumentHeading(props.heading, props.procedure, headingSection)
+    );
+    console.log(props.heading, props.procedure);
     setNumOfDocs(1);
     setSections({});
     props.handleDialogClose();
