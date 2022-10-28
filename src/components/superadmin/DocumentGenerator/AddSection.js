@@ -19,6 +19,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Controller, useForm } from "react-hook-form";
 import AddIcon from "@mui/icons-material/Add";
 import { useDispatch, useSelector } from "react-redux";
+import { addSectionDocumentHeading } from "../../../redux/superAdminReducer/superAdminAction";
 
 const AddSection = (props) => {
   const dispatch = useDispatch();
@@ -33,19 +34,21 @@ const AddSection = (props) => {
     let subData = [];
     for (let i = 0; i < Object.keys(sections)?.length; i++) {
       subData.push({
-        id: Math.ceil(Math.random() * 10000001),
+        // id: Math.ceil(Math.random() * 10000001),
         section: Object.values(sections)[i],
       });
     }
     console.log(subData);
-    dispatch({
-      type: "UPDATE_DOCUMENT",
-      payload: {
-        id: props?.id,
-        sections: subData,
-        doc_id: selectedDocument?.id,
-      },
-    });
+    console.log(props.heading, props.procedure);
+    let headingSection = [];
+    headingSection = subData.map((head) => head.section);
+    console.log(headingSection);
+    console.log(headingSection.toString());
+    headingSection = headingSection.toString();
+    dispatch(
+      addSectionDocumentHeading(props.heading, props.procedure, headingSection)
+    );
+    console.log(props.heading, props.procedure);
     setNumOfDocs(1);
     setSections({});
     props.handleDialogClose();

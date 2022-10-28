@@ -149,6 +149,8 @@ const DocumentTables = () => {
           columns={columns}
           disableSelectionOnClick
           onRowClick={(e) => {
+            // console.log(e);
+            // alert(e.row.procedure);
             dispatch({
               type: "SET_SELECT_DOCUMENT",
               payload: e.row,

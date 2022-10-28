@@ -5,9 +5,16 @@ import Layout from "../../../components/superadmin/Layout";
 import { FormBuilder } from "@formio/react";
 import "formiojs/dist/formio.builder.min.css";
 import axios from "axios";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { saveDocument } from "../../../redux/superAdminReducer/superAdminAction";
 
-const GenerateNewDocument = () => {
-  const [title, setTitle] = useState("");
+const GenerateNewDocument = (props) => {
+  const { procedure, heading, sectiontitle } = useParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [title, setTitle] = useState(sectiontitle);
   const schemaRef = useRef();
 
   const onSubmitHandler = async () => {
@@ -18,18 +25,11 @@ const GenerateNewDocument = () => {
     console.log(schemaRef);
     const formData = { ...schemaRef.current, title };
     console.log(formData);
-    try {
-      const res = await axios.post(
-        "https://cp-digital-backend.herokuapp.com/docgen/savedocument",
-        formData
-      );
-      console.log(res);
-      if (res) {
-        alert("document submitted succesfully");
-        window.location.reload();
-      }
-    } catch (err) {
-      console.log(err);
+    const success = dispatch(
+      saveDocument(formData, procedure, heading, sectiontitle)
+    );
+    if (success) {
+      navigate(-1);
     }
   };
 
@@ -72,16 +72,17 @@ const GenerateNewDocument = () => {
               <Grid container>
                 <Grid item lg={4} xs={4}>
                   <Typography sx={{ pb: 1, fontWeight: "bold" }}>
-                    Document Title :
+                    Document Name :
                   </Typography>
                   <TextField
                     fullWidth
                     size="small"
                     required
                     id="outlined-required"
-                    label="Enter Document Title"
+                    label="Document Title"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
+                    disabled
                   />
                 </Grid>
                 <Grid item lg={8} xs={8} textAlign="right">

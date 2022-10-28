@@ -27,7 +27,7 @@ function Navigation() {
         />
 
         <Route
-          path="/superadmin/documentGenerator/generatenewdocument"
+          path="/superadmin/documentGenerator/generatenewdocument/:procedure/:heading/:sectiontitle"
           element={<GenerateNewDocument />}
         />
         <Route path="/superadmin/laws" element={<Laws />}>
