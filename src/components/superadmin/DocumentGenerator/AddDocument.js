@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -18,13 +18,16 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { Controller, useForm } from "react-hook-form";
 import AddIcon from "@mui/icons-material/Add";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   addDocument,
+  fetchCategory,
   getDocuments,
 } from "../../../redux/superAdminReducer/superAdminAction";
 
 const AddDocument = (props) => {
+  const { categoryList } = useSelector((state) => state?.SuperAdmin);
+
   const dispatch = useDispatch();
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
@@ -33,7 +36,11 @@ const AddDocument = (props) => {
   const [newDocumentData, setNewDocumentData] = useState({});
   const [headings, setHeadings] = useState({});
 
-  const onSubmit = () => {
+  console.log(
+    categoryList?.filter((cat) => cat.category === newDocumentData.law)[0]?.acts
+  );
+
+  const onSubmit = async () => {
     console.log({
       ...newDocumentData,
       // numOfDocs,
@@ -59,27 +66,20 @@ const AddDocument = (props) => {
       docHeadings,
     };
     console.log(finalData);
-    dispatch(addDocument(finalData));
-    dispatch(getDocuments());
+    await dispatch(addDocument(finalData));
+    await dispatch(getDocuments());
+    handleDialogClose();
   };
 
   const onChange = (e) => {
     setNewDocumentData({ ...newDocumentData, [e.target.name]: e.target.value });
   };
 
-  const Law = [
-    {
-      value: "corporatelaw",
-    },
-  ];
-
-  const Act = [
-    {
-      value: "companyact",
-    },
-  ];
-
   const access = ["Procedures", "Calculators", "Content mangement"];
+
+  useEffect(() => {
+    dispatch(fetchCategory());
+  }, []);
 
   return (
     <>
@@ -121,9 +121,9 @@ const AddDocument = (props) => {
                   onChange={onChange}
                   value={newDocumentData.law}
                 >
-                  {Law.map((desig, index) => (
-                    <MenuItem key={desig.value} value={desig.value}>
-                      {desig.value}
+                  {categoryList.map((desig, index) => (
+                    <MenuItem key={desig.category} value={desig.category}>
+                      {desig.category}
                     </MenuItem>
                   ))}
                 </Select>
@@ -141,11 +141,13 @@ const AddDocument = (props) => {
                   onChange={onChange}
                   value={newDocumentData.act}
                 >
-                  {Act.map((desig, index) => (
-                    <MenuItem key={desig.value} value={desig.value}>
-                      {desig.value}
-                    </MenuItem>
-                  ))}
+                  {categoryList
+                    ?.filter((cat) => cat.category === newDocumentData.law)[0]
+                    ?.acts?.map((desig, index) => (
+                      <MenuItem key={desig.act} value={desig.act}>
+                        {desig.act}
+                      </MenuItem>
+                    ))}
                 </Select>
               </FormControl>
             </Box>

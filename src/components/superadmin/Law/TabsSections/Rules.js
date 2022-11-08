@@ -1,21 +1,55 @@
 import {
   Box,
+  Button,
   Card,
   FormControl,
+  Menu,
   MenuItem,
   Select,
   TableContainer,
+  Tooltip,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import TableDialog from "./DialogShow/TableDialog";
+import AddIcon from "@mui/icons-material/Add";
+import AddDialog from "../AddDialogCommon/AddDialog";
+import AddRuleDialog from "./Rule/AddRuleDialog";
+import { Delete, Edit } from "@mui/icons-material";
+import Add from "@mui/icons-material/Add";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import EditRuleDialog from "./Rule/EditRuleDialog";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchRule,
+  fetchRules,
+} from "../../../../redux/superAdminReducer/superAdminAction";
+import DeleteRuleDialog from "./Rule/DeleteRuleDialog";
+
+const options = ["Publish", "UnPublish"];
+const ITEM_HEIGHT = 48;
 
 const Rules = () => {
-  const [open, setOpen] = React.useState(false);
-  const handleOpenSection = () => {
-    setOpen(true);
+  const [openDialog, setopenDialog] = React.useState(false);
+  const [openEditRuleDialog, setopenEditRuleDialog] = React.useState(false);
+  const [openDeleteRuleDialog, setopenDeleteRuleDialog] = React.useState(false);
+  const [rulesDetails, setrulesDetails] = React.useState([]);
+  const [ruleId, setruleId] = React.useState("");
+
+  const dispatch = useDispatch();
+  const { rulesList } = useSelector((state) => state?.SuperAdmin);
+
+  // menu action
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
   };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const rows = [
     {
       id: "CORPROA1",
@@ -61,11 +95,29 @@ const Rules = () => {
 
   const columns = [
     {
-      field: "date",
+      field: "rule_date",
       headerName: "Date",
+      flex: 0.2,
+
+      renderCell: (params) => {
+        return (
+          <>
+            <Box sx={{ display: "flex", flexDirection: "column", my: 2 }}>
+              <Typography
+                sx={{
+                  cursor: "pointer",
+                }}
+              >
+                {params?.row?.rule_date?.toString().substring(0, 10) ||
+                  new Date().toISOString().split("T")[0]}
+              </Typography>
+            </Box>
+          </>
+        );
+      },
     },
     {
-      field: "rules",
+      field: "rule_name      ",
       headerName: "Rules",
       flex: 1,
       renderCell: (params) => {
@@ -74,16 +126,11 @@ const Rules = () => {
             sx={{
               cursor: "pointer",
             }}
-            onClick={handleOpenSection}
           >
-            {params.row.rules}
+            {params.row.rule_name}
           </Typography>
         );
       },
-    },
-    {
-      field: "rule",
-      headerName: "Rule",
     },
     {
       field: "status",
@@ -100,22 +147,110 @@ const Rules = () => {
       field: "actions",
       headerName: "Actions",
       type: "actions",
-      getActions: (params) => [
-        <GridActionsCellItem label="Pulish" showInMenu />,
-        <GridActionsCellItem
-          //   icon={<MoreVertIcon />}
-          label="UnPulish"
-          showInMenu
-        />,
-      ],
+      renderCell: (params) => {
+        return (
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
+            <Box sx={{ display: "flex" }}>
+              <Tooltip title="Edit rule">
+                <Typography
+                  color="primary"
+                  onClick={() => {
+                    setrulesDetails(params?.row);
+                    setopenEditRuleDialog(true);
+                  }}
+                  sx={{ pl: 1, cursor: "pointer" }}
+                >
+                  <Edit fontSize="small" />
+                </Typography>
+              </Tooltip>
+              <Tooltip title="Delete rule">
+                <Typography
+                  color="primary"
+                  sx={{ pl: 1, cursor: "pointer" }}
+                  onClick={() => {
+                    setruleId(params?.row?._id);
+                    setopenDeleteRuleDialog(true);
+                  }}
+                >
+                  <Delete fontSize="small" />
+                </Typography>
+              </Tooltip>
+              <div>
+                <Typography
+                  aria-label="more"
+                  id="long-button"
+                  aria-controls={open ? "long-menu" : undefined}
+                  aria-expanded={open ? "true" : undefined}
+                  aria-haspopup="true"
+                  onClick={handleClick}
+                  sx={{ pl: 1 }}
+                >
+                  <MoreVertIcon fontSize="small" />
+                </Typography>
+                <Menu
+                  id="long-menu"
+                  MenuListProps={{
+                    "aria-labelledby": "long-button",
+                  }}
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  PaperProps={{
+                    style: {
+                      maxHeight: ITEM_HEIGHT * 4.5,
+                      width: "20ch",
+                    },
+                  }}
+                >
+                  {options.map((option) => (
+                    <MenuItem
+                      key={option}
+                      selected={option === "Pyxis"}
+                      onClick={handleClose}
+                    >
+                      {option}
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </div>
+            </Box>
+          </Box>
+        );
+      },
     },
   ];
 
+  useEffect(() => {
+    dispatch(fetchRules());
+  }, [openDialog, openEditRuleDialog, openDeleteRuleDialog]);
+
   return (
     <>
-      <TableDialog open={open} close={() => setOpen(false)} />
+      <AddRuleDialog openDialog={openDialog} setOpenDialog={setopenDialog} />
+      <EditRuleDialog
+        openDialog={openEditRuleDialog}
+        setOpenDialog={setopenEditRuleDialog}
+        rulesDetails={rulesDetails}
+      />
+
+      <DeleteRuleDialog
+        openDialog={openDeleteRuleDialog}
+        setOpenDialog={setopenDeleteRuleDialog}
+        ruleId={ruleId}
+      />
+
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <Card
+        <Button
+          variant="contained"
+          size="small"
+          startIcon={<AddIcon />}
+          sx={{ mr: 2 }}
+          onClick={() => setopenDialog(true)}
+        >
+          Add Rule
+        </Button>
+
+        {/* <Card
           sx={{
             display: "flex",
             alignItems: "center",
@@ -177,8 +312,8 @@ const Rules = () => {
               <MenuItem value="Day Pushlished">Day </MenuItem>
             </Select>
           </FormControl>
-        </Card>
-        <Card
+        </Card> */}
+        {/* <Card
           sx={{
             display: "flex",
             alignItems: "center",
@@ -209,17 +344,19 @@ const Rules = () => {
               <MenuItem value="Day Pushlished">Day </MenuItem>
             </Select>
           </FormControl>
-        </Card>
+        </Card> */}
       </Box>
       <TableContainer
         sx={{
-          height: `calc(100vh - ${200}px)`,
+          height: `calc(100vh - ${250}px)`,
         }}
       >
         <DataGrid
-          hideFooter
-          rowsPerPageOptions={[]}
-          rows={rows}
+          // hideFooter
+          pageSize={5}
+          rowsPerPageOptions={[5]}
+          rows={rulesList || []}
+          getRowId={(row) => row?._id}
           columns={columns}
           disableSelectionOnClick
           sx={{

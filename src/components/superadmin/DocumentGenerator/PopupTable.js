@@ -34,29 +34,25 @@ function PopupTable() {
   return (
     <>
       <Layout>
-        <Grid
-          container
-          spacing={3}
-          sx={{
-            marginTop: "100px",
-            position: "relative",
-            zIndex: "12",
-            borderRadius: "10px",
-            // height: "180vh",
-            overflowY: "scroll",
-            p: 6,
-          }}
-        >
-          <Grid
-            container
-            item
-            xs={12}
+        <Box sx={{ maxHeight: "100vh" }}>
+          <Card
             sx={{
-              backgroundColor: "white",
-              p: 6,
+              marginTop: "100px",
+              mx: 3,
+              p: 3,
+              borderRadius: "10px",
+              height: `calc(100vh - ${120}px)`,
+              overflowY: "scroll",
             }}
           >
-            <Grid container item xs={12}>
+            {/* <Grid
+              container
+              xs={12}
+              sx={{
+                p: 3,
+              }}
+            > */}
+            <Box container item xs={12}>
               <div
                 style={{
                   display: "flex",
@@ -69,63 +65,47 @@ function PopupTable() {
                   Document Generator {currentDoc?.id}
                 </Typography>
               </div>
-              <Grid
-                item
-                lg={9}
-                sx={{ display: "flex", justifyContent: "flex-end" }}
-              >
-                {/* <Box
-                sx={{
-                  display: {
-                    xs: "none",
-                    md: "block",
-                    lg: "block",
-                    xl: "block",
-                  },
-                  mr: 3,
-                }}
-              ></Box> */}
-              </Grid>
-            </Grid>
+            </Box>
 
-            <Grid container item xs={12}></Grid>
-          </Grid>
-          <Grid
-            container
-            xs={12}
-            sx={{
-              backgroundColor: "white",
-              p: 2,
-            }}
-          >
-            <Grid container xs={12} sx={{ margin: "12px 0" }}>
-              <Grid item xs={2}>
-                Sl. No.
+            {/* <Grid container item xs={12}></Grid>
+            </Grid> */}
+            <Grid
+              container
+              xs={12}
+              sx={{
+                backgroundColor: "white",
+                p: 2,
+              }}
+            >
+              <Grid container xs={12} sx={{ margin: "12px 0" }}>
+                <Grid item xs={2}>
+                  Sl. No.
+                </Grid>
+                <Grid item xs={2}>
+                  Date
+                </Grid>
+                <Grid item xs={6}>
+                  Document Heading
+                </Grid>
+                <Grid item xs={2}>
+                  Action
+                </Grid>
               </Grid>
-              <Grid item xs={2}>
-                Date
-              </Grid>
-              <Grid item xs={6}>
-                Document Heading
-              </Grid>
-              <Grid item xs={2}>
-                Action
-              </Grid>
+              {currentDoc?.documentHeadings?.map((item, index) => {
+                console.log(item);
+                return (
+                  <DataRow
+                    index={index}
+                    item={item}
+                    key={index}
+                    openAddSection={() => SetAddSection(true)}
+                    setSelectedHeading={setSelectedHeading}
+                  />
+                );
+              })}
             </Grid>
-            {currentDoc?.documentHeadings?.map((item, index) => {
-              console.log(item);
-              return (
-                <DataRow
-                  index={index}
-                  item={item}
-                  key={index}
-                  openAddSection={() => SetAddSection(true)}
-                  setSelectedHeading={setSelectedHeading}
-                />
-              );
-            })}
-          </Grid>
-        </Grid>
+          </Card>
+        </Box>
       </Layout>
       <AddSection
         closeDialog={() => SetAddSection(false)}
@@ -157,6 +137,14 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
     );
   };
 
+  const onSubmitEditDocument = (procedure, header, formdata) => {
+    alert(procedure);
+    alert(header);
+    alert(formdata);
+    console.log(formdata);
+    // navigate("/superadmin/documentGenerator/editDocument");
+  };
+
   return (
     <Grid container xs={12} sx={{ margin: "8px 0" }}>
       <Grid
@@ -174,8 +162,8 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
         <Grid item xs={2}>
           <h6>{new Date().toDateString()}</h6>
         </Grid>
-        <Grid container item xs={6}>
-          <Grid container item xs={5}>
+        <Grid container item xs={8}>
+          <Grid container item xs={8}>
             <h6>{item.header}</h6>
           </Grid>
           <Grid container item xs={3}>
@@ -195,8 +183,8 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
               Add Section
             </Button>
           </Grid>
-          <Grid container item xs={1}></Grid>
-          <Grid container item xs={3}>
+          {/* <Grid container item xs={1}></Grid> */}
+          {/* <Grid container item xs={3}>
             <Button
               color="primary"
               variant="contained"
@@ -210,9 +198,9 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
             >
               {item?.sections?.length === 0 ? "Edit" : "Generate"} Document{" "}
             </Button>
-          </Grid>
+          </Grid> */}
         </Grid>
-        <Grid container item xs={2}></Grid>
+        {/* <Grid container item xs={2}></Grid> */}
       </Grid>
 
       {expand && (
@@ -243,29 +231,60 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
               <Grid item xs={2}>
                 <h6>{new Date().toDateString()}</h6>
               </Grid>
-              <Grid container item xs={6}>
-                <Grid container item xs={5}>
+              <Grid container item xs={8}>
+                <Grid container item xs={7}>
                   <h6>{items}</h6>
                 </Grid>
-                <Grid container item xs={3}></Grid>
-                <Grid container item xs={1}></Grid>
-                <Grid container item xs={3}>
+                {/* <Grid container item xs={3}></Grid>
+                <Grid container item xs={1}></Grid> */}
+                <Grid container item xs={4}>
                   <Button
-                    color="primary"
+                    color={
+                      item?.forms?.some((item) => item.title === items)
+                        ? "info"
+                        : "primary"
+                    }
                     variant="contained"
                     sx={{
                       color: "white",
                       textTransform: "none",
                     }}
                     fullWidth
-                    onClick={() => onSubmit(procedure, item.header, items)}
+                    onClick={() =>
+                      item?.forms?.some((item) => item.title === items)
+                        ? onSubmitEditDocument(
+                            procedure,
+                            item.header,
+                            (items = item?.forms?.filter(
+                              (item) => item.title === items
+                            ))
+                          )
+                        : onSubmit(procedure, item.header, items)
+                    }
                   >
-                    {item?.sections?.length === 0 ? "Edit" : "Generate"}{" "}
+                    {item?.forms?.some((item) => item.title === items)
+                      ? "Edit"
+                      : "Generate"}{" "}
                     Document{" "}
                   </Button>
+                  {/* <Button
+                    color="secondary"
+                    variant="contained"
+                    sx={{
+                      color: "white",
+                      textTransform: "none",
+                      mt: 2,
+                    }}
+                    fullWidth
+                    onClick={() =>
+                      onSubmitEditDocument(procedure, item.header, items)
+                    }
+                  >
+                    Edit Document
+                  </Button> */}
                 </Grid>
               </Grid>
-              <Grid container item xs={2}></Grid>
+              {/* <Grid container item xs={2}></Grid> */}
             </Grid>
           ))}
         </>

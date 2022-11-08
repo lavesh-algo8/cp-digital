@@ -10,8 +10,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import TableDialog from "./DialogShow/TableDialog";
-import AddDialog from "../AddDialogCommon/AddDialog";
+import AddDialog from "../../AddDialogCommon/AddDialog";
 import AddIcon from "@mui/icons-material/Add";
 
 const AccountingStandards = () => {
@@ -104,8 +103,6 @@ const AccountingStandards = () => {
 
   return (
     <>
-      <TableDialog open={open} close={() => setOpen(false)} />
-
       <AddDialog
         openDialog={openDialog}
         setopenDialog={setopenDialog}
@@ -120,9 +117,8 @@ const AccountingStandards = () => {
           sx={{ mr: 2 }}
           onClick={() => setopenDialog(true)}
         >
-          Add Accounting Standard
+          Add Accounting
         </Button>
-
         <Card
           sx={{
             display: "flex",

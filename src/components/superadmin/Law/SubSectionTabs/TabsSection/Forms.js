@@ -10,11 +10,10 @@ import {
 } from "@mui/material";
 import React from "react";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import TableDialog from "./DialogShow/TableDialog";
-import AddDialog from "../AddDialogCommon/AddDialog";
+import AddDialog from "../../AddDialogCommon/AddDialog";
 import AddIcon from "@mui/icons-material/Add";
 
-const AccountingStandards = () => {
+const Forms = () => {
   const [open, setOpen] = React.useState(false);
   const [openDialog, setopenDialog] = React.useState(false);
 
@@ -24,44 +23,35 @@ const AccountingStandards = () => {
   const rows = [
     {
       id: "CORPROA1",
-      refno: "AS3",
-      particular: "Disclosure of Accounting Policies",
+      form: "SPICe+",
       status: "Published",
     },
     {
       id: "CORPROA2",
-      refno: "AS3",
-      particular: "Disclosure of Accounting Policies",
+      form: "INC-9",
       status: "Published",
     },
     {
       id: "CORPROA3",
-      refno: "AS2",
-      particular: "Disclosure of Accounting Policies",
+      form: "SPICe+",
       status: "Unpublished",
     },
     {
       id: "CORPROA4",
-      refno: "AS4",
-      particular: "Disclosure of Accounting Policies",
+      form: "INC-11A+",
       status: "Published",
     },
     {
       id: "CORPROA5",
-      refno: "AS3",
-      particular: "Disclosure of Accounting Policies",
+      form: "SPICe+",
       status: "Published",
     },
   ];
 
   const columns = [
     {
-      field: "refno",
-      headerName: "Reference No",
-    },
-    {
-      field: "particular",
-      headerName: "Particulars",
+      field: "form",
+      headerName: "Form No",
       flex: 1,
       renderCell: (params) => {
         return (
@@ -71,7 +61,7 @@ const AccountingStandards = () => {
             }}
             onClick={handleOpenSection}
           >
-            {params.row.particular}
+            {params.row.form}
           </Typography>
         );
       },
@@ -104,12 +94,10 @@ const AccountingStandards = () => {
 
   return (
     <>
-      <TableDialog open={open} close={() => setOpen(false)} />
-
       <AddDialog
         openDialog={openDialog}
         setopenDialog={setopenDialog}
-        name="Accounting Standard"
+        name="Form"
       />
 
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -120,9 +108,39 @@ const AccountingStandards = () => {
           sx={{ mr: 2 }}
           onClick={() => setopenDialog(true)}
         >
-          Add Accounting Standard
+          Add Form
         </Button>
-
+        <Card
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            backgroundColor: "#192A3A",
+            color: "white",
+            height: "35px",
+          }}
+        >
+          <Typography sx={{ pr: 8, pl: 2 }}>Chapter (rules)</Typography>
+          <FormControl sx={{ minWidth: 60 }}>
+            <Select
+              size="small"
+              color="whitecol"
+              defaultValue="Name"
+              sx={{
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "none",
+                },
+                color: "white",
+                fontSize: "15px",
+                "& .MuiSvgIcon-root": {
+                  color: "white",
+                },
+              }}
+            >
+              <MenuItem value="Name">Select</MenuItem>
+              <MenuItem value="Day Pushlished">Day Published</MenuItem>
+            </Select>
+          </FormControl>
+        </Card>
         <Card
           sx={{
             display: "flex",
@@ -133,7 +151,7 @@ const AccountingStandards = () => {
             ml: 2,
           }}
         >
-          <Typography sx={{ pr: 2, pl: 2 }}>Rules</Typography>
+          <Typography sx={{ pr: 4, pl: 2 }}>Rule</Typography>
           <FormControl sx={{}}>
             <Select
               size="small"
@@ -150,9 +168,7 @@ const AccountingStandards = () => {
                 },
               }}
             >
-              <MenuItem value="Name">
-                Accounting standards as on 01.04.2016
-              </MenuItem>
+              <MenuItem value="Name">Select</MenuItem>
               <MenuItem value="Day Pushlished">Day </MenuItem>
             </Select>
           </FormControl>
@@ -197,4 +213,4 @@ const AccountingStandards = () => {
   );
 };
 
-export default AccountingStandards;
+export default Forms;

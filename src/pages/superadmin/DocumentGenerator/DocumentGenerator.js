@@ -45,40 +45,36 @@ function DocumentGenerator() {
 
   return (
     <Layout>
-      <Grid
-        container
-        spacing={3}
-        sx={{
-          marginTop: "100px",
-          position: "relative",
-          zIndex: "12",
-          borderRadius: "10px",
-          // height: "180vh",
-          overflowY: "scroll",
-          p: 6,
-        }}
-      >
-        <Grid
-          container
-          item
-          xs={12}
+      <Box sx={{ maxHeight: "100vh" }}>
+        <Card
           sx={{
-            backgroundColor: "white",
-            p: 6,
+            marginTop: "100px",
+            mx: 3,
+            borderRadius: "10px",
+            height: `calc(100vh - ${120}px)`,
           }}
         >
-          <Grid container item xs={12}>
-            <Grid item xs={12} lg={3}>
-              <Typography variant="h6" fontWeight={600}>
-                Document Generator
-              </Typography>
-            </Grid>
-            <Grid
-              item
-              lg={9}
-              sx={{ display: "flex", justifyContent: "flex-end" }}
-            >
-              {/* <Box
+          <Grid
+            container
+            item
+            xs={12}
+            sx={{
+              backgroundColor: "white",
+              p: 6,
+            }}
+          >
+            <Grid container item xs={12}>
+              <Grid item xs={12} lg={3}>
+                <Typography variant="h6" fontWeight={600}>
+                  Document Generator
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                lg={9}
+                sx={{ display: "flex", justifyContent: "flex-end" }}
+              >
+                {/* <Box
                 sx={{
                   display: {
                     xs: "none",
@@ -89,131 +85,136 @@ function DocumentGenerator() {
                   mr: 3,
                 }}
               ></Box> */}
-              <Box
-                sx={{
-                  mr: 3,
-                }}
-              >
-                <Card
+                <Box
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    backgroundColor: "#192A3A",
-                    color: "white",
-                    height: "35px",
+                    mr: 3,
                   }}
                 >
-                  <Typography sx={{ pl: 2, fontSize: "15px" }}>Law</Typography>
-                  <FormControl sx={{ minWidth: 60 }}>
-                    <Select
-                      size="small"
-                      color="whitecol"
-                      defaultValue="All"
-                      sx={{
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          border: "none",
-                        },
-                        color: "white",
-                        fontSize: "15px",
-                        "& .MuiSvgIcon-root": {
+                  <Card
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      backgroundColor: "#192A3A",
+                      color: "white",
+                      height: "35px",
+                    }}
+                  >
+                    <Typography sx={{ pl: 2, fontSize: "15px" }}>
+                      Law
+                    </Typography>
+                    <FormControl sx={{ minWidth: 60 }}>
+                      <Select
+                        size="small"
+                        color="whitecol"
+                        defaultValue="All"
+                        sx={{
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            border: "none",
+                          },
                           color: "white",
-                        },
-                      }}
-                    >
-                      {Laws.map((label, index) => (
-                        <MenuItem value={label.value}>{label.title}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Card>
-              </Box>
-              <Box
-                sx={{
-                  mr: 3,
-                }}
-              >
-                <Card
+                          fontSize: "15px",
+                          "& .MuiSvgIcon-root": {
+                            color: "white",
+                          },
+                        }}
+                      >
+                        {Laws.map((label, index) => (
+                          <MenuItem value={label.value}>{label.title}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Card>
+                </Box>
+                <Box
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    backgroundColor: "#192A3A",
-                    color: "white",
-                    height: "35px",
+                    mr: 3,
                   }}
                 >
-                  <Typography sx={{ pl: 2, fontSize: "15px" }}>Act</Typography>
-                  <FormControl sx={{ minWidth: 60 }}>
-                    <Select
-                      size="small"
-                      color="whitecol"
-                      defaultValue="All"
-                      sx={{
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          border: "none",
-                        },
-                        color: "white",
-                        fontSize: "15px",
-                        "& .MuiSvgIcon-root": {
+                  <Card
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      backgroundColor: "#192A3A",
+                      color: "white",
+                      height: "35px",
+                    }}
+                  >
+                    <Typography sx={{ pl: 2, fontSize: "15px" }}>
+                      Act
+                    </Typography>
+                    <FormControl sx={{ minWidth: 60 }}>
+                      <Select
+                        size="small"
+                        color="whitecol"
+                        defaultValue="All"
+                        sx={{
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            border: "none",
+                          },
                           color: "white",
-                        },
-                      }}
-                    >
-                      {Acts.map((label, index) => (
-                        <MenuItem value={label.value}>{label.title}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Card>
-              </Box>
-              <Box
-                sx={{
-                  mr: 3,
-                }}
-              >
-                <Button
-                  variant="contained"
+                          fontSize: "15px",
+                          "& .MuiSvgIcon-root": {
+                            color: "white",
+                          },
+                        }}
+                      >
+                        {Acts.map((label, index) => (
+                          <MenuItem value={label.value}>{label.title}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Card>
+                </Box>
+                <Box
                   sx={{
-                    height: "35px",
-                    textTransform: "none",
+                    mr: 3,
                   }}
-                  onClick={() => setOpenDialogAdd(true)}
                 >
-                  <AddIcon fontSize="12px" sx={{ mr: 1 }} />
-                  Add
-                </Button>
-                <AddDocument
-                  openDialog={openDialogAdd}
-                  setOpenDialog={setOpenDialogAdd}
-                />
-              </Box>
-              <Box>
-                <Button
-                  variant="contained"
-                  sx={{
-                    height: "35px",
-                    textTransform: "none",
-                  }}
-                  onClick={() => setOpenDialogUpload(true)}
-                >
-                  <UploadIcon fontSize="12px" sx={{ mr: 1 }} />
-                  Upload
-                </Button>
-                <UploadDocument
-                  openDialog={openDialogUpload}
-                  setOpenDialog={setOpenDialogUpload}
-                  refresh={() =>
-                    dispatch(getDocuments(Laws[0]?.value, Acts[0]?.value))
-                  }
-                />
-              </Box>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      height: "35px",
+                      textTransform: "none",
+                    }}
+                    onClick={() => setOpenDialogAdd(true)}
+                  >
+                    <AddIcon fontSize="12px" sx={{ mr: 1 }} />
+                    Add
+                  </Button>
+                  <AddDocument
+                    openDialog={openDialogAdd}
+                    setOpenDialog={setOpenDialogAdd}
+                  />
+                </Box>
+                <Box>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      height: "35px",
+                      textTransform: "none",
+                    }}
+                    onClick={() => setOpenDialogUpload(true)}
+                  >
+                    <UploadIcon fontSize="12px" sx={{ mr: 1 }} />
+                    Upload
+                  </Button>
+                  <UploadDocument
+                    openDialog={openDialogUpload}
+                    setOpenDialog={setOpenDialogUpload}
+                    refresh={() =>
+                      dispatch(getDocuments(Laws[0]?.value, Acts[0]?.value))
+                    }
+                  />
+                </Box>
+              </Grid>
+            </Grid>
+
+            <Grid container item xs={12}>
+              <DocumentTables />
             </Grid>
           </Grid>
-
-          <Grid container item xs={12}>
-            <DocumentTables />
-          </Grid>
-        </Grid>
-      </Grid>
+        </Card>
+      </Box>
     </Layout>
   );
 }

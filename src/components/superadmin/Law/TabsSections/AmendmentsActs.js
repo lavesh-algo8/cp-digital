@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Card,
   FormControl,
   MenuItem,
@@ -10,9 +11,13 @@ import {
 import React from "react";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import TableDialog from "./DialogShow/TableDialog";
+import AddIcon from "@mui/icons-material/Add";
+import AddDialog from "../AddDialogCommon/AddDialog";
 
 const AmendmentsActs = () => {
   const [open, setOpen] = React.useState(false);
+  const [openDialog, setopenDialog] = React.useState(false);
+
   const handleOpenSection = () => {
     setOpen(true);
   };
@@ -101,7 +106,22 @@ const AmendmentsActs = () => {
     <>
       <TableDialog open={open} close={() => setOpen(false)} />
 
+      <AddDialog
+        openDialog={openDialog}
+        setopenDialog={setopenDialog}
+        name="Amendment Act"
+      />
+
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Button
+          variant="contained"
+          size="small"
+          startIcon={<AddIcon />}
+          sx={{ mr: 2 }}
+          onClick={() => setopenDialog(true)}
+        >
+          Add Amendment Act
+        </Button>
         <Card
           sx={{
             display: "flex",
@@ -137,12 +157,12 @@ const AmendmentsActs = () => {
       </Box>
       <TableContainer
         sx={{
-          height: `calc(100vh - ${200}px)`,
+          height: `calc(100vh - ${250}px)`,
         }}
       >
         <DataGrid
-          hideFooter
-          rowsPerPageOptions={[]}
+          pageSize={5}
+          rowsPerPageOptions={[5]}
           rows={rows}
           columns={columns}
           disableSelectionOnClick

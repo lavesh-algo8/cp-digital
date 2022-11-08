@@ -9,6 +9,16 @@ const initialStore = {
   listOfSubAdmins: [],
   listOfDocuments: [],
   selectedDocument: {},
+  categoryList: [],
+  chapterList: [],
+  sectionsList: [],
+  subsectionsList: [],
+  rulesList: [],
+  notificationsList: [],
+  circularsList: [],
+  rulesListBySubSections: [],
+  notificationsListBySubSections: [],
+  circularsListBySubSection: [],
 };
 
 const superAdminReducer = (state = initialStore, action) => {
@@ -57,6 +67,58 @@ const superAdminReducer = (state = initialStore, action) => {
       return {
         ...state,
         selectedDocument: action.payload,
+      };
+
+    case "GET_CATEGORY":
+      return {
+        ...state,
+        categoryList: action.payload,
+      };
+
+    case "GET_CHAPTERS":
+      return {
+        ...state,
+        chapterList: action.payload,
+      };
+    case "GET_SECTIONS":
+      return {
+        ...state,
+        sectionsList: action.payload,
+      };
+    case "GET_SUBSECTIONS":
+      return {
+        ...state,
+        subsectionsList: action.payload,
+      };
+    case "GET_RULES":
+      return {
+        ...state,
+        rulesList: action.payload,
+      };
+    case "GET_RULES_BY_SUB_SECTION":
+      return {
+        ...state,
+        rulesListBySubSections: action.payload,
+      };
+    case "GET_NOTIFICATIONS":
+      return {
+        ...state,
+        notificationsList: action.payload,
+      };
+    case "GET_NOTIFICATIONS_BY_SUB_SECTION":
+      return {
+        ...state,
+        notificationsListBySubSection: action.payload,
+      };
+    case "GET_CIRCULARS":
+      return {
+        ...state,
+        circularsList: action.payload,
+      };
+    case "GET_CIRCULARS_BY_SUB_SECTION":
+      return {
+        ...state,
+        circularsListBySubSection: action.payload,
       };
     // case "UPDATE_DOCUMENT":
     //   let headingList = state?.listOfDocuments?.filter(

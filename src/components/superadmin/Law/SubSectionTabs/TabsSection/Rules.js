@@ -12,32 +12,20 @@ import {
 } from "@mui/material";
 import React, { useEffect } from "react";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import TableDialog from "./DialogShow/TableDialog";
+import AddDialog from "../../AddDialogCommon/AddDialog";
 import AddIcon from "@mui/icons-material/Add";
-import AddDialog from "../AddDialogCommon/AddDialog";
-import AddCircularDialog from "./Circular/AddCircularDialog";
-import { Delete, Edit } from "@mui/icons-material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import EditCircularDialog from "./Circular/EditCircularDialog";
+import { Delete, Edit } from "@mui/icons-material";
+
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCirculars } from "../../../../redux/superAdminReducer/superAdminAction";
-import DeleteCircularDialog from "./Circular/DeleteCircularDialog";
+import { fetchRulesBySubSection } from "../../../../../redux/superAdminReducer/superAdminAction";
+import { useParams } from "react-router-dom";
 
 const options = ["Publish", "UnPublish"];
 const ITEM_HEIGHT = 48;
 
-const Circular = () => {
-  const dispatch = useDispatch();
-
+const Rules = () => {
   const [openDialog, setopenDialog] = React.useState(false);
-  const [openEditCircularRuleDialog, setopenEditCircularRuleDialog] =
-    React.useState(false);
-  const [openDeleteCircularDialog, setopenDeleteCircularDialog] =
-    React.useState(false);
-  const [circularId, setcircularId] = React.useState(false);
-
-  const { circularsList } = useSelector((state) => state?.SuperAdmin);
-  const [circularsDetails, setcircularsDetails] = React.useState({});
 
   // menu action
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -49,12 +37,14 @@ const Circular = () => {
     setAnchorEl(null);
   };
 
+  const dispatch = useDispatch();
+  const params = useParams();
+  const { rulesListBySections } = useSelector((state) => state?.SuperAdmin);
+
   const columns = [
     {
-      field: "circular_date",
+      field: "rule_date",
       headerName: "Date",
-      flex: 0.2,
-
       renderCell: (params) => {
         return (
           <>
@@ -64,7 +54,7 @@ const Circular = () => {
                   cursor: "pointer",
                 }}
               >
-                {params?.row?.circular_date?.toString().substring(0, 10) ||
+                {params?.row?.rule_date?.toString().substring(0, 10) ||
                   new Date().toISOString().split("T")[0]}
               </Typography>
             </Box>
@@ -73,8 +63,8 @@ const Circular = () => {
       },
     },
     {
-      field: "circular_heading",
-      headerName: "Circulars",
+      field: "rule_name",
+      headerName: "Rules",
       flex: 1,
       renderCell: (params) => {
         return (
@@ -82,9 +72,8 @@ const Circular = () => {
             sx={{
               cursor: "pointer",
             }}
-            // onClick={handleOpenSection}
           >
-            {params.row.circular_heading}
+            {params.row.rule_name}
           </Typography>
         );
       },
@@ -108,25 +97,25 @@ const Circular = () => {
         return (
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Box sx={{ display: "flex" }}>
-              <Tooltip title="Edit section">
+              <Tooltip title="Edit rule">
                 <Typography
                   color="primary"
                   onClick={() => {
-                    setcircularsDetails(params?.row);
-                    setopenEditCircularRuleDialog(true);
+                    // setrulesDetails(params?.row);
+                    // setopenEditRuleDialog(true);
                   }}
                   sx={{ pl: 1, cursor: "pointer" }}
                 >
                   <Edit fontSize="small" />
                 </Typography>
               </Tooltip>
-              <Tooltip title="Delete Section">
+              <Tooltip title="Delete rule">
                 <Typography
                   color="primary"
                   sx={{ pl: 1, cursor: "pointer" }}
                   onClick={() => {
-                    setcircularId(params?.row?._id);
-                    setopenDeleteCircularDialog(true);
+                    // setruleName(params?.row?.rule_name);
+                    // setopenDeleteRuleDialog(true);
                   }}
                 >
                   <Delete fontSize="small" />
@@ -178,84 +167,39 @@ const Circular = () => {
   ];
 
   useEffect(() => {
-    dispatch(fetchCirculars());
-  }, [openDialog, openEditCircularRuleDialog, openDeleteCircularDialog]);
+    dispatch(fetchRulesBySubSection(params.sectionname));
+  }, [params]);
 
   return (
     <>
-      <AddCircularDialog
+      <AddDialog
         openDialog={openDialog}
-        setOpenDialog={setopenDialog}
+        setopenDialog={setopenDialog}
+        name="Rule"
       />
-
-      <EditCircularDialog
-        openDialog={openEditCircularRuleDialog}
-        setOpenDialog={setopenEditCircularRuleDialog}
-        circularsDetails={circularsDetails}
-      />
-
-      <DeleteCircularDialog
-        openDialog={openDeleteCircularDialog}
-        setOpenDialog={setopenDeleteCircularDialog}
-        circularId={circularId}
-      />
-
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <Button
+        {/* <Button
           variant="contained"
           size="small"
           startIcon={<AddIcon />}
           sx={{ mr: 2 }}
           onClick={() => setopenDialog(true)}
         >
-          Add Circular
-        </Button>
-        {/* <Card
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            backgroundColor: "#192A3A",
-            color: "white",
-            height: "35px",
-            ml: 2,
-          }}
-        >
-          <Typography sx={{ pr: 4, pl: 2 }}>Year</Typography>
-          <FormControl sx={{}}>
-            <Select
-              size="small"
-              color="whitecol"
-              defaultValue="Name"
-              sx={{
-                "& .MuiOutlinedInput-notchedOutline": {
-                  border: "none",
-                },
-                color: "white",
-                fontSize: "15px",
-                "& .MuiSvgIcon-root": {
-                  color: "white",
-                },
-              }}
-            >
-              <MenuItem value="Name">Select</MenuItem>
-              <MenuItem value="Day Pushlished">Day </MenuItem>
-            </Select>
-          </FormControl>
-        </Card> */}
+          Add Rule
+        </Button> */}
       </Box>
       <TableContainer
         sx={{
-          height: `calc(100vh - ${250}px)`,
+          height: `calc(100vh - ${220}px)`,
         }}
       >
         <DataGrid
           pageSize={5}
           rowsPerPageOptions={[5]}
-          rows={circularsList || []}
+          rows={rulesListBySections || []}
           getRowId={(row) => row?._id}
           columns={columns}
           disableSelectionOnClick
-          getRowHeight={() => "auto"}
           sx={{
             boxShadow: 0,
             border: 0,
@@ -271,7 +215,6 @@ const Circular = () => {
             },
             "& .MuiDataGrid-cell": {
               borderBottom: "none",
-              py: "8px",
             },
             "& .MuiDataGrid-columnHeaderTitle": {
               color: "#bfc0c9",
@@ -283,4 +226,4 @@ const Circular = () => {
   );
 };
 
-export default Circular;
+export default Rules;

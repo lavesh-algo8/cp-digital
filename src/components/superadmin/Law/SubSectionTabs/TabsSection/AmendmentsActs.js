@@ -10,11 +10,10 @@ import {
 } from "@mui/material";
 import React from "react";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import TableDialog from "./DialogShow/TableDialog";
-import AddDialog from "../AddDialogCommon/AddDialog";
+import AddDialog from "../../AddDialogCommon/AddDialog";
 import AddIcon from "@mui/icons-material/Add";
 
-const AccountingStandards = () => {
+const AmendmentsActs = () => {
   const [open, setOpen] = React.useState(false);
   const [openDialog, setopenDialog] = React.useState(false);
 
@@ -24,40 +23,40 @@ const AccountingStandards = () => {
   const rows = [
     {
       id: "CORPROA1",
-      refno: "AS3",
-      particular: "Disclosure of Accounting Policies",
+      date: "22.04.2022",
+      particular: "S.O. 1303(E)-Commencement notification dated 24.03.2021",
       status: "Published",
     },
     {
       id: "CORPROA2",
-      refno: "AS3",
-      particular: "Disclosure of Accounting Policies",
+      date: "22.04.2022",
+      particular: "S.O. 1303(E)-Commencement notification dated 24.03.2021",
       status: "Published",
     },
     {
       id: "CORPROA3",
-      refno: "AS2",
-      particular: "Disclosure of Accounting Policies",
+      date: "22.04.2022",
+      particular: "S.O. 1303(E)-Commencement notification dated 24.03.2021",
       status: "Unpublished",
     },
     {
       id: "CORPROA4",
-      refno: "AS4",
-      particular: "Disclosure of Accounting Policies",
+      date: "22.04.2022",
+      particular: "S.O. 1303(E)-Commencement notification dated 24.03.2021",
       status: "Published",
     },
     {
       id: "CORPROA5",
-      refno: "AS3",
-      particular: "Disclosure of Accounting Policies",
+      date: "22.04.2022",
+      particular: "S.O. 1303(E)-Commencement notification dated 24.03.2021",
       status: "Published",
     },
   ];
 
   const columns = [
     {
-      field: "refno",
-      headerName: "Reference No",
+      field: "date",
+      headerName: "Date",
     },
     {
       field: "particular",
@@ -104,12 +103,10 @@ const AccountingStandards = () => {
 
   return (
     <>
-      <TableDialog open={open} close={() => setOpen(false)} />
-
       <AddDialog
         openDialog={openDialog}
         setopenDialog={setopenDialog}
-        name="Accounting Standard"
+        name="Amendment Act"
       />
 
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -120,9 +117,8 @@ const AccountingStandards = () => {
           sx={{ mr: 2 }}
           onClick={() => setopenDialog(true)}
         >
-          Add Accounting Standard
+          Add Amendment Act
         </Button>
-
         <Card
           sx={{
             display: "flex",
@@ -133,8 +129,8 @@ const AccountingStandards = () => {
             ml: 2,
           }}
         >
-          <Typography sx={{ pr: 2, pl: 2 }}>Rules</Typography>
-          <FormControl sx={{}}>
+          <Typography sx={{ pr: 4, pl: 2 }}>Year</Typography>
+          <FormControl>
             <Select
               size="small"
               color="whitecol"
@@ -150,9 +146,7 @@ const AccountingStandards = () => {
                 },
               }}
             >
-              <MenuItem value="Name">
-                Accounting standards as on 01.04.2016
-              </MenuItem>
+              <MenuItem value="Name">Select</MenuItem>
               <MenuItem value="Day Pushlished">Day </MenuItem>
             </Select>
           </FormControl>
@@ -197,4 +191,4 @@ const AccountingStandards = () => {
   );
 };
 
-export default AccountingStandards;
+export default AmendmentsActs;
