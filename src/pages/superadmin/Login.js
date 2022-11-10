@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import Carasoul from "../../components/superadmin/Carasoul";
@@ -25,17 +25,15 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = async (data) => {
+  const onSubmit = (data) => {
     console.log(data);
-    await dispatch(
+    dispatch(
       superAdminLogin({
         email: data.emailid,
         password: data.password,
       })
     );
-    if (localStorage.getItem("token")) {
-      navigate("/superadmin/admins");
-    }
+    navigate("/superadmin/admins");
   };
   const handleClickShowPassword = () => {
     if (showPassword === true) {
@@ -44,12 +42,6 @@ const Login = () => {
       setshowPassword(true);
     }
   };
-
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      navigate("/superadmin/admins");
-    }
-  }, []);
 
   return (
     <>

@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Card,
   FormControl,
   MenuItem,
@@ -11,13 +10,9 @@ import {
 import React from "react";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import TableDialog from "./DialogShow/TableDialog";
-import AddDialog from "../AddDialogCommon/AddDialog";
-import AddIcon from "@mui/icons-material/Add";
 
 const AccountingStandards = () => {
   const [open, setOpen] = React.useState(false);
-  const [openDialog, setopenDialog] = React.useState(false);
-
   const handleOpenSection = () => {
     setOpen(true);
   };
@@ -106,23 +101,7 @@ const AccountingStandards = () => {
     <>
       <TableDialog open={open} close={() => setOpen(false)} />
 
-      <AddDialog
-        openDialog={openDialog}
-        setopenDialog={setopenDialog}
-        name="Accounting Standard"
-      />
-
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <Button
-          variant="contained"
-          size="small"
-          startIcon={<AddIcon />}
-          sx={{ mr: 2 }}
-          onClick={() => setopenDialog(true)}
-        >
-          Add Accounting Standard
-        </Button>
-
         <Card
           sx={{
             display: "flex",
@@ -160,12 +139,12 @@ const AccountingStandards = () => {
       </Box>
       <TableContainer
         sx={{
-          height: `calc(100vh - ${250}px)`,
+          height: `calc(100vh - ${200}px)`,
         }}
       >
         <DataGrid
-          pageSize={5}
-          rowsPerPageOptions={[5]}
+          hideFooter
+          rowsPerPageOptions={[]}
           rows={rows}
           columns={columns}
           disableSelectionOnClick

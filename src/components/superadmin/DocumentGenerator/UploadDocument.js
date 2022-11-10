@@ -19,7 +19,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Controller, useForm } from "react-hook-form";
 import UploadIcon from "@mui/icons-material/Upload";
 import { useDispatch } from "react-redux";
-// import { saveDocument } from "../../../redux/superAdminReducer/superAdminAction";
+import { saveDocument } from "../../../redux/superAdminReducer/superAdminAction";
 
 const UploadDocument = (props) => {
   const dispatch = useDispatch();
@@ -38,7 +38,7 @@ const UploadDocument = (props) => {
     formData.append("file", userData?.file);
     formData.append("document", userData?.act);
     formData.append("collection", userData?.law);
-    // dispatch(saveDocument(formData));
+    dispatch(saveDocument(formData));
     setUserData({
       file: null,
       law: "",
