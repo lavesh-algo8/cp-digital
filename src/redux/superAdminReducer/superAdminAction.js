@@ -8,8 +8,10 @@ export const superAdminLogin = (formData) => async (dispatch) => {
   try {
     const resp = await callBackend("post", "superadmin/salogin", formData);
     console.log(resp);
-    localStorage.setItem("token", resp?.token);
-    localStorage.setItem("refreshToken", resp?.refreshToken);
+    if (resp) {
+      localStorage.setItem("token", resp?.token);
+      localStorage.setItem("refreshToken", resp?.refreshToken);
+    }
     dispatch({
       type: "LOGIN",
       payload: {
