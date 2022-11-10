@@ -64,7 +64,6 @@ const SubSectionEditDialog = (props) => {
   const [updatedBy, setupdatedBy] = useState(
     props.subsectionDetails?.updatedBy
   );
-  const [sorting, setsorting] = useState(props.subsectionDetails?.sorting);
   const [value, setValue] = useState(
     htmlToDraftBlocks(props?.subsectionDetails?.sub_regulation_details)
   );
@@ -84,7 +83,6 @@ const SubSectionEditDialog = (props) => {
       sub_regulation_no: regulationNo,
       updatedAt: dateOfUpdate,
       updatedBy,
-      sorting,
       sub_regulation_details: sectionData,
     };
     console.log(data);
@@ -94,7 +92,6 @@ const SubSectionEditDialog = (props) => {
     setregulationNo("");
     setdateOfUpdate("");
     setupdatedBy("");
-    setsorting("");
     setValue("");
     props.setOpenDialog(false);
   };
@@ -106,7 +103,6 @@ const SubSectionEditDialog = (props) => {
     setregulationNo(props.subsectionDetails.sub_regulation_no);
     setdateOfUpdate(props.subsectionDetails.updatedAt);
     setupdatedBy(props.subsectionDetails.updatedBy);
-    setsorting(props.subsectionDetails.sorting);
     if (props?.subsectionDetails) {
       setValue(
         htmlToDraftBlocks(props?.subsectionDetails?.sub_regulation_details)

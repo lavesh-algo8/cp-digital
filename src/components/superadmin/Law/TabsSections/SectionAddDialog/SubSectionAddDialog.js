@@ -54,7 +54,7 @@ const SubSectionAddDialog = (props) => {
       sorting,
       sub_regulation_details: sectionData,
     };
-    await dispatch(addSubSection(data, props.sectionName));
+    await dispatch(addSubSection(data, props.sectionId));
     setsubsection("");
     setregulationName("");
     setregulationNo("");
@@ -99,7 +99,7 @@ const SubSectionAddDialog = (props) => {
                   <Typography>Name of the section</Typography>
                   <OutlinedInput
                     id="outlined-adornment-weight"
-                    value={props.sectionName}
+                    value={props.sectionname}
                     disabled
                     aria-describedby="outlined-weight-helper-text"
                     fullWidth

@@ -51,7 +51,7 @@ const SectionAddDialog = (props) => {
       sorting,
       regulation_details: sectionData,
     };
-    await dispatch(addSection(data, props.chapter));
+    await dispatch(addSection(data, props.chapterid));
     setsection("");
     setregulationName("");
     setregulationNo("");

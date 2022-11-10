@@ -505,18 +505,15 @@ export const deleteChapter = (chapterid) => async (dispatch) => {
   }
 };
 
-export const addSection = (formData, chapter) => async (dispatch) => {
+export const addSection = (formData, chapterid) => async (dispatch) => {
   try {
     let config = {
       method: "post",
-      url: `${baseUrl}/knowledgecentre/addsection/`,
+      url: `${baseUrl}/knowledgecentre/addsection/${chapterid}`,
       headers: {
         "content-type": "application/json",
       },
       data: formData,
-      params: {
-        chapter,
-      },
     };
     console.log(formData);
     const data = await axios(config);
@@ -567,7 +564,7 @@ export const editSubSection = (formData, subsectionId) => async (dispatch) => {
   try {
     let config = {
       method: "put",
-      url: `${baseUrl}/knowledgecentre/editsection/${subsectionId}`,
+      url: `${baseUrl}/knowledgecentre/editsubsection/${subsectionId}`,
       headers: {
         "content-type": "application/json",
       },
@@ -599,21 +596,17 @@ export const deleteSubSection = (subsectionId) => async (dispatch) => {
   }
 };
 
-export const addSubSection = (formData, section) => async (dispatch) => {
+export const addSubSection = (formData, sectionId) => async (dispatch) => {
   try {
     let config = {
       method: "post",
-      url: `${baseUrl}/knowledgecentre/addsubsection/`,
+      url: `${baseUrl}/knowledgecentre/addsubsection/${sectionId}`,
       headers: {
         "content-type": "application/json",
       },
       data: formData,
-      params: {
-        section_name: section,
-      },
     };
     console.log(formData);
-    console.log(section);
     const data = await axios(config);
     console.log("Section Added", data);
     dispatch(openSnackBar(data?.data?.message, "success"));

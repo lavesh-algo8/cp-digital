@@ -50,6 +50,7 @@ const LawsLayout = ({ children }) => {
 
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [categoryId, setcategoryId] = useState(false);
+  const [categoryName, setcategoryName] = useState(false);
 
   useEffect(() => {
     dispatch(fetchCategory());
@@ -78,6 +79,7 @@ const LawsLayout = ({ children }) => {
           openDialog={openDialogAddAct}
           setOpenDialog={setOpenDialogAddAct}
           categoryId={categoryId}
+          categoryName={categoryName}
         />
         {/* add Act dialog box */}
 
@@ -198,6 +200,7 @@ const LawsLayout = ({ children }) => {
                             onClick={() => {
                               setOpenDialogAddAct(true);
                               setcategoryId(value._id);
+                              setcategoryName(value.category);
                             }}
                           >
                             <AddIcon sx={{ color: "black" }} fontSize="small" />

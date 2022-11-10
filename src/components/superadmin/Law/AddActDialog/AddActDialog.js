@@ -49,7 +49,8 @@ const AddActDialog = (props) => {
         maxWidth="lg"
       >
         <DialogTitle fontWeight={600}>
-          Add New Act : <span style={{ color: "grey" }}>{props._id}</span>
+          Add New Act :{" "}
+          <span style={{ color: "grey" }}>{props.categoryName}</span>
         </DialogTitle>
         <Box position="absolute" top={5} right={10}>
           <IconButton onClick={handleDialogClose}>

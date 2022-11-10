@@ -75,6 +75,7 @@ const Section = () => {
     sectionDeleteDialog,
     subsectionDeleteDialog,
     sectionEditDialog,
+    subsectionEditDialog,
   ]);
 
   const columns = [
@@ -100,9 +101,10 @@ const Section = () => {
                 sx={{ pt: 1 }}
               >
                 {params?.row?.sub_sections?.map((item, index) => (
-                  <>
-                    <Box>22.04.2022</Box>
-                  </>
+                  <Box>
+                    {item.updatedAt?.toString().substring(0, 10) ||
+                      new Date().toISOString().split("T")[0]}
+                  </Box>
                 ))}
               </Collapse>
             </Box>
@@ -179,6 +181,7 @@ const Section = () => {
                   sx={{ pl: 1, cursor: "pointer" }}
                   onClick={() => {
                     setsectionname(params?.row?.section?.section_name);
+                    setsectionId(params?.row?.section?._id);
                     setsubSectionAddDialog(true);
                   }}
                 >
@@ -312,12 +315,13 @@ const Section = () => {
       <SectionAddDialog
         openDialog={sectionAddDialog}
         setOpenDialog={setsectionAddDialog}
-        chapter={params.chapter}
+        chapterid={params.chapterid}
       />
       <SubSectionAddDialog
         openDialog={subSectionAddDialog}
         setOpenDialog={setsubSectionAddDialog}
-        sectionName={sectionname}
+        sectionId={sectionId}
+        sectionname={sectionname}
       />
       <SectionDeleteDialog
         openDialog={sectionDeleteDialog}

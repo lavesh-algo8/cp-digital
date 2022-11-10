@@ -218,7 +218,7 @@ const CompanyAct = () => {
     <>
       {/* add chapter dialog */}
       <AddChapterDialog
-        openDialog={openDialogActChapter}
+        openDialog={openDialogAddChapter}
         setOpenDialog={setOpenDialogAddChapter}
         actid={params.actid}
       />

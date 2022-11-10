@@ -21,7 +21,7 @@ const DeleteActDialog = (props) => {
   const handleClick = async () => {
     const success = await dispatch(deleteAct(props.actid));
     if (success) {
-      navigate(-1);
+      navigate("/superadmin/laws");
     }
     dispatch(fetchCategory());
     console.log(success);

@@ -41,7 +41,7 @@ const DeleteCategoryDialog = (props) => {
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        {"Are You Sure You want to Delete this Act?"}
+        {"Are You Sure You want to Delete this Category?"}
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
