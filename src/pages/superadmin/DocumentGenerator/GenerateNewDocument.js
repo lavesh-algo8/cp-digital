@@ -7,10 +7,10 @@ import "formiojs/dist/formio.builder.min.css";
 import axios from "axios";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { saveProcedureDocument } from "../../../redux/superAdminReducer/superAdminAction";
+import { saveDocument } from "../../../redux/superAdminReducer/superAdminAction";
 
 const GenerateNewDocument = (props) => {
-  const { sectiontitle, procedureId } = useParams();
+  const { procedure, heading, sectiontitle } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -25,10 +25,9 @@ const GenerateNewDocument = (props) => {
     console.log(schemaRef);
     const formData = { ...schemaRef.current, title };
     console.log(formData);
-    const success = await dispatch(
-      saveProcedureDocument(formData, procedureId)
+    const success = dispatch(
+      saveDocument(formData, procedure, heading, sectiontitle)
     );
-    console.log(success);
     if (success) {
       navigate(-1);
     }
