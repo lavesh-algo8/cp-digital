@@ -24,29 +24,16 @@ import DifferenceIcon from "@mui/icons-material/Difference";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import {
-  Autocomplete,
   Avatar,
   Button,
   Grid,
   InputAdornment,
-  Menu,
-  MenuItem,
   OutlinedInput,
-  TextField,
 } from "@mui/material";
 import Badge from "@mui/material/Badge";
 import { useNavigate } from "react-router-dom";
-import { Logout } from "@mui/icons-material";
 
 const drawerWidth = 120;
-
-const searchItems = [
-  { title: "new", name: "newName" },
-  { title: "new1", name: "newName1" },
-  { title: "new2", name: "newName2" },
-  { title: "new3", name: "newName3" },
-  { title: "new4", name: "newName4" },
-];
 
 export default function Layout({ children }) {
   let currentLocation = window.location.pathname;
@@ -221,15 +208,6 @@ export default function Layout({ children }) {
     </div>
   );
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const openAEl = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   return (
     <Box
       sx={{
@@ -238,54 +216,6 @@ export default function Layout({ children }) {
         backgroundImage: "url(/background.png)",
       }}
     >
-      <Menu
-        anchorEl={anchorEl}
-        id="account-menu"
-        open={openAEl}
-        onClose={handleClose}
-        onClick={handleClose}
-        PaperProps={{
-          elevation: 0,
-          sx: {
-            overflow: "visible",
-            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-            mt: 1.5,
-            "& .MuiAvatar-root": {
-              width: 32,
-              height: 32,
-              ml: -0.5,
-              mr: 1,
-            },
-            "&:before": {
-              content: '""',
-              display: "block",
-              position: "absolute",
-              top: 0,
-              right: 14,
-              width: 10,
-              height: 10,
-              bgcolor: "background.paper",
-              transform: "translateY(-50%) rotate(45deg)",
-              zIndex: 0,
-            },
-          },
-        }}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-      >
-        <MenuItem
-          onClick={() => {
-            localStorage.removeItem("token");
-            navigate("/");
-          }}
-        >
-          <ListItemIcon>
-            <Logout fontSize="small" />
-          </ListItemIcon>
-          Logout
-        </MenuItem>
-      </Menu>
-
       <CssBaseline />
       <AppBar
         position="fixed"
@@ -358,45 +288,14 @@ export default function Layout({ children }) {
               }}
             ></Avatar>
           </IconButton>
+
           <Box
             sx={{
               display: { xs: "none", md: "block", lg: "block", xl: "block" },
               mr: 5,
             }}
           >
-            <Autocomplete
-              id="combo-box-demo"
-              freeSolo
-              options={searchItems}
-              getOptionLabel={(option) =>
-                option.title ? option.title : option.name
-              }
-              style={{ width: 300, borderRight: "none", borderLeft: "none" }}
-              onChange={(e, value) => console.log(e.target, value.title)}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  variant="outlined"
-                  sx={{
-                    background: "white",
-                    width: "35ch",
-                    borderRadius: "4px",
-                  }}
-                  size="small"
-                  placeholder="Search...."
-                  InputProps={{
-                    ...params.InputProps,
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon color="maincolor" />
-                      </InputAdornment>
-                    ),
-                    disableUnderline: true,
-                  }}
-                />
-              )}
-            />
-            {/* <OutlinedInput
+            <OutlinedInput
               id="outlined-adornment-weight"
               startAdornment={
                 <InputAdornment position="start">
@@ -413,7 +312,7 @@ export default function Layout({ children }) {
                 width: "35ch",
               }}
               placeholder="Search...."
-            /> */}
+            />
           </Box>
 
           <Button
@@ -448,7 +347,6 @@ export default function Layout({ children }) {
             sx={{
               display: { xs: "none", md: "block", lg: "block", xl: "block" },
             }}
-            onClick={handleClick}
           >
             <Avatar
               variant="rounded"
