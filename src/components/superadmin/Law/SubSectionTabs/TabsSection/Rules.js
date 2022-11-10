@@ -39,12 +39,13 @@ const Rules = () => {
 
   const dispatch = useDispatch();
   const params = useParams();
-  const { rulesListBySections } = useSelector((state) => state?.SuperAdmin);
+  const { rulesListBySubSections } = useSelector((state) => state?.SuperAdmin);
 
   const columns = [
     {
       field: "rule_date",
       headerName: "Date",
+      flex: 0.2,
       renderCell: (params) => {
         return (
           <>
@@ -97,7 +98,7 @@ const Rules = () => {
         return (
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Box sx={{ display: "flex" }}>
-              <Tooltip title="Edit rule">
+              {/* <Tooltip title="Edit rule">
                 <Typography
                   color="primary"
                   onClick={() => {
@@ -120,7 +121,7 @@ const Rules = () => {
                 >
                   <Delete fontSize="small" />
                 </Typography>
-              </Tooltip>
+              </Tooltip> */}
               <div>
                 <Typography
                   aria-label="more"
@@ -167,7 +168,7 @@ const Rules = () => {
   ];
 
   useEffect(() => {
-    dispatch(fetchRulesBySubSection(params.sectionname));
+    dispatch(fetchRulesBySubSection(params.subsectionid));
   }, [params]);
 
   return (
@@ -196,7 +197,7 @@ const Rules = () => {
         <DataGrid
           pageSize={5}
           rowsPerPageOptions={[5]}
-          rows={rulesListBySections || []}
+          rows={rulesListBySubSections || []}
           getRowId={(row) => row?._id}
           columns={columns}
           disableSelectionOnClick

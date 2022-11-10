@@ -63,7 +63,7 @@ function DocumentGenerator() {
               p: 6,
             }}
           >
-            <Grid container item xs={12}>
+            <Grid container item xs={12} sx={{ mb: 2 }}>
               <Grid item xs={12} lg={3}>
                 <Typography variant="h6" fontWeight={600}>
                   Document Generator
@@ -75,17 +75,6 @@ function DocumentGenerator() {
                 sx={{ display: "flex", justifyContent: "flex-end" }}
               >
                 {/* <Box
-                sx={{
-                  display: {
-                    xs: "none",
-                    md: "block",
-                    lg: "block",
-                    xl: "block",
-                  },
-                  mr: 3,
-                }}
-              ></Box> */}
-                <Box
                   sx={{
                     mr: 3,
                   }}
@@ -124,8 +113,8 @@ function DocumentGenerator() {
                       </Select>
                     </FormControl>
                   </Card>
-                </Box>
-                <Box
+                </Box> */}
+                {/* <Box
                   sx={{
                     mr: 3,
                   }}
@@ -164,7 +153,7 @@ function DocumentGenerator() {
                       </Select>
                     </FormControl>
                   </Card>
-                </Box>
+                </Box> */}
                 <Box
                   sx={{
                     mr: 3,
@@ -175,18 +164,21 @@ function DocumentGenerator() {
                     sx={{
                       height: "35px",
                       textTransform: "none",
+                      px: 3,
                     }}
                     onClick={() => setOpenDialogAdd(true)}
                   >
-                    <AddIcon fontSize="12px" sx={{ mr: 1 }} />
+                    <AddIcon fontSize="12px" sx={{ mr: 2 }} />
                     Add
                   </Button>
-                  <AddDocument
-                    openDialog={openDialogAdd}
-                    setOpenDialog={setOpenDialogAdd}
-                  />
+                  {openDialogAdd && (
+                    <AddDocument
+                      openDialog={openDialogAdd}
+                      setOpenDialog={setOpenDialogAdd}
+                    />
+                  )}
                 </Box>
-                <Box>
+                {/* <Box>
                   <Button
                     variant="contained"
                     sx={{
@@ -205,7 +197,7 @@ function DocumentGenerator() {
                       dispatch(getDocuments(Laws[0]?.value, Acts[0]?.value))
                     }
                   />
-                </Box>
+                </Box> */}
               </Grid>
             </Grid>
 

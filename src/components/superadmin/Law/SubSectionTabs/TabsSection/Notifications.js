@@ -39,7 +39,7 @@ const Notifications = () => {
 
   const dispatch = useDispatch();
   const params = useParams();
-  const { notificationsListBySections } = useSelector(
+  const { notificationsListBySubSection } = useSelector(
     (state) => state?.SuperAdmin
   );
 
@@ -47,6 +47,7 @@ const Notifications = () => {
     {
       field: "notification_date",
       headerName: "Date",
+      flex: 0.2,
       renderCell: (params) => {
         return (
           <>
@@ -100,7 +101,7 @@ const Notifications = () => {
         return (
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Box sx={{ display: "flex" }}>
-              <Tooltip title="Edit section">
+              {/* <Tooltip title="Edit section">
                 <Typography
                   color="primary"
                   onClick={() => {
@@ -123,7 +124,7 @@ const Notifications = () => {
                 >
                   <Delete fontSize="small" />
                 </Typography>
-              </Tooltip>
+              </Tooltip> */}
               <div>
                 <Typography
                   aria-label="more"
@@ -170,7 +171,7 @@ const Notifications = () => {
   ];
 
   useEffect(() => {
-    dispatch(fetchNotificationsBySubSection(params.sectionname));
+    dispatch(fetchNotificationsBySubSection(params.subsectionid));
   }, [params]);
 
   return (
@@ -199,7 +200,7 @@ const Notifications = () => {
         <DataGrid
           pageSize={5}
           rowsPerPageOptions={[5]}
-          rows={notificationsListBySections || []}
+          rows={notificationsListBySubSection || []}
           getRowId={(row) => row?._id}
           columns={columns}
           disableSelectionOnClick

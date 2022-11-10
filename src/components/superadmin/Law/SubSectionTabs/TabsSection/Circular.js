@@ -47,6 +47,23 @@ const Circular = () => {
     {
       field: "circular_date",
       headerName: "Date",
+      flex: 0.2,
+      renderCell: (params) => {
+        return (
+          <>
+            <Box sx={{ display: "flex", flexDirection: "column", my: 2 }}>
+              <Typography
+                sx={{
+                  cursor: "pointer",
+                }}
+              >
+                {params?.row?.section?.createdAt?.toString().substring(0, 10) ||
+                  new Date().toISOString().split("T")[0]}
+              </Typography>
+            </Box>
+          </>
+        );
+      },
     },
     {
       field: "circular_heading",
@@ -84,7 +101,7 @@ const Circular = () => {
         return (
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Box sx={{ display: "flex" }}>
-              <Tooltip title="Edit section">
+              {/* <Tooltip title="Edit section">
                 <Typography
                   color="primary"
                   onClick={() => {
@@ -107,7 +124,7 @@ const Circular = () => {
                 >
                   <Delete fontSize="small" />
                 </Typography>
-              </Tooltip>
+              </Tooltip> */}
               <div>
                 <Typography
                   aria-label="more"
@@ -154,7 +171,7 @@ const Circular = () => {
   ];
 
   useEffect(() => {
-    dispatch(fetchCircularsBySubSection(params.sectionname));
+    dispatch(fetchCircularsBySubSection(params.subsectionid));
   }, [params]);
 
   return (

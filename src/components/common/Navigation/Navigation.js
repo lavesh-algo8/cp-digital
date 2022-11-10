@@ -25,16 +25,20 @@ function Navigation() {
           element={<DocumentGenerator />}
         />
         <Route
-          path="/superadmin/documentGenerator/viewProcedure"
+          path="/superadmin/documentGenerator/viewProcedure/:procedureId"
           element={<PopupTable />}
         />
         <Route
-          path="/superadmin/documentGenerator/editdocument"
+          path="/superadmin/documentGenerator/editdocument/:procedure/:procedureId"
           element={<EditDocument />}
         />
 
-        <Route
+        {/* <Route
           path="/superadmin/documentGenerator/generatenewdocument/:procedure/:heading/:sectiontitle"
+          element={<GenerateNewDocument />}
+        /> */}
+        <Route
+          path="/superadmin/documentGenerator/generatenewdocument/:sectiontitle/:procedureId"
           element={<GenerateNewDocument />}
         />
         <Route path="/superadmin/laws" element={<Laws />}>
@@ -42,11 +46,11 @@ function Navigation() {
         </Route>
 
         <Route
-          path="/superadmin/laws/:category/:act/:actid/:chapter"
+          path="/superadmin/laws/:category/:act/:actid/:chapter/:chapterid"
           element={<ChapterSpecificData />}
         />
         <Route
-          path="/superadmin/laws/:category/:act/:actid/:chapter/:sectionname"
+          path="/superadmin/laws/:category/:act/:actid/:chapter/:chapterid/:subsectionname/:subsectionid"
           element={<SubSectionSpecificData />}
         />
         <Route path="/superadmin/calculator" element={<CalculatorPage />}>

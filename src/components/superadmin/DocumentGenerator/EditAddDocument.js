@@ -21,20 +21,34 @@ import AddIcon from "@mui/icons-material/Add";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addDocument,
+  editDocument,
   fetchCategory,
   getDocuments,
 } from "../../../redux/superAdminReducer/superAdminAction";
 
-const AddDocument = (props) => {
+const EditAddDocument = (props) => {
   const { categoryList } = useSelector((state) => state?.SuperAdmin);
+
+  const head = props.selectedRowData?.document_headings?.documentHeadings;
+  console.log(head);
+  console.log(props.selectedRowData);
 
   const dispatch = useDispatch();
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
   };
-  const [numOfDocs, setNumOfDocs] = useState(1);
-  const [newDocumentData, setNewDocumentData] = useState({});
-  const [headings, setHeadings] = useState({});
+  const [numOfDocs, setNumOfDocs] = useState(
+    props.selectedRowData?.document_headings?.documentHeadings.length
+  );
+  const [newDocumentData, setNewDocumentData] = useState({
+    law: props.selectedRowData?.category_name,
+    act: props.selectedRowData?.act_name,
+    procedure: props.selectedRowData?.procedure,
+    type: props.selectedRowData?.procedure_type,
+  });
+  const [headings, setHeadings] = useState(
+    props.selectedRowData?.document_headings?.documentHeadings
+  );
 
   console.log(
     categoryList?.filter((cat) => cat.category === newDocumentData.law)[0]?.acts
@@ -67,7 +81,7 @@ const AddDocument = (props) => {
       docHeadings,
     };
     console.log(finalData);
-    await dispatch(addDocument(finalData));
+    await dispatch(editDocument(finalData, props.selectedRowData.procedure_id));
     await dispatch(getDocuments());
     handleDialogClose();
   };
@@ -79,8 +93,26 @@ const AddDocument = (props) => {
   const access = ["Procedures", "Calculators", "Content mangement"];
 
   useEffect(() => {
-    dispatch(fetchCategory());
-  }, []);
+    if (props) {
+      setNewDocumentData({
+        ...newDocumentData,
+        law: props.selectedRowData?.category_name,
+      });
+      setNewDocumentData({
+        ...newDocumentData,
+        act: props.selectedRowData?.act_name,
+      });
+      setNewDocumentData({
+        ...newDocumentData,
+        procedure: props.selectedRowData?.procedure,
+      });
+      setNewDocumentData({
+        ...newDocumentData,
+        type: props.selectedRowData?.procedure_type,
+      });
+    }
+    setHeadings(props.selectedRowData?.document_headings?.documentHeadings);
+  }, [props]);
 
   return (
     <>
@@ -95,7 +127,7 @@ const AddDocument = (props) => {
         }}
         maxWidth="lg"
       >
-        <DialogTitle fontWeight={600}>Add New Document</DialogTitle>
+        <DialogTitle fontWeight={600}>Edit Document Details</DialogTitle>
         <Box position="absolute" top={5} right={10}>
           <IconButton onClick={handleDialogClose}>
             <CloseIcon />
@@ -123,6 +155,7 @@ const AddDocument = (props) => {
                     onChange={onChange}
                     value={newDocumentData.law}
                     required
+                    disabled
                   >
                     {categoryList.map((desig, index) => (
                       <MenuItem key={desig.category} value={desig.category}>
@@ -144,6 +177,7 @@ const AddDocument = (props) => {
                     onChange={onChange}
                     value={newDocumentData.act}
                     required
+                    disabled
                   >
                     {categoryList
                       ?.filter((cat) => cat.category === newDocumentData.law)[0]
@@ -189,9 +223,9 @@ const AddDocument = (props) => {
                     <Box sx={{ display: "flex" }}>
                       <TextField
                         size="small"
-                        id={`Document Heading ${key + 1}`}
+                        id={key}
                         label={`Document Heading ${key + 1}`}
-                        name={`Document Heading ${key + 1}`}
+                        name={key}
                         variant="outlined"
                         fullWidth
                         onChange={(e) => {
@@ -200,8 +234,8 @@ const AddDocument = (props) => {
                             [e.target.name]: e.target.value,
                           });
                         }}
+                        value={headings[key]}
                         required
-                        value={headings[`Document Heading ${key + 1}`]}
                       />
                     </Box>
                   </Grid>
@@ -225,7 +259,7 @@ const AddDocument = (props) => {
                           variant="contained"
                           onClick={() => {
                             setNumOfDocs(numOfDocs - 1);
-                            delete headings[`Document Heading ${key + 1}`];
+                            delete headings[key];
                           }}
                           disabled={numOfDocs === 1}
                         >
@@ -266,7 +300,7 @@ const AddDocument = (props) => {
                   }}
                   fullWidth
                 >
-                  Create
+                  Save
                 </Button>
               </Box>
             </form>
@@ -278,4 +312,4 @@ const AddDocument = (props) => {
   );
 };
 
-export default AddDocument;
+export default EditAddDocument;

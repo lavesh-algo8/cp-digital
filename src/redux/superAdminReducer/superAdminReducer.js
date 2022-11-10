@@ -17,8 +17,9 @@ const initialStore = {
   notificationsList: [],
   circularsList: [],
   rulesListBySubSections: [],
-  notificationsListBySubSections: [],
+  notificationsListBySubSection: [],
   circularsListBySubSection: [],
+  procedureHeadingsList: [],
 };
 
 const superAdminReducer = (state = initialStore, action) => {
@@ -119,6 +120,12 @@ const superAdminReducer = (state = initialStore, action) => {
       return {
         ...state,
         circularsListBySubSection: action.payload,
+      };
+
+    case "GET_PROCEDURE_HEADINGS":
+      return {
+        ...state,
+        procedureHeadingsList: action.payload,
       };
     // case "UPDATE_DOCUMENT":
     //   let headingList = state?.listOfDocuments?.filter(

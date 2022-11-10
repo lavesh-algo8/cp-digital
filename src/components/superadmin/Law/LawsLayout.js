@@ -28,6 +28,8 @@ import AddActDialog from "./AddActDialog/AddActDialog";
 import CompanyAct from "./CompanyAct";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategory } from "../../../redux/superAdminReducer/superAdminAction";
+import { Delete } from "@mui/icons-material";
+import DeleteCategoryDialog from "./AddCategoryDialog/DeleteCategoryDialog";
 
 const LawsLayout = ({ children }) => {
   const { categoryList } = useSelector((state) => state?.SuperAdmin);
@@ -44,6 +46,7 @@ const LawsLayout = ({ children }) => {
   };
   const [openDialogAddCategory, setOpenDialogAddCategory] = useState(false);
   const [openDialogAddAct, setOpenDialogAddAct] = useState(false);
+  const [openDialogDeleteAct, setOpenDialogDeleteAct] = useState(false);
 
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [categoryId, setcategoryId] = useState(false);
@@ -61,6 +64,14 @@ const LawsLayout = ({ children }) => {
           setOpenDialog={setOpenDialogAddCategory}
         />
         {/* add Category dialog box */}
+
+        {/* delete Category dialog box */}
+        <DeleteCategoryDialog
+          openDialog={openDialogDeleteAct}
+          setOpenDialog={setOpenDialogDeleteAct}
+          categoryId={categoryId}
+        />
+        {/* delete Category dialog box */}
 
         {/* add Act dialog box */}
         <AddActDialog
@@ -113,109 +124,110 @@ const LawsLayout = ({ children }) => {
                     mt: 2,
                   }}
                 >
-                  {
-                    // [
-                    //   {
-                    //     law: "Corporate Law",
-                    //     acts: [
-                    //       { act: "CompanyAct", id: 123 },
-                    //       { act: "Sebi Act", id: 450 },
-                    //     ],
-                    //   },
-                    //   {
-                    //     law: "Foreign Exchange Law",
-                    //     acts: [
-                    //       { act: "Act1", id: 6457 },
-                    //       { act: "Act2", id: 909 },
-                    //     ],
-                    //   },
-                    //   { law: "Insolvency Law", acts: [] },
-                    //   { law: "Tax Law", acts: [] },
-                    // ]
-                    categoryList?.map((value, index) => (
-                      <>
-                        <ListItemButton
-                          selected={params.category === value.category}
-                          onClick={() => {
-                            handleExpandClick(value.category);
-                          }}
-                          sx={{
-                            "&.Mui-selected": {
-                              backgroundColor: "transparent",
-                              color: "#dbad95",
-                              borderLeft: "4px solid #dbad95",
-                              "&:hover": {
-                                // backgroundColor: "#2d4a66",
-                              },
+                  {categoryList?.map((value, index) => (
+                    <>
+                      <ListItemButton
+                        selected={params.category === value.category}
+                        onClick={() => {
+                          handleExpandClick(value.category);
+                        }}
+                        sx={{
+                          "&.Mui-selected": {
+                            backgroundColor: "transparent",
+                            color: "#dbad95",
+                            borderLeft: "4px solid #dbad95",
+                            "&:hover": {
+                              // backgroundColor: "#2d4a66",
                             },
-                          }}
-                        >
-                          <ListItemText
-                            primary={value.category.toUpperCase()}
-                          />
-                          {expanded === value.category ? (
-                            <ExpandLess />
-                          ) : (
-                            <ExpandMore />
-                          )}
-                        </ListItemButton>
-                        <Collapse
-                          in={value.category === expanded}
-                          timeout="auto"
-                          unmountOnExit
+                          },
+                        }}
+                      >
+                        <ListItemText primary={value.category.toUpperCase()} />
+                        {expanded === value.category ? (
+                          <ExpandLess />
+                        ) : (
+                          <ExpandMore />
+                        )}
+                      </ListItemButton>
+                      <Collapse
+                        in={value.category === expanded}
+                        timeout="auto"
+                        unmountOnExit
+                        sx={{
+                          backgroundColor: "#FBFBFB",
+                          color: "#ACACAC",
+                        }}
+                      >
+                        <List component="div" disablePadding>
+                          {value?.acts?.map((item, index) => (
+                            <ListItemButton
+                              key={index}
+                              sx={{
+                                pl: 4,
+                                color: params.act === item.act ? "black" : "",
+                                fontWeight:
+                                  params.act === item.act ? "bold" : "",
+                              }}
+                              onClick={() =>
+                                navigate(
+                                  `/superadmin/laws/${value.category}/${item.act}/${item._id}`
+                                )
+                              }
+                            >
+                              <ListItemText
+                                disableTypography
+                                primary={item.act}
+                              />
+                              <ChevronRightIcon />
+                            </ListItemButton>
+                          ))}
+                        </List>
+                        <Box
                           sx={{
-                            backgroundColor: "#FBFBFB",
-                            color: "#ACACAC",
+                            pt: 1,
+                            px: 3,
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
                           }}
                         >
-                          <List component="div" disablePadding>
-                            {value?.acts.map((item, index) => (
-                              <ListItemButton
-                                key={index}
-                                sx={{
-                                  pl: 4,
-                                  color: params.act === item.act ? "black" : "",
-                                  fontWeight:
-                                    params.act === item.act ? "bold" : "",
-                                }}
-                                onClick={() =>
-                                  navigate(
-                                    `/superadmin/laws/${value.category}/${item.act}/${item._id}`
-                                  )
-                                }
-                              >
-                                <ListItemText
-                                  disableTypography
-                                  primary={item.act}
-                                />
-                                <ChevronRightIcon />
-                              </ListItemButton>
-                            ))}
-                          </List>
-                          <Box
-                            sx={{
-                              pt: 1,
-                              pb: 2,
-                              px: 3,
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "center",
+                          <Typography sx={{ color: "black" }}>
+                            Add New Act
+                          </Typography>
+                          <IconButton
+                            onClick={() => {
+                              setOpenDialogAddAct(true);
+                              setcategoryId(value._id);
                             }}
                           >
-                            <Typography>Add New Act</Typography>
-                            <IconButton
-                              onClick={() => {
-                                setOpenDialogAddAct(true);
-                                setcategoryId(value._id);
-                              }}
-                            >
-                              <AddIcon fontSize="small" />
-                            </IconButton>
-                          </Box>
-                        </Collapse>
-                      </>
-                    ))
-                  }
+                            <AddIcon sx={{ color: "black" }} fontSize="small" />
+                          </IconButton>
+                        </Box>
+
+                        <Box
+                          sx={{
+                            pb: 2,
+                            px: 3,
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Typography sx={{ color: "red" }}>
+                            Delete Category
+                          </Typography>
+                          <IconButton
+                            onClick={() => {
+                              setOpenDialogDeleteAct(true);
+                              setcategoryId(value._id);
+                            }}
+                          >
+                            <Delete sx={{ color: "red" }} fontSize="small" />
+                          </IconButton>
+                        </Box>
+                      </Collapse>
+                    </>
+                  ))}
                 </Box>
               </Card>
             </Grid>

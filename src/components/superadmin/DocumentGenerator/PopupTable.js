@@ -5,18 +5,20 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Layout from "../Layout";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import AddSection from "./AddSection";
+import { fetchProcedureHeadings } from "../../../redux/superAdminReducer/superAdminAction";
 
 function PopupTable() {
+  const params = useParams();
   const dispatch = useDispatch();
-  const { listOfDocuments, selectedDocument } = useSelector(
-    (state) => state.SuperAdmin
-  );
+  const { listOfDocuments, selectedDocument, procedureHeadingsList } =
+    useSelector((state) => state.SuperAdmin);
   const currentDoc = listOfDocuments?.filter(
     (item) => item?.procedure === selectedDocument?.procedure
   )[0];
   console.log(currentDoc);
+  console.log(procedureHeadingsList);
   const navigate = useNavigate();
   const [addSection, SetAddSection] = useState(false);
   const [selectedHeading, setSelectedHeading] = useState(null);
@@ -30,6 +32,10 @@ function PopupTable() {
   //     });
   //   };
   // }, []);
+
+  useEffect(() => {
+    dispatch(fetchProcedureHeadings(params.procedureId));
+  }, [params]);
 
   return (
     <>
@@ -91,7 +97,7 @@ function PopupTable() {
                   Action
                 </Grid>
               </Grid>
-              {currentDoc?.documentHeadings?.map((item, index) => {
+              {procedureHeadingsList?.headings?.map((item, index) => {
                 console.log(item);
                 return (
                   <DataRow
@@ -123,9 +129,8 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
   const [expand, setExpand] = useState(false);
   const navigate = useNavigate();
 
-  const { listOfDocuments, selectedDocument } = useSelector(
-    (state) => state.SuperAdmin
-  );
+  const { listOfDocuments, selectedDocument, procedureHeadingsList } =
+    useSelector((state) => state.SuperAdmin);
   const currentDoc = listOfDocuments?.filter(
     (item) => item?.procedure === selectedDocument?.procedure
   )[0];
@@ -164,7 +169,7 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
         </Grid>
         <Grid container item xs={8}>
           <Grid container item xs={8}>
-            <h6>{item.header}</h6>
+            <h6>{item}</h6>
           </Grid>
           <Grid container item xs={3}>
             <Button
@@ -223,51 +228,46 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
               Action
             </Grid>
           </Grid>
-          {item?.sectionTitles?.map((items, index2) => (
-            <Grid container item xs={12} sx={{ padding: "8px 16px" }}>
-              <Grid item xs={2}>
-                <h6>{index2 + 1}</h6>
-              </Grid>
-              <Grid item xs={2}>
-                <h6>{new Date().toDateString()}</h6>
-              </Grid>
-              <Grid container item xs={8}>
-                <Grid container item xs={7}>
-                  <h6>{items}</h6>
+          {procedureHeadingsList.heading_with_titles
+            .filter((row) => row.documentHeading === item)
+            .map((items, index2) => (
+              <Grid container item xs={12} sx={{ padding: "8px 16px" }}>
+                <Grid item xs={2}>
+                  <h6>{index2 + 1}</h6>
                 </Grid>
-                {/* <Grid container item xs={3}></Grid>
+                <Grid item xs={2}>
+                  <h6>{new Date().toDateString()}</h6>
+                </Grid>
+                <Grid container item xs={8}>
+                  <Grid container item xs={7}>
+                    <h6>{items.title}</h6>
+                  </Grid>
+                  {/* <Grid container item xs={3}></Grid>
                 <Grid container item xs={1}></Grid> */}
-                <Grid container item xs={4}>
-                  <Button
-                    color={
-                      item?.forms?.some((item) => item.title === items)
-                        ? "info"
-                        : "primary"
-                    }
-                    variant="contained"
-                    sx={{
-                      color: "white",
-                      textTransform: "none",
-                    }}
-                    fullWidth
-                    onClick={() =>
-                      item?.forms?.some((item) => item.title === items)
-                        ? onSubmitEditDocument(
-                            procedure,
-                            item.header,
-                            (items = item?.forms?.filter(
-                              (item) => item.title === items
-                            ))
-                          )
-                        : onSubmit(procedure, item.header, items)
-                    }
-                  >
-                    {item?.forms?.some((item) => item.title === items)
-                      ? "Edit"
-                      : "Generate"}{" "}
-                    Document{" "}
-                  </Button>
-                  {/* <Button
+                  <Grid container item xs={4}>
+                    <Button
+                      color={items?.formData ? "info" : "primary"}
+                      variant="contained"
+                      sx={{
+                        color: "white",
+                        textTransform: "none",
+                      }}
+                      fullWidth
+                      onClick={() =>
+                        items?.formData
+                          ? onSubmitEditDocument(
+                              procedure,
+                              item.header,
+                              (items = item?.forms?.filter(
+                                (item) => item.title === items
+                              ))
+                            )
+                          : onSubmit(procedure, item.header, items)
+                      }
+                    >
+                      {items?.formData ? "Edit" : "Generate"} Document{" "}
+                    </Button>
+                    {/* <Button
                     color="secondary"
                     variant="contained"
                     sx={{
@@ -282,11 +282,11 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
                   >
                     Edit Document
                   </Button> */}
+                  </Grid>
                 </Grid>
+                {/* <Grid container item xs={2}></Grid> */}
               </Grid>
-              {/* <Grid container item xs={2}></Grid> */}
-            </Grid>
-          ))}
+            ))}
         </>
       )}
     </Grid>

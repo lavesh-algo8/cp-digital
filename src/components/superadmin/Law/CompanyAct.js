@@ -2,9 +2,12 @@ import {
   Button,
   Card,
   FormControl,
+  IconButton,
+  Menu,
   MenuItem,
   Select,
   TableContainer,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
@@ -14,27 +17,55 @@ import React, { useEffect, useState } from "react";
 import TableDialog from "../../../components/superadmin/Law/TabsSections/DialogShow/TableDialog";
 import AddChapterDialog from "./AddChapterDialog/AddChapterDialog";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { fetchChapters } from "../../../redux/superAdminReducer/superAdminAction";
 import { useDispatch, useSelector } from "react-redux";
+import { Delete, Edit } from "@mui/icons-material";
+import EditChapterDialog from "./EditChapterDialog/EditChapterDialog";
+import DeleteChapterDialog from "./DeleteChapterDialog/DeleteChapterDialog";
+import DeleteActDialog from "./AddActDialog/DeleteActDialog";
+import EditActDialog from "./AddActDialog/EditActDialog";
+
+const options = ["Publish", "UnPublish"];
+const ITEM_HEIGHT = 48;
 
 const CompanyAct = () => {
   const dispatch = useDispatch();
   const { chapterList } = useSelector((state) => state?.SuperAdmin);
 
+  // menu action
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const navigate = useNavigate();
   const [openDialogAddChapter, setOpenDialogAddChapter] = useState(false);
+  const [openDialogEditChapter, setOpenDialogEditChapter] = useState(false);
+  const [openDialogDeleteChapter, setOpenDialogDeleteChapter] = useState(false);
+  const [openDialogActChapter, setOpenDialogActChapter] = useState(false);
+  const [openDialogDeleteAct, setopenDialogDeleteAct] = useState(false);
+  const [openDialogEditAct, setopenDialogEditAct] = useState(false);
+
+  const [chapterData, setchapterData] = useState(false);
   const { pathname } = useLocation();
   const params = useParams();
   console.log(params.act);
 
-  const handleOpenSection = (chapter) => {
-    navigate(`${pathname}/${chapter}`);
+  const handleOpenSection = (row) => {
+    // alert(row._id);
+    navigate(`${pathname}/${row.chapter}/${row._id}`);
   };
 
   const columns = [
     {
       field: "date",
       headerName: "Date",
+      flex: 0.2,
       renderCell: (params) => {
         return (
           <Typography>
@@ -54,7 +85,7 @@ const CompanyAct = () => {
             sx={{
               cursor: "pointer",
             }}
-            onClick={() => handleOpenSection(params.row.chapter)}
+            onClick={() => handleOpenSection(params.row)}
           >
             {params.row.chapter}
           </Typography>
@@ -76,20 +107,87 @@ const CompanyAct = () => {
       field: "actions",
       headerName: "Actions",
       type: "actions",
-      getActions: (params) => [
-        <GridActionsCellItem label="Pulish" showInMenu />,
-        <GridActionsCellItem
-          //   icon={<MoreVertIcon />}
-          label="UnPulish"
-          showInMenu
-        />,
-      ],
+      renderCell: (params) => {
+        return (
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
+            <Box sx={{ display: "flex" }}>
+              <Tooltip title="Edit chapter">
+                <Typography
+                  color="primary"
+                  onClick={() => {
+                    setchapterData(params?.row);
+                    setOpenDialogEditChapter(true);
+                  }}
+                  sx={{ pl: 1, cursor: "pointer" }}
+                >
+                  <Edit fontSize="small" />
+                </Typography>
+              </Tooltip>
+              <Tooltip title="Delete chapter">
+                <Typography
+                  color="primary"
+                  sx={{ pl: 1, cursor: "pointer" }}
+                  onClick={() => {
+                    setchapterData(params?.row);
+                    setOpenDialogDeleteChapter(true);
+                  }}
+                >
+                  <Delete fontSize="small" />
+                </Typography>
+              </Tooltip>
+              <div>
+                <Typography
+                  aria-label="more"
+                  id="long-button"
+                  aria-controls={open ? "long-menu" : undefined}
+                  aria-expanded={open ? "true" : undefined}
+                  aria-haspopup="true"
+                  onClick={handleClick}
+                  sx={{ pl: 1 }}
+                >
+                  <MoreVertIcon fontSize="small" />
+                </Typography>
+                <Menu
+                  id="long-menu"
+                  MenuListProps={{
+                    "aria-labelledby": "long-button",
+                  }}
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  PaperProps={{
+                    style: {
+                      maxHeight: ITEM_HEIGHT * 4.5,
+                      width: "20ch",
+                    },
+                  }}
+                >
+                  {options.map((option) => (
+                    <MenuItem
+                      key={option}
+                      selected={option === "Pyxis"}
+                      onClick={handleClose}
+                    >
+                      {option}
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </div>
+            </Box>
+          </Box>
+        );
+      },
     },
   ];
 
   useEffect(() => {
-    dispatch(fetchChapters(params.act));
-  }, [params.act, openDialogAddChapter]);
+    dispatch(fetchChapters(params.actid));
+  }, [
+    params.act,
+    openDialogAddChapter,
+    openDialogEditChapter,
+    openDialogDeleteChapter,
+  ]);
 
   if (params.act === undefined) {
     return (
@@ -120,11 +218,60 @@ const CompanyAct = () => {
     <>
       {/* add chapter dialog */}
       <AddChapterDialog
-        openDialog={openDialogAddChapter}
+        openDialog={openDialogActChapter}
         setOpenDialog={setOpenDialogAddChapter}
         actid={params.actid}
       />
       {/* add chapter dialog */}
+
+      {/* edit chapter dialog */}
+      <EditChapterDialog
+        openDialog={openDialogEditChapter}
+        setOpenDialog={setOpenDialogEditChapter}
+        actid={params.actid}
+        chapterData={chapterData}
+      />
+      {/* edit chapter dialog */}
+
+      {/* delete chapter dialog */}
+      <DeleteChapterDialog
+        openDialog={openDialogDeleteChapter}
+        setOpenDialog={setOpenDialogDeleteChapter}
+        chapterData={chapterData}
+      />
+      {/* delete chapter dialog */}
+
+      {/* delete act dialog */}
+      <DeleteActDialog
+        openDialog={openDialogDeleteAct}
+        setOpenDialog={setopenDialogDeleteAct}
+        actid={params.actid}
+      />
+      {/* delete act dialog */}
+
+      {/* edit act dialog */}
+      <EditActDialog
+        openDialog={openDialogEditAct}
+        setOpenDialog={setopenDialogEditAct}
+        actid={params.actid}
+        act={params.act}
+      />
+      {/* edit act dialog */}
+      {/* <Button
+        variant="outlined"
+        sx={{
+          color: "red",
+          textTransform: "none",
+          position: "relative",
+          float: "right",
+          margin: 0.3,
+        }}
+        color="inherit"
+        // startIcon={<Delete />}
+        onClick={() => setopenDialogDeleteAct(true)}
+      >
+        <Delete />
+      </Button> */}
 
       <Box sx={{ width: "100%", p: 5 }}>
         <Box
@@ -142,10 +289,33 @@ const CompanyAct = () => {
               size="small"
               startIcon={<AddIcon />}
               onClick={() => setOpenDialogAddChapter(true)}
+              sx={{ mr: 2 }}
             >
               Add Chapter
             </Button>
-            <Card
+            <Button
+              variant="outlined"
+              sx={{ color: "red", textTransform: "none" }}
+              color="inherit"
+              startIcon={<Delete />}
+              onClick={() => setopenDialogDeleteAct(true)}
+            >
+              Delete Act
+            </Button>
+            <Button
+              variant="outlined"
+              sx={{ ml: 2, textTransform: "none" }}
+              color="info"
+              startIcon={<Edit />}
+              onClick={() => setopenDialogEditAct(true)}
+            >
+              Edit Act Name
+            </Button>
+
+            {/* <IconButton>
+              <Delete sx={{ color: "red" }} />
+            </IconButton> */}
+            {/* <Card
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -176,7 +346,7 @@ const CompanyAct = () => {
                   <MenuItem value="Day Pushlished">Day </MenuItem>
                 </Select>
               </FormControl>
-            </Card>
+            </Card> */}
           </Box>
         </Box>
         <TableContainer

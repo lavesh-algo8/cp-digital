@@ -67,8 +67,8 @@ const Section = () => {
   };
 
   useEffect(() => {
-    console.log(params.chapter);
-    dispatch(fetchSections(params.chapter));
+    console.log(params.chapterid);
+    dispatch(fetchSections(params.chapterid));
   }, [
     sectionAddDialog,
     subSectionAddDialog,
@@ -136,7 +136,9 @@ const Section = () => {
                   <>
                     <Box
                       onClick={() =>
-                        navigate(`${pathname}/${item.sub_section_name}`)
+                        navigate(
+                          `${pathname}/${item.sub_section_name}/${item._id}`
+                        )
                       }
                       sx={{
                         cursor: "pointer",

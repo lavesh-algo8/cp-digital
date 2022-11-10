@@ -24,16 +24,26 @@ import DifferenceIcon from "@mui/icons-material/Difference";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import {
+  Autocomplete,
   Avatar,
   Button,
   Grid,
   InputAdornment,
   OutlinedInput,
+  TextField,
 } from "@mui/material";
 import Badge from "@mui/material/Badge";
 import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 120;
+
+const searchItems = [
+  { title: "new", name: "newName" },
+  { title: "new1", name: "newName1" },
+  { title: "new2", name: "newName2" },
+  { title: "new3", name: "newName3" },
+  { title: "new4", name: "newName4" },
+];
 
 export default function Layout({ children }) {
   let currentLocation = window.location.pathname;
@@ -295,7 +305,39 @@ export default function Layout({ children }) {
               mr: 5,
             }}
           >
-            <OutlinedInput
+            <Autocomplete
+              id="combo-box-demo"
+              freeSolo
+              options={searchItems}
+              getOptionLabel={(option) =>
+                option.title ? option.title : option.name
+              }
+              style={{ width: 300, borderRight: "none", borderLeft: "none" }}
+              onChange={(e, value) => console.log(e.target, value.title)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  sx={{
+                    background: "white",
+                    width: "35ch",
+                    borderRadius: "4px",
+                  }}
+                  size="small"
+                  placeholder="Search...."
+                  InputProps={{
+                    ...params.InputProps,
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon color="maincolor" />
+                      </InputAdornment>
+                    ),
+                    disableUnderline: true,
+                  }}
+                />
+              )}
+            />
+            {/* <OutlinedInput
               id="outlined-adornment-weight"
               startAdornment={
                 <InputAdornment position="start">
@@ -312,7 +354,7 @@ export default function Layout({ children }) {
                 width: "35ch",
               }}
               placeholder="Search...."
-            />
+            /> */}
           </Box>
 
           <Button

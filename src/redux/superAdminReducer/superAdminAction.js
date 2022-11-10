@@ -188,31 +188,6 @@ export const getDocuments = () => async (dispatch) => {
   }
 };
 
-export const addDocument = (formData) => async (dispatch) => {
-  try {
-    let config = {
-      method: "POST",
-      url: `${baseUrl}/docgen/createheadings`,
-      headers: {
-        "content-type": "application/x-www-form-urlencoded",
-      },
-      data: qs.stringify(formData),
-    };
-
-    const resp = await axios(config);
-    console.log(resp);
-    if (resp?.data.message === "headings and procedure added successfully") {
-      dispatch(openSnackBar("document successfully created", "success"));
-      return true;
-    } else {
-      dispatch(openSnackBar(resp?.data.message, "error"));
-      return false;
-    }
-  } catch (e) {
-    console.log(e);
-  }
-};
-
 export const addSectionDocumentHeading =
   (heading, procedure, sections) => async (dispatch) => {
     try {
@@ -262,30 +237,123 @@ export const addSectionDocumentHeading =
 //   }
 // };
 
-export const saveDocument =
-  (formData, procedure, heading, sectiontitle) => async (dispatch) => {
+// Doc Generator
+
+export const addDocument = (formData) => async (dispatch) => {
+  try {
+    let config = {
+      method: "POST",
+      url: `${baseUrl}/docgen/createheadings`,
+      headers: {
+        "content-type": "application/x-www-form-urlencoded",
+      },
+      data: qs.stringify(formData),
+    };
+
+    const resp = await axios(config);
+    console.log(resp);
+    if (resp?.data.message === "headings and procedure added successfully") {
+      dispatch(openSnackBar("document successfully created", "success"));
+      return true;
+    } else {
+      dispatch(openSnackBar(resp?.data.message, "error"));
+      return false;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const editDocument = (formData, procedureId) => async (dispatch) => {
+  try {
+    let config = {
+      method: "put",
+      url: `${baseUrl}/docgen/editheadings/${procedureId}`,
+      headers: {
+        "content-type": "application/x-www-form-urlencoded",
+      },
+      data: qs.stringify(formData),
+    };
+
+    console.log(config);
+
+    const resp = await axios(config);
+    console.log(resp);
+    if (resp?.data.message === "doc headings updated successfully") {
+      dispatch(openSnackBar("document successfully edited", "success"));
+      return true;
+    } else {
+      dispatch(openSnackBar(resp?.data.message, "error"));
+      return false;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const saveProcedureDocument =
+  (formData, procedureId) => async (dispatch) => {
     try {
       let config = {
         method: "post",
-        url: `${baseUrl}/docgen/savedocument`,
+        url: `${baseUrl}/docgen/manualform/saveform/${procedureId}`,
         headers: {
           "content-type": "application/json",
         },
-        data: { docData: formData },
-        params: {
-          procedure,
-          heading,
-          sectiontitle,
-        },
+        data: formData,
       };
       console.log(formData);
       const data = await axios(config);
       console.log("UPLOAD DATA", data);
       dispatch(openSnackBar(data?.data?.message, "success"));
+      return data;
     } catch (e) {
       console.log(e);
     }
   };
+
+export const editProcedureDocument =
+  (formData, procedureId) => async (dispatch) => {
+    try {
+      let config = {
+        method: "put",
+        url: `${baseUrl}/docgen/manualform/editform/${procedureId}`,
+        headers: {
+          "content-type": "application/json",
+        },
+        data: formData,
+      };
+      console.log(formData);
+      const data = await axios(config);
+      console.log("UPLOAD DATA", data);
+      dispatch(openSnackBar(data?.data?.message, "success"));
+      return data;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+export const fetchProcedureHeadings = (procedureId) => async (dispatch) => {
+  try {
+    let config = {
+      method: "get",
+      url: `${baseUrl}/docgen/fetchheadings/${procedureId}`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const data = await axios(config);
+    console.log("Document Procedure Headings", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+    dispatch({
+      type: "GET_PROCEDURE_HEADINGS",
+      payload: data.data,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+//Doc Generator
 
 // Knowlege hub law, catergory
 
@@ -303,6 +371,24 @@ export const addCategory = (formData) => async (dispatch) => {
     const data = await axios(config);
     console.log("Category", data);
     dispatch(openSnackBar(data?.data?.message, "success"));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const deleteCategory = (categoryid) => async (dispatch) => {
+  try {
+    let config = {
+      method: "delete",
+      url: `${baseUrl}/knowledgecentre/deletecategory/${categoryid}`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const data = await axios(config);
+    console.log("Category Deleted", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+    return data;
   } catch (e) {
     console.log(e);
   }
@@ -327,6 +413,43 @@ export const addAct = (formData, categoryId) => async (dispatch) => {
   }
 };
 
+export const deleteAct = (actid) => async (dispatch) => {
+  try {
+    let config = {
+      method: "delete",
+      url: `${baseUrl}/knowledgecentre/deleteact/${actid}`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const data = await axios(config);
+    console.log("Act Deleted", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+    return data;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const editAct = (formData, actid) => async (dispatch) => {
+  try {
+    let config = {
+      method: "put",
+      url: `${baseUrl}/knowledgecentre/editact/${actid}`,
+      headers: {
+        "content-type": "application/json",
+      },
+      data: { act: formData },
+    };
+    console.log(formData);
+    const data = await axios(config);
+    console.log("Act Edited", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 export const addChapter = (formData, actid) => async (dispatch) => {
   try {
     let config = {
@@ -340,6 +463,42 @@ export const addChapter = (formData, actid) => async (dispatch) => {
     console.log(formData);
     const data = await axios(config);
     console.log("Chapter Added", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const editChapter = (formData, actid) => async (dispatch) => {
+  try {
+    let config = {
+      method: "put",
+      url: `${baseUrl}/knowledgecentre/editchapter/${actid}`,
+      headers: {
+        "content-type": "application/json",
+      },
+      data: { chapter: formData },
+    };
+    console.log(formData);
+    const data = await axios(config);
+    console.log("Chapter Edited", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const deleteChapter = (chapterid) => async (dispatch) => {
+  try {
+    let config = {
+      method: "delete",
+      url: `${baseUrl}/knowledgecentre/deletechapter/${chapterid}`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const data = await axios(config);
+    console.log("Chapter Deleted", data);
     dispatch(openSnackBar(data?.data?.message, "success"));
   } catch (e) {
     console.log(e);
@@ -730,7 +889,7 @@ export const fetchCategory = () => async (dispatch) => {
         const categoryId = item._id;
         console.log(item.category);
         const acts = await axios.get(
-          `${baseUrl}/knowledgecentre/fetchact/${item.category}`
+          `${baseUrl}/knowledgecentre/fetchact/${item._id}`
         );
         console.log(acts);
         catWiseAct.push({
@@ -777,11 +936,11 @@ export const fetchChapters = (act) => async (dispatch) => {
   }
 };
 
-export const fetchSections = (chapter) => async (dispatch) => {
+export const fetchSections = (chapterid) => async (dispatch) => {
   try {
     let config = {
       method: "get",
-      url: `${baseUrl}/knowledgecentre/fetchsection/${chapter}`,
+      url: `${baseUrl}/knowledgecentre/fetchsection/${chapterid}`,
       headers: {
         "content-type": "application/json",
       },
@@ -821,11 +980,11 @@ export const fetchSubSections = () => async (dispatch) => {
   }
 };
 
-export const fetchRulesBySubSection = (sectionName) => async (dispatch) => {
+export const fetchRulesBySubSection = (subsectionid) => async (dispatch) => {
   try {
     let config = {
       method: "get",
-      url: `${baseUrl}/cmsrules/fetchrules/${sectionName}`,
+      url: `${baseUrl}/cmsrules/fetchrules/${subsectionid}`,
       headers: {
         "content-type": "application/json",
       },
@@ -843,11 +1002,11 @@ export const fetchRulesBySubSection = (sectionName) => async (dispatch) => {
 };
 
 export const fetchNotificationsBySubSection =
-  (sectionName) => async (dispatch) => {
+  (subsectionid) => async (dispatch) => {
     try {
       let config = {
         method: "get",
-        url: `${baseUrl}/cmsnotifications/fetchnotifications/${sectionName}`,
+        url: `${baseUrl}/cmsnotifications/fetchnotifications/${subsectionid}`,
         headers: {
           "content-type": "application/json",
         },
@@ -856,7 +1015,7 @@ export const fetchNotificationsBySubSection =
       console.log("Notification : ", data.data.result);
 
       dispatch({
-        type: "GET_NOTIFICATION_BY_SUB_SECTION",
+        type: "GET_NOTIFICATIONS_BY_SUB_SECTION",
         payload: data.data.result,
       });
     } catch (e) {
@@ -864,26 +1023,27 @@ export const fetchNotificationsBySubSection =
     }
   };
 
-export const fetchCircularsBySubSection = (sectionName) => async (dispatch) => {
-  try {
-    let config = {
-      method: "get",
-      url: `${baseUrl}/cmscirculars/fetchcirculars/${sectionName}`,
-      headers: {
-        "content-type": "application/json",
-      },
-    };
-    const data = await axios(config);
-    console.log("Circular : ", data.data.result);
+export const fetchCircularsBySubSection =
+  (subsectionid) => async (dispatch) => {
+    try {
+      let config = {
+        method: "get",
+        url: `${baseUrl}/cmscirculars/fetchcirculars/${subsectionid}`,
+        headers: {
+          "content-type": "application/json",
+        },
+      };
+      const data = await axios(config);
+      console.log("Circular : ", data.data.result);
 
-    dispatch({
-      type: "GET_CIRCULARS_BY_SUB_SECTION",
-      payload: data.data.result,
-    });
-  } catch (e) {
-    console.log(e);
-  }
-};
+      dispatch({
+        type: "GET_CIRCULARS_BY_SUB_SECTION",
+        payload: data.data.result,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
 // Knowlege hub law, catergory
 

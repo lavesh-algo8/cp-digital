@@ -5,24 +5,61 @@ import {
   Box,
   IconButton,
   DialogContent,
+  Typography,
+  Button,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridActionsCellItem,
+  GridToolbar,
+  GridToolbarContainer,
+  GridToolbarExport,
+  GridToolbarExportContainer,
+  GridToolbarFilterButton,
+  GridToolbarQuickFilter,
+} from "@mui/x-data-grid";
 import UploadIcon from "@mui/icons-material/Upload";
 import { useDispatch, useSelector } from "react-redux";
 import CloseIcon from "@mui/icons-material/Close";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import parse from "html-react-parser";
-import { useNavigate } from "react-router-dom";
-import { getDocuments } from "../../../redux/superAdminReducer/superAdminAction";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  fetchProcedureHeadings,
+  getDocuments,
+} from "../../../redux/superAdminReducer/superAdminAction";
+import { Form } from "@formio/react";
+import EditDocument from "../../../pages/superadmin/DocumentGenerator/EditDocument";
+import EditAddDocument from "./EditAddDocument";
+import DeleteProcedureDocument from "./DeleteProcedureDocument";
+
+const disable = true;
+
+function CustomToolbar() {
+  return (
+    <GridToolbarContainer>
+      {disable ? (
+        <>
+          <GridToolbarQuickFilter sx={{ marginLeft: "auto" }} />
+        </>
+      ) : (
+        <GridToolbarExport />
+      )}
+    </GridToolbarContainer>
+  );
+}
 
 const DocumentTables = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { listOfDocuments } = useSelector((state) => state.SuperAdmin);
   const [selectedRow, setSelectedRow] = React.useState(null);
+  const [selectedRowData, setSelectedRowData] = React.useState(null);
+  const [openDialogEdit, setOpenDialogEdit] = useState(false);
+  const [openDialogDelete, setOpenDialogDelete] = useState(false);
 
   React.useEffect(() => {
     dispatch(getDocuments());
@@ -32,33 +69,83 @@ const DocumentTables = () => {
     {
       field: "id",
       headerName: "Sl No.",
-      flex: 1,
+      flex: 0.2,
     },
     {
       field: "procedure",
       headerName: "Procedure",
       flex: 1,
+      renderCell: (params) => {
+        return (
+          <Typography>
+            {params?.row?.procedure_type
+              ? params?.row?.procedure + " / " + params?.row?.procedure_type
+              : params?.row?.procedure}
+          </Typography>
+        );
+      },
     },
-    // {
-    //   field: "date",
-    //   headerName: "Date",
-    //   flex: 1,
-    // },
-    // {
-    //   field: "title",
-    //   headerName: "Title",
-    //   flex: 1,
-    // },
-    // {
-    //   field: "menu",
-    //   headerName: "Menu",
-    //   flex: 1,
-    // },
-    // {
-    //   field: "status",
-    //   headerName: "Status",
-    //   flex: 1,
-    // },
+
+    {
+      field: "category_name",
+      headerName: "Law",
+      flex: 0.3,
+    },
+    {
+      field: "act_name",
+      headerName: "Act",
+      flex: 0.3,
+    },
+
+    {
+      field: "procedures",
+      headerName: "Procedure Form",
+      flex: 0.5,
+      type: "actions",
+      renderCell: (params) => {
+        return (
+          <>
+            {params?.row?.form === null ? (
+              <Button
+                variant="contained"
+                sx={{
+                  textTransform: "none",
+                  width: "25ch",
+                }}
+                onClick={() =>
+                  navigate(
+                    `/superadmin/documentGenerator/generatenewdocument/${params?.row?.procedure}/${params?.row?.procedure_id}`
+                  )
+                }
+              >
+                Generate Document
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color="info"
+                sx={{
+                  textTransform: "none",
+                  width: "25ch",
+                }}
+                onClick={() => {
+                  dispatch({
+                    type: "SET_SELECT_DOCUMENT",
+                    payload: params?.row,
+                  });
+                  navigate(
+                    `/superadmin/documentGenerator/editdocument/${params?.row?.procedure}/${params?.row?.procedure_id}`
+                  );
+                }}
+              >
+                Edit Document
+              </Button>
+            )}
+          </>
+        );
+      },
+    },
+
     {
       field: "actions",
       headerName: "Actions",
@@ -71,11 +158,26 @@ const DocumentTables = () => {
           onClick={() => {
             console.log(params);
             handleOpenDialog();
-            setSelectedRow(params.row?.fileData);
+            setSelectedRow(params.row?.form?.formData);
           }}
         />,
-        <GridActionsCellItem icon={<EditIcon />} label="Edit" showInMenu />,
-        <GridActionsCellItem icon={<DeleteIcon />} label="Delete" showInMenu />,
+        <GridActionsCellItem
+          icon={<EditIcon />}
+          onClick={() => {
+            setOpenDialogEdit(true);
+            setSelectedRowData(params.row);
+          }}
+          label="Edit"
+          showInMenu
+        />,
+        <GridActionsCellItem
+          icon={<DeleteIcon />}
+          label="Delete"
+          showInMenu
+          onClick={() => {
+            setOpenDialogDelete(true);
+          }}
+        />,
         <GridActionsCellItem
           icon={<UploadIcon />}
           label="Publish"
@@ -97,6 +199,19 @@ const DocumentTables = () => {
 
   return (
     <>
+      {openDialogEdit && (
+        <EditAddDocument
+          openDialog={openDialogEdit}
+          setOpenDialog={setOpenDialogEdit}
+          selectedRowData={selectedRowData}
+        />
+      )}
+
+      <DeleteProcedureDocument
+        openDialog={openDialogDelete}
+        setOpenDialog={setOpenDialogDelete}
+      />
+
       <DocumentViewer
         openDialog={openDialog}
         handleDialogClose={handleDialogClose}
@@ -136,16 +251,32 @@ const DocumentTables = () => {
       <TableContainer
         sx={{
           height: `calc(100vh - ${200}px)`,
+          pb: 5,
           border: 0,
         }}
       >
         <DataGrid
           hideFooter
           rowsPerPageOptions={[]}
-          rows={listOfDocuments?.map((doc, index) => ({
-            id: index + 1,
-            ...doc,
-          }))}
+          rowHeight={65}
+          // disableColumnFilter
+          // disableColumnSelector
+          // disableDensitySelector
+          rows={
+            listOfDocuments?.map((doc, index) => ({
+              id: index + 1,
+              ...doc,
+            })) || []
+          }
+          components={{
+            Toolbar: CustomToolbar,
+          }}
+          componentsProps={{
+            toolbar: {
+              showQuickFilter: true,
+              quickFilterProps: { debounceMs: 500 },
+            },
+          }}
           columns={columns}
           disableSelectionOnClick
           onRowClick={(e) => {
@@ -155,7 +286,9 @@ const DocumentTables = () => {
               type: "SET_SELECT_DOCUMENT",
               payload: e.row,
             });
-            navigate(`/superadmin/documentGenerator/viewProcedure`);
+            navigate(
+              `/superadmin/documentGenerator/viewProcedure/${e.row.procedure_id}`
+            );
           }}
           sx={{
             boxShadow: 0,
@@ -248,6 +381,7 @@ const DocumentTables = () => {
 export default DocumentTables;
 
 function DocumentViewer(props) {
+  console.log(props);
   return (
     <Dialog
       open={props.openDialog} // Use value directly here
@@ -266,7 +400,8 @@ function DocumentViewer(props) {
         </IconButton>
       </Box>
       <DialogContent>
-        <div>{parse(props.data || "")}</div>
+        <div></div>
+        <Form src={props.data} />
       </DialogContent>
     </Dialog>
   );
