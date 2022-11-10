@@ -4211,15 +4211,10 @@ downloadjs@^1.4.7:
   resolved "https://registry.npmjs.org/downloadjs/-/downloadjs-1.4.7.tgz"
   integrity sha512-LN1gO7+u9xjU5oEScGFKvXhYf7Y/empUIIEAGBs1LzUq/rg5duiDrkuH5A2lQGd5jfMOb9X9usDa2oVXwJ0U/Q==
 
-"downloadjs@^1.4.7":
-  "integrity" "sha512-LN1gO7+u9xjU5oEScGFKvXhYf7Y/empUIIEAGBs1LzUq/rg5duiDrkuH5A2lQGd5jfMOb9X9usDa2oVXwJ0U/Q=="
-  "resolved" "https://registry.npmjs.org/downloadjs/-/downloadjs-1.4.7.tgz"
-  "version" "1.4.7"
-
-"draft-js@^0.10.x || ^0.11.x", "draft-js@^0.11.x":
-  "integrity" "sha512-ne7yFfN4sEL82QPQEn80xnADR8/Q6ALVworbC5UOSzOvjffmYfFsr3xSZtxbIirti14R7Y33EZC5rivpLgIbsg=="
-  "resolved" "https://registry.npmjs.org/draft-js/-/draft-js-0.11.7.tgz"
-  "version" "0.11.7"
+dragula@^3.7.3:
+  version "3.7.3"
+  resolved "https://registry.npmjs.org/dragula/-/dragula-3.7.3.tgz"
+  integrity sha512-/rRg4zRhcpf81TyDhaHLtXt6sEywdfpv1cRUMeFFy7DuypH2U0WUL0GTdyAQvXegviT4PJK4KuMmOaIDpICseQ==
   dependencies:
     contra "1.9.4"
     crossvent "1.5.5"
