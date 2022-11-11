@@ -37,6 +37,8 @@ import {
 import Badge from "@mui/material/Badge";
 import { useNavigate } from "react-router-dom";
 import { Logout } from "@mui/icons-material";
+import { superAdminLogout } from "../../redux/superAdminReducer/superAdminAction";
+import { useDispatch } from "react-redux";
 
 const drawerWidth = 120;
 
@@ -51,10 +53,19 @@ const searchItems = [
 export default function Layout({ children }) {
   let currentLocation = window.location.pathname;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+  const handleLogOut = async () => {
+    localStorage.removeItem("token");
+    const success = await dispatch(superAdminLogout());
+    if (success) {
+      navigate("/");
+    }
   };
 
   const drawer = (
@@ -273,12 +284,7 @@ export default function Layout({ children }) {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem
-          onClick={() => {
-            localStorage.removeItem("token");
-            navigate("/");
-          }}
-        >
+        <MenuItem onClick={handleLogOut}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

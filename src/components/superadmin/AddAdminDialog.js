@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Autocomplete,
   Box,
   Button,
   Chip,
@@ -205,6 +206,25 @@ const AddAdminDialog = (props) => {
                     ))}
                   </Select>
                 </FormControl>
+              )}
+            />
+
+            <Autocomplete
+              sx={{ mt: 2 }}
+              multiple
+              id="tags-standard"
+              options={access}
+              getOptionLabel={(option) => option}
+              defaultValue={[]}
+              renderInput={(params) => (
+                <TextField
+                  multiline
+                  rows={2}
+                  {...params}
+                  variant="outlined"
+                  label="Access"
+                  placeholder=""
+                />
               )}
             />
 

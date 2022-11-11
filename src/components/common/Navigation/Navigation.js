@@ -13,6 +13,7 @@ import PopupTable from "../../superadmin/DocumentGenerator/PopupTable";
 import ChapterSpecificData from "../../../pages/superadmin/Category/ChapterSpecificData";
 import SubSectionSpecificData from "../../../pages/superadmin/Category/SubSectionSpecificData";
 import ProtectedRoute from "../../superadmin/ProtectedRoute/ProtectedRoute";
+import GenerateDocumentTitles from "../../../pages/superadmin/DocumentGenerator/GenerateDocumentTitles";
 
 function Navigation() {
   return (
@@ -44,6 +45,10 @@ function Navigation() {
           <Route
             path="/superadmin/documentGenerator/generatenewdocument/:sectiontitle/:procedureId"
             element={<GenerateNewDocument />}
+          />
+          <Route
+            path="/superadmin/documentGenerator/generatedocument/:subheadingtitle/:subheadingId"
+            element={<GenerateDocumentTitles />}
           />
           <Route path="/superadmin/laws" element={<Laws />}>
             <Route path=":category/:act/:actid" element={<Laws />} />

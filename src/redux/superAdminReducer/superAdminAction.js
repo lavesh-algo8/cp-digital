@@ -27,6 +27,20 @@ export const superAdminLogin = (formData) => async (dispatch) => {
   }
 };
 
+export const superAdminLogout = () => async (dispatch) => {
+  try {
+    localStorage.clear();
+    localStorage.removeItem("persist:root");
+    await dispatch({
+      type: "LOGOUT",
+      payload: {},
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 export const getAdminList = () => async (dispatch) => {
   try {
     const resp = await callBackend("get", "superadmin/listadmins");
@@ -190,36 +204,6 @@ export const getDocuments = () => async (dispatch) => {
   }
 };
 
-export const addSectionDocumentHeading =
-  (heading, procedure, sections) => async (dispatch) => {
-    try {
-      let config = {
-        method: "POST",
-        url: `${baseUrl}/docgen/addsections/`,
-        headers: {
-          "content-type": "application/json",
-        },
-        data: { formTitles: sections },
-        params: {
-          procedure,
-          heading,
-        },
-      };
-      console.log(config);
-      const resp = await axios(config);
-      console.log(resp);
-      if (resp?.data.message === "sections saved successfully") {
-        dispatch(openSnackBar(resp?.data.message, "success"));
-        return true;
-      } else {
-        dispatch(openSnackBar(resp?.data.message, "error"));
-        return false;
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
 // export const saveDocument = (formData) => async (dispatch) => {
 //   try {
 //     let config = {
@@ -355,6 +339,54 @@ export const fetchProcedureHeadings = (procedureId) => async (dispatch) => {
     console.log(e);
   }
 };
+
+export const addSectionDocumentHeading =
+  (heading, procedureId, sections) => async (dispatch) => {
+    try {
+      let config = {
+        method: "POST",
+        url: `${baseUrl}/docgen/addsections/${procedureId}`,
+        headers: {
+          "content-type": "application/json",
+        },
+        data: { formTitles: sections, documentHeading: heading },
+      };
+      console.log(config);
+      const resp = await axios(config);
+      console.log(resp);
+      if (resp?.data.message === "titles added successfully") {
+        dispatch(openSnackBar(resp?.data.message, "success"));
+        return true;
+      } else {
+        dispatch(openSnackBar(resp?.data.message, "error"));
+        return false;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+export const saveSubheadingDocument =
+  (formData, subheadingId) => async (dispatch) => {
+    try {
+      let config = {
+        method: "post",
+        url: `${baseUrl}/docgen/savedocument/${subheadingId}`,
+        headers: {
+          "content-type": "application/json",
+        },
+        data: { formData: formData },
+      };
+      console.log(formData);
+      const data = await axios(config);
+      console.log("Form Saved", data);
+      dispatch(openSnackBar(data?.data?.message, "success"));
+      return data;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
 //Doc Generator
 
 // Knowlege hub law, catergory

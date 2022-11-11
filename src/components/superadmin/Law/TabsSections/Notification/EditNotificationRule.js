@@ -305,7 +305,7 @@ const EditNotificationDialog = (props) => {
                           .join(", ")
                       }
                     >
-                      {subsectionsList.map((section) => (
+                      {subsectionsList?.map((section) => (
                         <MenuItem
                           key={section._id}
                           value={section?.sub_section_name}

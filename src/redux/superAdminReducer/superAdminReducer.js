@@ -35,6 +35,10 @@ const superAdminReducer = (state = initialStore, action) => {
         email: action.payload.email,
       };
     case "LOGOUT":
+      Object.keys(state).forEach((key) => {
+        localStorage.removeItem(`persist:${key}`);
+      });
+      state = undefined;
       return {
         ...state,
         isLoggedIn: false,

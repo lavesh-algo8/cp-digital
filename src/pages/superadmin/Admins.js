@@ -79,50 +79,58 @@ const Admins = () => {
                 <Typography sx={{ p: 4, fontWeight: "bold", fontSize: "20px" }}>
                   Peoples
                 </Typography>
-                <Tabs
-                  TabIndicatorProps={{
-                    style: {
-                      backgroundColor: "#192A3A",
-                      width: "6px",
-                      borderRadius: "10px",
-                    },
-                  }}
-                  orientation="vertical"
-                  value={value}
-                  onChange={handleChange}
+                <Box
                   sx={{
-                    mt: 3,
-                    borderRight: 1,
-                    borderColor: "divider",
-                    "& .MuiTab-root.Mui-selected": {
-                      color: "#192A3A",
-                    },
+                    overflowY: "scroll",
+                    overflowX: "hidden",
+                    height: "83vh",
                   }}
                 >
-                  <Tab
-                    label="List of admins"
-                    {...a11yProps(0)}
-                    sx={{
-                      textTransform: "none",
-                      marginRight: "auto",
-                      pl: 4,
-                      fontWeight: "bold",
-                      color: "#acafb7",
+                  <Tabs
+                    TabIndicatorProps={{
+                      style: {
+                        backgroundColor: "#192A3A",
+                        width: "6px",
+                        borderRadius: "10px",
+                      },
                     }}
-                  />
-                  <Tab
-                    label="List of sub-admins"
-                    {...a11yProps(1)}
+                    orientation="vertical"
+                    value={value}
+                    onChange={handleChange}
                     sx={{
-                      textTransform: "none",
-                      marginRight: "auto",
-                      pl: 4,
-                      mt: 1,
-                      fontWeight: "bold",
-                      color: "#acafb7",
+                      mt: 3,
+                      borderRight: 1,
+                      borderColor: "divider",
+                      "& .MuiTab-root.Mui-selected": {
+                        color: "#192A3A",
+                      },
                     }}
-                  />
-                </Tabs>
+                  >
+                    <Tab
+                      label="List of admins"
+                      {...a11yProps(0)}
+                      sx={{
+                        textTransform: "none",
+                        marginRight: "auto",
+                        pl: 4,
+                        fontWeight: "bold",
+                        color: "#acafb7",
+                      }}
+                    />
+                    <Tab
+                      label="List of sub-admins"
+                      {...a11yProps(1)}
+                      sx={{
+                        textTransform: "none",
+                        marginRight: "auto",
+                        pl: 4,
+                        mt: 1,
+                        fontWeight: "bold",
+                        color: "#acafb7",
+                      }}
+                    />
+                  </Tabs>
+                </Box>
               </Card>
             </Grid>
             <Grid item lg={10} md={10} xs={12}>
@@ -131,6 +139,7 @@ const Admins = () => {
                   marginTop: "100px",
                   mx: 3,
                   borderRadius: "10px",
+                  height: `calc(100vh - ${120}px)`,
                 }}
               >
                 <TabPanel value={value} index={0}>
@@ -167,6 +176,8 @@ const Admins = () => {
                           inputProps={{
                             "aria-label": "weight",
                           }}
+                          notched={false}
+                          label="search"
                           size="small"
                           sx={{
                             background: "white",
@@ -274,6 +285,8 @@ const Admins = () => {
                           inputProps={{
                             "aria-label": "weight",
                           }}
+                          notched={false}
+                          label="search"
                           size="small"
                           sx={{
                             background: "white",

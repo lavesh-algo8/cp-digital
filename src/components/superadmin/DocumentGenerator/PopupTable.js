@@ -1,4 +1,11 @@
-import { Button, Card, Grid, TableContainer, Typography } from "@mui/material";
+import {
+  Button,
+  Card,
+  Grid,
+  IconButton,
+  TableContainer,
+  Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
@@ -7,7 +14,10 @@ import Layout from "../Layout";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import AddSection from "./AddSection";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { fetchProcedureHeadings } from "../../../redux/superAdminReducer/superAdminAction";
+import { Add, Delete, Edit } from "@mui/icons-material";
 
 function PopupTable() {
   const params = useParams();
@@ -22,16 +32,6 @@ function PopupTable() {
   const navigate = useNavigate();
   const [addSection, SetAddSection] = useState(false);
   const [selectedHeading, setSelectedHeading] = useState(null);
-
-  // useEffect(() => {
-  //   return () => {
-  //     setSelectedHeading(null);
-  //     dispatch({
-  //       type: "SET_SELECT_DOCUMENT",
-  //       payload: {},
-  //     });
-  //   };
-  // }, []);
 
   useEffect(() => {
     dispatch(fetchProcedureHeadings(params.procedureId));
@@ -51,13 +51,6 @@ function PopupTable() {
               overflowY: "scroll",
             }}
           >
-            {/* <Grid
-              container
-              xs={12}
-              sx={{
-                p: 3,
-              }}
-            > */}
             <Box container item xs={12}>
               <div
                 style={{
@@ -73,8 +66,6 @@ function PopupTable() {
               </div>
             </Box>
 
-            {/* <Grid container item xs={12}></Grid>
-            </Grid> */}
             <Grid
               container
               xs={12}
@@ -83,7 +74,11 @@ function PopupTable() {
                 p: 2,
               }}
             >
-              <Grid container xs={12} sx={{ margin: "12px 0" }}>
+              <Grid
+                container
+                xs={12}
+                sx={{ margin: "12px 0", color: "#224260" }}
+              >
                 <Grid item xs={2}>
                   Sl. No.
                 </Grid>
@@ -93,7 +88,7 @@ function PopupTable() {
                 <Grid item xs={6}>
                   Document Heading
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={2} display="flex" justifyContent="center">
                   Action
                 </Grid>
               </Grid>
@@ -117,7 +112,6 @@ function PopupTable() {
         closeDialog={() => SetAddSection(false)}
         openDialog={addSection}
         heading={selectedHeading}
-        procedure={currentDoc?.procedure}
       />
     </>
   );
@@ -136,9 +130,9 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
   )[0];
   const [procedure, setProcedure] = useState(currentDoc?.procedure);
 
-  const onSubmit = (procedure, heading, section) => {
+  const onSubmit = (subsectiontitle, subheadingId) => {
     navigate(
-      `/superadmin/documentGenerator/generatenewdocument/${procedure}/${heading}/${section}`
+      `/superadmin/documentGenerator/generatedocument/${subsectiontitle}/${subheadingId}`
     );
   };
 
@@ -151,7 +145,7 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
   };
 
   return (
-    <Grid container xs={12} sx={{ margin: "8px 0" }}>
+    <Grid container xs={12} sx={{ margin: "10px 0" }}>
       <Grid
         container
         item
@@ -161,51 +155,60 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
           setExpand(!expand);
         }}
       >
-        <Grid item xs={2}>
-          <h6>{index + 1}</h6>
+        <Grid item xs={2} display="flex" alignItems="center">
+          <h6>
+            <b>{index + 1}.</b>
+          </h6>
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs={2} display="flex" alignItems="center">
           <h6>{new Date().toDateString()}</h6>
         </Grid>
         <Grid container item xs={8}>
-          <Grid container item xs={8}>
+          <Grid container item xs={8} display="flex" alignItems="center">
             <h6>{item}</h6>
           </Grid>
-          <Grid container item xs={3}>
-            <Button
-              color="greycol"
-              variant="contained"
+          <Grid
+            container
+            item
+            xs={4}
+            display="flex"
+            alignItems="center"
+            justifyContent="flex-end"
+          >
+            <Box
               sx={{
-                textTransform: "none",
-              }}
-              fullWidth
-              onClick={() => {
-                openAddSection();
-                // setSelectedHeading(item?.id);
-                setSelectedHeading(item.header);
+                display: "flex",
+                alignItems: "center",
               }}
             >
-              Add Section
-            </Button>
+              <Button
+                color="greycol"
+                variant="contained"
+                sx={{
+                  textTransform: "none",
+                }}
+                fullWidth
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openAddSection();
+                  setSelectedHeading(item);
+                }}
+              >
+                <Add fontSize="small" />
+                Add Section
+              </Button>
+              <IconButton sx={{ ml: 1 }} onClick={(e) => e.stopPropagation()}>
+                <Delete color="primary" />
+              </IconButton>
+              <IconButton onClick={(e) => e.stopPropagation()}>
+                <Edit />
+              </IconButton>
+              {/* <Typography sx={{ ml: 2 }}>
+                {expand ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+              </Typography> */}
+            </Box>
           </Grid>
-          {/* <Grid container item xs={1}></Grid> */}
-          {/* <Grid container item xs={3}>
-            <Button
-              color="primary"
-              variant="contained"
-              sx={{
-                color: "white",
-                textTransform: "none",
-              }}
-              fullWidth
-              disabled={item?.sections?.length !== 0}
-              //   onClick={onSubmit}
-            >
-              {item?.sections?.length === 0 ? "Edit" : "Generate"} Document{" "}
-            </Button>
-          </Grid> */}
         </Grid>
-        {/* <Grid container item xs={2}></Grid> */}
       </Grid>
 
       {expand && (
@@ -213,7 +216,12 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
           <Grid
             container
             xs={12}
-            sx={{ margin: "12px 0", padding: "8px 16px" }}
+            sx={{
+              marginTop: "12px",
+              padding: "8px 16px",
+              background: "#BDBDBD",
+              color: "#2A4966",
+            }}
           >
             <Grid item xs={2}>
               Sl. No.
@@ -221,17 +229,28 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
             <Grid item xs={2}>
               Date
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={5}>
               Section Heading
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={3} display="flex" justifyContent="center">
               Action
             </Grid>
           </Grid>
-          {procedureHeadingsList.heading_with_titles
+          {procedureHeadingsList.heading_with_titles[index]
             .filter((row) => row.documentHeading === item)
             .map((items, index2) => (
-              <Grid container item xs={12} sx={{ padding: "8px 16px" }}>
+              <Grid
+                container
+                item
+                xs={12}
+                sx={{
+                  py: 2,
+                  px: 3,
+                  // padding: "8px 16px",
+                  background: "#707070",
+                  color: "white",
+                }}
+              >
                 <Grid item xs={2}>
                   <h6>{index2 + 1}</h6>
                 </Grid>
@@ -242,15 +261,20 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
                   <Grid container item xs={7}>
                     <h6>{items.title}</h6>
                   </Grid>
-                  {/* <Grid container item xs={3}></Grid>
-                <Grid container item xs={1}></Grid> */}
-                  <Grid container item xs={4}>
+                  <Grid
+                    container
+                    item
+                    xs={5}
+                    display="flex"
+                    justifyContent="flex-end"
+                  >
                     <Button
                       color={items?.formData ? "info" : "primary"}
                       variant="contained"
                       sx={{
                         color: "white",
                         textTransform: "none",
+                        width: "22ch",
                       }}
                       fullWidth
                       onClick={() =>
@@ -262,29 +286,19 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
                                 (item) => item.title === items
                               ))
                             )
-                          : onSubmit(procedure, item.header, items)
+                          : onSubmit(items.title, items._id)
                       }
                     >
                       {items?.formData ? "Edit" : "Generate"} Document{" "}
                     </Button>
-                    {/* <Button
-                    color="secondary"
-                    variant="contained"
-                    sx={{
-                      color: "white",
-                      textTransform: "none",
-                      mt: 2,
-                    }}
-                    fullWidth
-                    onClick={() =>
-                      onSubmitEditDocument(procedure, item.header, items)
-                    }
-                  >
-                    Edit Document
-                  </Button> */}
+                    <IconButton sx={{ ml: 1 }} onClick={() => {}}>
+                      <Delete sx={{ color: "white" }} />
+                    </IconButton>
+                    <IconButton onClick={() => {}}>
+                      <Edit sx={{ color: "white" }} />
+                    </IconButton>
                   </Grid>
                 </Grid>
-                {/* <Grid container item xs={2}></Grid> */}
               </Grid>
             ))}
         </>

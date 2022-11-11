@@ -20,8 +20,10 @@ import { Controller, useForm } from "react-hook-form";
 import AddIcon from "@mui/icons-material/Add";
 import { useDispatch, useSelector } from "react-redux";
 import { addSectionDocumentHeading } from "../../../redux/superAdminReducer/superAdminAction";
+import { useParams } from "react-router-dom";
 
 const AddSection = (props) => {
+  const params = useParams();
   const dispatch = useDispatch();
   const { selectedDocument = {} } = useSelector((state) => state.SuperAdmin);
   const handleDialogClose = () => {
@@ -30,7 +32,7 @@ const AddSection = (props) => {
   const [numOfDocs, setNumOfDocs] = useState(1);
   const [sections, setSections] = useState({});
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     let subData = [];
     for (let i = 0; i < Object.keys(sections)?.length; i++) {
       subData.push({
@@ -39,19 +41,22 @@ const AddSection = (props) => {
       });
     }
     console.log(subData);
-    console.log(props.heading, props.procedure);
     let headingSection = [];
     headingSection = subData.map((head) => head.section);
     console.log(headingSection);
     console.log(headingSection.toString());
     headingSection = headingSection.toString();
-    dispatch(
-      addSectionDocumentHeading(props.heading, props.procedure, headingSection)
+    await dispatch(
+      addSectionDocumentHeading(
+        props.heading,
+        params.procedureId,
+        headingSection
+      )
     );
-    console.log(props.heading, props.procedure);
+    console.log(props.heading, params.procedureId);
     setNumOfDocs(1);
     setSections({});
-    props.handleDialogClose();
+    props.closeDialog();
   };
 
   return (

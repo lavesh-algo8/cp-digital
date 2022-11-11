@@ -401,7 +401,7 @@ function DocumentViewer(props) {
       </Box>
       <DialogContent>
         <div></div>
-        <Form src={props.data} />
+        <Form src={props.data} onRender={(html) => console.log(html)} />
       </DialogContent>
     </Dialog>
   );
