@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Card,
+  Collapse,
   FormControl,
   Menu,
   MenuItem,
@@ -18,10 +19,14 @@ import AddDialog from "../AddDialogCommon/AddDialog";
 import AddNotificationDialog from "./Notification/AddNotificationDialog";
 import { Delete, Edit } from "@mui/icons-material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import EditNotificationDialog from "./Notification/EditNotificationRule";
+import EditNotificationDialog from "./Notification/EditNotificationDialog";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchNotification } from "../../../../redux/superAdminReducer/superAdminAction";
 import DeleteNotificationDialog from "./Notification/DeleteNotificationDialog";
+import Add from "@mui/icons-material/Add";
+import AddSubNotificationDialog from "./Notification/AddSubNotificationDialog";
+import EditSubNotificationDialog from "./Notification/EditSubNotificationDialog";
+import DeleteSubNotificationDialog from "./Notification/DeleteSubNotificationDialog";
 
 const options = ["Publish", "UnPublish"];
 const ITEM_HEIGHT = 48;
@@ -33,11 +38,26 @@ const Notifications = () => {
   const [openDeleteNotificationDialog, setopenDeleteNotificationDialog] =
     React.useState(false);
 
-  const [notificationId, setnotificationId] = React.useState(false);
+  const [openAddSubNotificationDialog, setopenAddSubNotificationDialog] =
+    React.useState(false);
+  const [openEditSubNotificationDialog, setopenEditSubNotificationDialog] =
+    React.useState(false);
+
+  const [openDeleteSubNotificationDialog, setopenDeleteSubNotificationDialog] =
+    React.useState(false);
+
+  const [notificationId, setnotificationId] = React.useState("");
+  const [subnotificationId, setsubnotificationId] = React.useState("");
+
+  const [notificationName, setnotificationName] = React.useState("");
+  const [clickedIndex, setClickedIndex] = React.useState(-1);
 
   const dispatch = useDispatch();
   const { notificationsList } = useSelector((state) => state?.SuperAdmin);
   const [notificationsDetails, setnotificationsDetails] = React.useState({});
+  const [subnotificationsDetails, setsubnotificationsDetails] = React.useState(
+    {}
+  );
 
   // menu action
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -48,44 +68,6 @@ const Notifications = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const rows = [
-    {
-      id: "CORPROA1",
-      date: "22.04.2022",
-      notification:
-        "S.O. 2099(E)-Special court notification for the State of Jharkhand",
-      status: "Published",
-    },
-    {
-      id: "CORPROA2",
-      date: "22.04.2022",
-      notification:
-        "S.O. 2099(E)-Special court notification for the State of Jharkhand",
-      status: "Published",
-    },
-    {
-      id: "CORPROA3",
-      date: "22.04.2022",
-      notification:
-        "S.O. 2099(E)-Special court notification for the State of Jharkhand",
-      status: "Unpublished",
-    },
-    {
-      id: "CORPROA4",
-      date: "22.04.2022",
-      notification:
-        "S.O. 2099(E)-Special court notification for the State of Jharkhand",
-      status: "Published",
-    },
-    {
-      id: "CORPROA5",
-      date: "22.04.2022",
-      notification:
-        "S.O. 2099(E)-Special court notification for the State of Jharkhand",
-      status: "Published",
-    },
-  ];
 
   const columns = [
     {
@@ -102,9 +84,21 @@ const Notifications = () => {
                   cursor: "pointer",
                 }}
               >
-                {params?.row?.notification_date?.toString().substring(0, 10) ||
-                  new Date().toISOString().split("T")[0]}
+                {params?.row?.notification.notification_date
+                  ?.toString()
+                  .substring(0, 10) || new Date().toISOString().split("T")[0]}
               </Typography>
+              <Collapse
+                in={params?.row?.notification?._id === clickedIndex}
+                sx={{ pt: 1 }}
+              >
+                {params?.row?.sub_notifications?.map((item, index) => (
+                  <Box>
+                    {item.updatedAt?.toString().substring(0, 10) ||
+                      new Date().toISOString().split("T")[0]}
+                  </Box>
+                ))}
+              </Collapse>
             </Box>
           </>
         );
@@ -115,15 +109,53 @@ const Notifications = () => {
       headerName: "Notifications",
       flex: 1,
       renderCell: (params) => {
+        // return (
+        //   <Typography
+        //     sx={{
+        //       cursor: "pointer",
+        //     }}
+        //     // onClick={handleOpenSection}
+        //   >
+        //     {params.row.notification.notification_heading}
+        //   </Typography>
+        // );
+
         return (
-          <Typography
-            sx={{
-              cursor: "pointer",
-            }}
-            // onClick={handleOpenSection}
-          >
-            {params.row.notification_heading}
-          </Typography>
+          <>
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <Typography
+                sx={{
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setClickedIndex(params?.row?.notification?._id);
+                }}
+              >
+                {params.row.notification.notification_heading}
+              </Typography>
+              <Collapse
+                in={params?.row?.notification?._id === clickedIndex}
+                sx={{ pt: 1 }}
+              >
+                {params?.row?.sub_notifications?.map((item, index) => (
+                  <>
+                    <Box
+                      // onClick={() =>
+                      //   navigate(
+                      //     `${pathname}/${item.sub_circular_heading}/${item._id}`
+                      //   )
+                      // }
+                      sx={{
+                        cursor: "pointer",
+                      }}
+                    >
+                      {item.sub_notification_heading}
+                    </Box>
+                  </>
+                ))}
+              </Collapse>
+            </Box>
+          </>
         );
       },
     },
@@ -146,11 +178,26 @@ const Notifications = () => {
         return (
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Box sx={{ display: "flex" }}>
+              <Tooltip title="Add subnotification">
+                <Typography
+                  color="primary"
+                  sx={{ pl: 1, cursor: "pointer" }}
+                  onClick={() => {
+                    setnotificationName(
+                      params?.row?.notification.notification_heading
+                    );
+                    setnotificationId(params.row.notification._id);
+                    setopenAddSubNotificationDialog(true);
+                  }}
+                >
+                  <Add fontSize="small" />
+                </Typography>
+              </Tooltip>
               <Tooltip title="Edit section">
                 <Typography
                   color="primary"
                   onClick={() => {
-                    setnotificationsDetails(params?.row);
+                    setnotificationsDetails(params?.row.notification);
                     setopenEditNotificationDialog(true);
                   }}
                   sx={{ pl: 1, cursor: "pointer" }}
@@ -163,7 +210,7 @@ const Notifications = () => {
                   color="primary"
                   sx={{ pl: 1, cursor: "pointer" }}
                   onClick={() => {
-                    setnotificationId(params.row._id);
+                    setnotificationId(params.row.notification._id);
                     setopenDeleteNotificationDialog(true);
                   }}
                 >
@@ -209,6 +256,41 @@ const Notifications = () => {
                 </Menu>
               </div>
             </Box>
+            <Collapse
+              in={params?.row?.notification?._id === clickedIndex}
+              sx={{ pt: 1 }}
+            >
+              {params?.row?.sub_notifications?.map((item, index) => (
+                <>
+                  <Box sx={{ display: "flex" }}>
+                    <Tooltip title="Delete sub-circular">
+                      <Typography
+                        color="primary"
+                        sx={{ pl: 1, cursor: "pointer" }}
+                        onClick={() => {
+                          setsubnotificationId(item._id);
+                          setopenDeleteSubNotificationDialog(true);
+                        }}
+                      >
+                        <Delete fontSize="small" />
+                      </Typography>
+                    </Tooltip>
+                    <Tooltip title="Edit sub-circular">
+                      <Typography
+                        color="primary"
+                        sx={{ pl: 1, cursor: "pointer" }}
+                        onClick={() => {
+                          setsubnotificationsDetails(item);
+                          setopenEditSubNotificationDialog(true);
+                        }}
+                      >
+                        <Edit fontSize="small" />
+                      </Typography>
+                    </Tooltip>
+                  </Box>
+                </>
+              ))}
+            </Collapse>
           </Box>
         );
       },
@@ -216,13 +298,41 @@ const Notifications = () => {
   ];
   useEffect(() => {
     dispatch(fetchNotification());
-  }, [openDialog, openEditNotificationDialog, openDeleteNotificationDialog]);
+  }, [
+    openDialog,
+    openEditNotificationDialog,
+    openDeleteNotificationDialog,
+    openAddSubNotificationDialog,
+    openEditSubNotificationDialog,
+    openDeleteSubNotificationDialog,
+  ]);
 
   return (
     <>
       <AddNotificationDialog
         openDialog={openDialog}
         setOpenDialog={setopenDialog}
+      />
+
+      <AddSubNotificationDialog
+        openDialog={openAddSubNotificationDialog}
+        setOpenDialog={setopenAddSubNotificationDialog}
+        notificationName={notificationName}
+        notificationId={notificationId}
+      />
+
+      {openEditSubNotificationDialog && (
+        <EditSubNotificationDialog
+          openDialog={openEditSubNotificationDialog}
+          setOpenDialog={setopenEditSubNotificationDialog}
+          subnotificationsDetails={subnotificationsDetails}
+        />
+      )}
+
+      <DeleteSubNotificationDialog
+        openDialog={openDeleteSubNotificationDialog}
+        setOpenDialog={setopenDeleteSubNotificationDialog}
+        subnotificationId={subnotificationId}
       />
 
       <EditNotificationDialog
@@ -289,9 +399,10 @@ const Notifications = () => {
           pageSize={5}
           rowsPerPageOptions={[5]}
           rows={notificationsList || []}
-          getRowId={(row) => row?._id}
+          getRowId={(row) => row?.notification._id}
           columns={columns}
           disableSelectionOnClick
+          getRowHeight={() => "auto"}
           sx={{
             boxShadow: 0,
             border: 0,

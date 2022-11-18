@@ -129,6 +129,7 @@ const LawsLayout = ({ children }) => {
                   {categoryList?.map((value, index) => (
                     <>
                       <ListItemButton
+                        key={index}
                         selected={params.category === value.category}
                         onClick={() => {
                           handleExpandClick(value.category);

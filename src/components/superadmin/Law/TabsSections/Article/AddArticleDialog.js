@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
@@ -10,7 +11,10 @@ import {
   Grid,
   IconButton,
   InputLabel,
+  ListItemText,
+  MenuItem,
   OutlinedInput,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -22,44 +26,45 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
 import { EditorState, convertToRaw } from "draft-js";
 import { useDispatch, useSelector } from "react-redux";
-import { addSection } from "../../../../../redux/superAdminReducer/superAdminAction";
+import {
+  addArticle,
+  addRule,
+} from "../../../../../redux/superAdminReducer/superAdminAction";
 
-const SectionAddDialog = (props) => {
-  const [section, setsection] = useState("");
-  const [sectionNo, setsectionNo] = useState("");
-  // const [regulationName, setregulationName] = useState("");
-  // const [dateOfUpdate, setdateOfUpdate] = useState(new Date());
-  // const [updatedBy, setupdatedBy] = useState("");
-  // const [sorting, setsorting] = useState("");
-  // const [value, setValue] = useState(EditorState.createEmpty());
-  const { sectionsList } = useSelector((state) => state?.SuperAdmin);
+const AddArticleDialog = (props) => {
+  const { subsectionsList } = useSelector((state) => state?.SuperAdmin);
+  const dispatch = useDispatch();
+
+  const [subsectionName, setsubsectionName] = React.useState([]);
+
+  const handleSubSectionSelectionChange = (event) => {
+    console.log(event);
+    const {
+      target: { value },
+    } = event;
+    setsubsectionName(
+      // On autofill we get a the stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+
+  const [article, setarticle] = useState("");
 
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
   };
-  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isNaN(sectionNo)) {
-      alert("Section no should be number");
-      return false;
-    }
     console.log("hey");
     const data = {
-      section_name: section,
-      section_no: sectionNo,
+      title: article,
     };
     console.log(data);
-    await dispatch(addSection(data, props.chapterid));
-    setsection("");
-    setsectionNo("");
+    await dispatch(addArticle(data));
+    setarticle("");
     props.setOpenDialog(false);
   };
-
-  useEffect(() => {
-    setsectionNo(sectionsList?.length + 1);
-  }, [sectionsList]);
 
   return (
     <>
@@ -75,7 +80,7 @@ const SectionAddDialog = (props) => {
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle fontWeight={600}>Add Section </DialogTitle>
+        <DialogTitle fontWeight={600}>Add Article </DialogTitle>
         <Box position="absolute" top={5} right={10}>
           <IconButton onClick={handleDialogClose}>
             <CloseIcon />
@@ -87,49 +92,28 @@ const SectionAddDialog = (props) => {
               sx={{
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: "center",
+                justifyContent: "space-between",
               }}
             >
-              <Typography>Section No</Typography>
-              <OutlinedInput
-                id="outlined-adornment-weight"
-                value={sectionNo}
-                onChange={(e) => {
-                  const re = /^[0-9\b]+$/;
-
-                  // if value is not blank, then test the regex
-
-                  if (e.target.value === "" || re.test(e.target.value)) {
-                    setsectionNo(e.target.value);
-                  }
-                }}
-                aria-describedby="outlined-weight-helper-text"
-                fullWidth
-                required
-                size="small"
-                notched={false}
-                label="Law"
-                sx={{
-                  mt: 1,
-                }}
-              />
-              <Typography sx={{ mt: 3 }}>Name of the section</Typography>
-              <OutlinedInput
-                multiline
-                rows={3}
-                id="outlined-adornment-weight"
-                value={section}
-                onChange={(e) => setsection(e.target.value)}
-                aria-describedby="outlined-weight-helper-text"
-                fullWidth
-                required
-                size="small"
-                notched={false}
-                label="Law"
-                sx={{
-                  mt: 1,
-                }}
-              />
+              <Box>
+                <Typography>Name of the Article</Typography>
+                <OutlinedInput
+                  multiline
+                  rows={3}
+                  id="outlined-adornment-weight"
+                  value={article}
+                  onChange={(e) => setarticle(e.target.value)}
+                  aria-describedby="outlined-weight-helper-text"
+                  fullWidth
+                  required
+                  size="small"
+                  notched={false}
+                  label="Law"
+                  sx={{
+                    mt: 1,
+                  }}
+                />
+              </Box>
             </Box>
 
             <Box
@@ -176,4 +160,4 @@ const SectionAddDialog = (props) => {
   );
 };
 
-export default SectionAddDialog;
+export default AddArticleDialog;

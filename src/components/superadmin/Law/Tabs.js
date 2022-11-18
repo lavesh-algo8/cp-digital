@@ -11,6 +11,7 @@ import Circular from "./TabsSections/Circular";
 import Forms from "./TabsSections/Forms";
 import AccountingStandards from "./TabsSections/AccountingStandards";
 import AmendmentsActs from "./TabsSections/AmendmentsActs";
+import Article from "./TabsSections/Article";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -76,6 +77,7 @@ export default function BasicTabs() {
             "Rules",
             "Notifications",
             "Circulars",
+            "Articles",
             "Forms",
             "Secretarial Standards",
             "Accounting Standards",
@@ -110,18 +112,21 @@ export default function BasicTabs() {
         <Circular />
       </TabPanel>
       <TabPanel value={value} index={4}>
-        <Forms />
+        <Article />
       </TabPanel>
       <TabPanel value={value} index={5}>
-        Secretarial Standards
+        <Forms />
       </TabPanel>
       <TabPanel value={value} index={6}>
-        <AccountingStandards />
+        Secretarial Standards
       </TabPanel>
       <TabPanel value={value} index={7}>
-        Case Laws
+        <AccountingStandards />
       </TabPanel>
       <TabPanel value={value} index={8}>
+        Case Laws
+      </TabPanel>
+      <TabPanel value={value} index={9}>
         <AmendmentsActs />
       </TabPanel>
     </Box>

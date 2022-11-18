@@ -43,11 +43,10 @@ import { useDispatch } from "react-redux";
 const drawerWidth = 120;
 
 const searchItems = [
-  { title: "new", name: "newName" },
-  { title: "new1", name: "newName1" },
-  { title: "new2", name: "newName2" },
-  { title: "new3", name: "newName3" },
-  { title: "new4", name: "newName4" },
+  { title: "dashboard", link: "/superadmin/dashboard" },
+  { title: "laws", link: "/superadmin/laws" },
+  { title: "document generator", link: "/superadmin/documentGenerator" },
+  { title: "calculators", link: "/superadmin/calculator" },
 ];
 
 export default function Layout({ children }) {
@@ -55,6 +54,8 @@ export default function Layout({ children }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const [openautocomplete, setOpenautocomplete] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -374,11 +375,32 @@ export default function Layout({ children }) {
               id="combo-box-demo"
               freeSolo
               options={searchItems}
-              getOptionLabel={(option) =>
-                option.title ? option.title : option.name
-              }
+              getOptionLabel={(option) => option.title}
+              renderOption={(props, option) => (
+                <Grid
+                  container
+                  sx={{ p: 1, cursor: "pointer" }}
+                  onClick={() => navigate(option.link)}
+                >
+                  <Grid item xs={6}>
+                    {option.title}
+                  </Grid>
+                  <Grid item xs={6} sx={{ overflow: "hidden", color: "gray" }}>
+                    {option.link}
+                  </Grid>
+                </Grid>
+              )}
+              open={openautocomplete}
+              onInputChange={(_, value) => {
+                if (value.length === 0) {
+                  if (openautocomplete) setOpenautocomplete(false);
+                } else {
+                  if (!openautocomplete) setOpenautocomplete(true);
+                }
+              }}
+              onClose={() => setOpenautocomplete(false)}
               style={{ width: 300, borderRight: "none", borderLeft: "none" }}
-              onChange={(e, value) => console.log(e.target, value.title)}
+              // onChange={(e, value) => console.log(e.target, value.title)}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -387,6 +409,8 @@ export default function Layout({ children }) {
                     background: "white",
                     width: "35ch",
                     borderRadius: "4px",
+                    "& legend": { display: "none" },
+                    "& fieldset": { top: 0 },
                   }}
                   size="small"
                   placeholder="Search...."

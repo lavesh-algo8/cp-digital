@@ -24,36 +24,46 @@ import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
-import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { useDispatch, useSelector } from "react-redux";
-import htmlToDraft from "html-to-draftjs";
 import {
+  addNotification,
   addSection,
-  editNotification,
+  editSubNotification,
+  fetchSections,
+  fetchSectionsByChapterId,
   fetchSubSections,
+  fetchSubSectionsBySectionId,
 } from "../../../../../redux/superAdminReducer/superAdminAction";
+import { EditorState, convertToRaw, ContentState } from "draft-js";
+import htmlToDraft from "html-to-draftjs";
 
-const EditNotificationDialog = (props) => {
+const EditSubNotificationDialog = (props) => {
   const [file, setFile] = useState(undefined);
-  const notificationId = props?.notificationsDetails._id;
+
+  const copyData = props?.subnotificationsDetails;
 
   const handleChange = (event) => {
     setFile(event.target.files[0]);
     console.log(event.target.files[0]);
   };
 
-  const [notificationName, setnotificationName] = useState("");
-  const [notificationNo, setnotificationNo] = useState("");
+  const [subnotificationName, setsubnotificationName] = useState("");
+  const [subnotificationNo, setsubnotificationNo] = useState("");
   const [notificationShortDescription, setnotificationShortDescription] =
     useState("");
   const [dateOfNotification, setdateOfNotification] = useState(new Date());
   const [value, setValue] = useState(EditorState.createEmpty());
   const [subsectionName, setsubsectionName] = React.useState([]);
+  const [sectionName, setsectionName] = React.useState([]);
+  const [chapterName, setchapterName] = React.useState([]);
+
+  const [dateOfAmendment, setdateOfAmendment] = useState(new Date());
 
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
   };
-  const { subsectionsList } = useSelector((state) => state?.SuperAdmin);
+  const { subsectionsList, allChapterList, sectionsbychapterList } =
+    useSelector((state) => state?.SuperAdmin);
 
   const dispatch = useDispatch();
 
@@ -62,10 +72,84 @@ const EditNotificationDialog = (props) => {
     const {
       target: { value },
     } = event;
-    setsubsectionName(
-      // On autofill we get a the stringified value.
-      typeof value === "string" ? value.split(",") : value
+    setsubsectionName(typeof value === "string" ? value.split(",") : value);
+  };
+
+  const handleSectionSelectionChange = async (event, key) => {
+    console.log(event);
+    let itemKey;
+    if (key.key) {
+      setsubsectionName("");
+      itemKey = key.key.slice(2); //Removes the .$ from the key.
+      console.log(itemKey);
+    } else {
+      itemKey = key;
+    }
+    await dispatch(fetchSubSectionsBySectionId(itemKey));
+    if (key.key) {
+      const {
+        target: { value },
+      } = event;
+      setsectionName(typeof value === "string" ? value.split(",") : value);
+    } else {
+    }
+  };
+
+  const handleChapterSelectionChange = async (event, key) => {
+    // event.preventDefault();
+    console.log(event);
+    let itemKey;
+    if (key.key) {
+      setsectionName("");
+      itemKey = key.key.slice(2); //Removes the .$ from the key.
+      console.log(itemKey);
+    } else {
+      itemKey = key;
+    }
+    await dispatch(fetchSectionsByChapterId(itemKey));
+    if (key.key) {
+      const {
+        target: { value },
+      } = event;
+      setchapterName(
+        // On autofill we get a the stringified value.
+        typeof value === "string" ? value.split(",") : value
+      );
+    } else {
+    }
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("hey");
+    const notificationDetails = draftToHtml(
+      convertToRaw(value.getCurrentContent())
     );
+    const data = {
+      no: subnotificationNo,
+      sub_notification_heading: subnotificationName,
+      upload_date: dateOfNotification,
+      short_desc: notificationShortDescription,
+      details: notificationDetails,
+      sub_sections: subsectionName.toString(),
+      amendment_date: dateOfAmendment,
+      chapter: chapterName.toString(),
+      section: sectionName.toString(),
+      sub_section: subsectionName.toString(),
+    };
+    console.log(data);
+
+    await dispatch(
+      editSubNotification(data, props.subnotificationsDetails._id)
+    );
+    setsubnotificationNo("");
+    setnotificationShortDescription("");
+    setdateOfNotification("");
+    setdateOfAmendment("");
+    setsubsectionName([]);
+    setchapterName([]);
+    setsectionName([]);
+    setValue("");
+    props.setOpenDialog(false);
   };
 
   const htmlToDraftBlocks = (html) => {
@@ -87,49 +171,46 @@ const EditNotificationDialog = (props) => {
     // return blocksFromHtml;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("hey");
-    const notificationDetails = draftToHtml(
-      convertToRaw(value.getCurrentContent())
-    );
-    const data = {
-      notification_no: notificationNo,
-      notification_heading: notificationName,
-      notification_date: dateOfNotification,
-      short_description: notificationShortDescription,
-      notification_desc: notificationDetails,
-      sub_sections: subsectionName.toString(),
-    };
-    console.log(data);
-
-    await dispatch(editNotification(data, notificationId));
-    setnotificationName("");
-    setnotificationNo("");
-    setnotificationShortDescription("");
-    setdateOfNotification("");
-    setsubsectionName([]);
-    setValue("");
-    props.setOpenDialog(false);
-  };
+  useEffect(() => {
+    dispatch(fetchSubSections());
+  }, []);
 
   useEffect(() => {
-    setnotificationName(props?.notificationsDetails.notification_heading);
-    setnotificationNo(props?.notificationsDetails.notification_no);
-    setnotificationShortDescription(
-      props?.notificationsDetails.short_description
-    );
-    setdateOfNotification(props?.notificationsDetails.notification_date);
-    setsubsectionName([]);
-    if (props?.notificationsDetails.sub_sections) {
-      setsubsectionName(props?.notificationsDetails?.sub_sections.split(","));
-    }
-    if (props?.notificationsDetails) {
-      setValue(
-        htmlToDraftBlocks(props?.notificationsDetails?.notification_desc)
+    if (props) {
+      setsubnotificationName(
+        props.subnotificationsDetails.sub_notification_heading
       );
+      setsubnotificationNo(props.subnotificationsDetails.sub_notification_no);
+      setdateOfAmendment(props.subnotificationsDetails.amendment_date);
+      setdateOfNotification(props.subnotificationsDetails.upload_date);
+      setnotificationShortDescription(props.subnotificationsDetails.short_desc);
+
+      setsubsectionName([
+        props?.subnotificationsDetails?.sub_section?.sub_section_name,
+      ]);
+      if (props.subnotificationsDetails?.section?.section_name != null) {
+        setsectionName([props?.subnotificationsDetails?.section?.section_name]);
+        handleSectionSelectionChange(
+          12,
+          props?.subnotificationsDetails?.section?._id
+        );
+      }
+      if (props.subnotificationsDetails?.chapter?.chapter != null) {
+        setchapterName([props?.subnotificationsDetails?.chapter?.chapter]);
+        handleChapterSelectionChange(
+          23,
+          props?.subnotificationsDetails?.chapter?._id
+        );
+      }
+      if (props?.subnotificationsDetails) {
+        setValue(
+          htmlToDraftBlocks(
+            props.subnotificationsDetails.sub_notification_details
+          )
+        );
+      }
     }
-  }, [props]);
+  }, [copyData]);
 
   return (
     <>
@@ -145,7 +226,7 @@ const EditNotificationDialog = (props) => {
         fullWidth
         maxWidth="lg"
       >
-        <DialogTitle fontWeight={600}>Edit Notification </DialogTitle>
+        <DialogTitle fontWeight={600}>Edit Sub-Notification </DialogTitle>
         <Box position="absolute" top={5} right={10}>
           <IconButton onClick={handleDialogClose}>
             <CloseIcon />
@@ -162,11 +243,11 @@ const EditNotificationDialog = (props) => {
                     justifyContent: "center",
                   }}
                 >
-                  <Typography>Notification Number</Typography>
+                  <Typography>Sub Notification Number</Typography>
                   <OutlinedInput
                     id="outlined-adornment-weight"
-                    value={notificationNo}
-                    onChange={(e) => setnotificationNo(e.target.value)}
+                    value={subnotificationNo}
+                    onChange={(e) => setsubnotificationNo(e.target.value)}
                     aria-describedby="outlined-weight-helper-text"
                     fullWidth
                     required
@@ -179,12 +260,12 @@ const EditNotificationDialog = (props) => {
                   />
 
                   <Typography sx={{ mt: 2 }}>
-                    Name of the Notification
+                    Name of the Sub-Notification
                   </Typography>
                   <OutlinedInput
                     id="outlined-adornment-weight"
-                    value={notificationName}
-                    onChange={(e) => setnotificationName(e.target.value)}
+                    value={subnotificationName}
+                    onChange={(e) => setsubnotificationName(e.target.value)}
                     aria-describedby="outlined-weight-helper-text"
                     fullWidth
                     required
@@ -201,6 +282,29 @@ const EditNotificationDialog = (props) => {
                     inputFormat="dd/MM/yyyy"
                     value={dateOfNotification}
                     onChange={(date) => setdateOfNotification(date)}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        size="small"
+                        variant="outlined"
+                        required
+                        sx={{
+                          mt: 1,
+                          "& legend": { display: "none" },
+                          "& fieldset": { top: 0 },
+                        }}
+                      />
+                    )}
+                  />
+
+                  <Typography sx={{ mt: 2 }}>
+                    Date of last Amendment (if any)
+                  </Typography>
+                  <DesktopDatePicker
+                    //   label="Date desktop"
+                    inputFormat="dd/MM/yyyy"
+                    value={dateOfAmendment}
+                    onChange={(date) => setdateOfAmendment(date)}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -279,11 +383,112 @@ const EditNotificationDialog = (props) => {
                     }}
                     sx={{ mt: 2 }}
                   >
-                    <Typography htmlFor="age-native-simple">Map to</Typography>
+                    <Typography htmlFor="age-native-simple">
+                      Map chapter
+                    </Typography>
                     <Select
                       labelId="demo-mutiple-checkbox-label"
                       id="demo-mutiple-checkbox"
-                      multiple
+                      // multiple
+                      value={chapterName}
+                      name="first"
+                      onChange={handleChapterSelectionChange}
+                      input={
+                        <OutlinedInput
+                          sx={{ mt: 1 }}
+                          notched={false}
+                          label="Tag"
+                          size="small"
+                        />
+                      }
+                      renderValue={(selected) =>
+                        selected
+                          .map(
+                            (obj) =>
+                              // console.log(obj);
+                              obj
+                          )
+                          .join(", ")
+                      }
+                    >
+                      {allChapterList?.map((chapter) => (
+                        <MenuItem key={chapter._id} value={chapter?.chapter}>
+                          <Checkbox
+                            checked={chapterName.indexOf(chapter?.chapter) > -1}
+                          />
+                          <ListItemText primary={chapter?.chapter} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+
+                  <FormControl
+                    className={{
+                      minWidth: 300,
+                    }}
+                    sx={{ mt: 2 }}
+                  >
+                    <Typography htmlFor="age-native-simple">
+                      Map section (optional)
+                    </Typography>
+                    <Select
+                      labelId="demo-mutiple-checkbox-label"
+                      id="demo-mutiple-checkbox"
+                      // multiple
+                      value={sectionName}
+                      name="first"
+                      onChange={handleSectionSelectionChange}
+                      input={
+                        <OutlinedInput
+                          sx={{ mt: 1 }}
+                          notched={false}
+                          label="Tag"
+                          size="small"
+                        />
+                      }
+                      renderValue={(selected) =>
+                        selected
+                          .map(
+                            (obj) =>
+                              // console.log(obj);
+                              obj
+                          )
+                          .join(", ")
+                      }
+                    >
+                      {sectionsbychapterList?.map((section) => (
+                        <MenuItem
+                          key={section.section._id}
+                          value={section?.section.section_name}
+                        >
+                          <Checkbox
+                            checked={
+                              sectionName.indexOf(
+                                section?.section.section_name
+                              ) > -1
+                            }
+                          />
+                          <ListItemText
+                            primary={section?.section.section_name}
+                          />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+
+                  <FormControl
+                    className={{
+                      minWidth: 300,
+                    }}
+                    sx={{ mt: 2 }}
+                  >
+                    <Typography htmlFor="age-native-simple">
+                      Map sub section (optional)
+                    </Typography>
+                    <Select
+                      labelId="demo-mutiple-checkbox-label"
+                      id="demo-mutiple-checkbox"
+                      // multiple
                       value={subsectionName}
                       name="first"
                       onChange={handleSubSectionSelectionChange}
@@ -338,7 +543,7 @@ const EditNotificationDialog = (props) => {
                     border: "1px solid #f1f1f1",
                     padding: "5px",
                     borderRadius: "2px",
-                    height: "430px",
+                    height: "700px",
                     width: "100%",
                   }}
                   onEditorStateChange={(item) => {
@@ -395,4 +600,4 @@ const EditNotificationDialog = (props) => {
   );
 };
 
-export default EditNotificationDialog;
+export default EditSubNotificationDialog;

@@ -40,6 +40,7 @@ const Section = () => {
   const { sectionsList } = useSelector((state) => state?.SuperAdmin);
 
   const [sectionname, setsectionname] = React.useState("");
+  const [sectionno, setsectionno] = React.useState("");
   const [sectionId, setsectionId] = React.useState("");
   const [sectionDetails, setsectionDetails] = React.useState({});
   const [subsectionDetails, setsubsectionDetails] = React.useState({});
@@ -51,6 +52,8 @@ const Section = () => {
     React.useState(false);
   const [sectionEditDialog, setsectionEditDialog] = React.useState(false);
   const [subsectionEditDialog, setsubsectionEditDialog] = React.useState(false);
+
+  const [subSectionLength, setsubSectionLength] = React.useState(false);
 
   const [clickedIndex, setClickedIndex] = React.useState(-1);
 
@@ -183,6 +186,9 @@ const Section = () => {
                     setsectionname(params?.row?.section?.section_name);
                     setsectionId(params?.row?.section?._id);
                     setsubSectionAddDialog(true);
+                    setsubSectionLength(params?.row?.sub_sections?.length);
+                    setsectionno(params?.row?.section?.section_no);
+                    setsectionDetails(params?.row?.section);
                   }}
                 >
                   <Add fontSize="small" />
@@ -290,23 +296,6 @@ const Section = () => {
           </Box>
         );
       },
-      // getActions: (params) => [
-      //   <GridActionsCellItem
-      //     label="Add Sub Section"
-      //     icon={<AddIcon />}
-      //     onClick={() => {
-      //       setsectionname(params?.row?.section?.section_name);
-      //       setsubSectionAddDialog(true);
-      //     }}
-      //     showInMenu
-      //   />,
-      //   <GridActionsCellItem
-      //     icon={<DeleteIcon />}
-      //     onClick={() => {}}
-      //     label="Delete"
-      //     showInMenu
-      //   />,
-      // ],
     },
   ];
 
@@ -322,6 +311,9 @@ const Section = () => {
         setOpenDialog={setsubSectionAddDialog}
         sectionId={sectionId}
         sectionname={sectionname}
+        subSectionLength={subSectionLength}
+        sectionno={sectionno}
+        sectionDetails={sectionDetails}
       />
       <SectionDeleteDialog
         openDialog={sectionDeleteDialog}

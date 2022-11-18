@@ -33,9 +33,10 @@ const SubSectionEditDialog = (props) => {
   const [section, setsection] = useState(
     props.subsectionDetails.sub_section_name
   );
-  const [regulationName, setregulationName] = useState(
-    props.subsectionDetails?.sub_regulation
+  const [dateOfAmendment, setdateOfAmendment] = useState(
+    props.subsectionDetails.amendment_date
   );
+
   const [regulationNo, setregulationNo] = useState(
     props.subsectionDetails?.sub_regulation_no
   );
@@ -75,20 +76,25 @@ const SubSectionEditDialog = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isNaN(regulationNo)) {
+      alert("Sub-Section number should be number");
+      return false;
+    }
     console.log("hey");
     const sectionData = draftToHtml(convertToRaw(value.getCurrentContent()));
     const data = {
       sub_section_name: section,
-      sub_regulation: regulationName,
+      // sub_regulation: regulationName,
       sub_regulation_no: regulationNo,
       updatedAt: dateOfUpdate,
+      amendment_date: dateOfAmendment,
       updatedBy,
       sub_regulation_details: sectionData,
     };
     console.log(data);
     await dispatch(editSubSection(data, props.subsectionDetails._id));
     setsection("");
-    setregulationName("");
+    setdateOfAmendment("");
     setregulationNo("");
     setdateOfUpdate("");
     setupdatedBy("");
@@ -99,10 +105,10 @@ const SubSectionEditDialog = (props) => {
   useEffect(() => {
     console.log(props);
     setsection(props.subsectionDetails.sub_section_name);
-    setregulationName(props.subsectionDetails.sub_regulation);
     setregulationNo(props.subsectionDetails.sub_regulation_no);
     setdateOfUpdate(props.subsectionDetails.updatedAt);
     setupdatedBy(props.subsectionDetails.updatedBy);
+    setdateOfAmendment(props.subsectionDetails.amendment_date);
     if (props?.subsectionDetails) {
       setValue(
         htmlToDraftBlocks(props?.subsectionDetails?.sub_regulation_details)
@@ -141,7 +147,7 @@ const SubSectionEditDialog = (props) => {
                     justifyContent: "center",
                   }}
                 >
-                  <Typography>Name of the section</Typography>
+                  <Typography>Name of the sub - section</Typography>
                   <OutlinedInput
                     id="outlined-adornment-weight"
                     value={section}
@@ -157,23 +163,7 @@ const SubSectionEditDialog = (props) => {
                     }}
                   />
 
-                  <Typography sx={{ mt: 2 }}>Regulation Name</Typography>
-                  <OutlinedInput
-                    id="outlined-adornment-weight"
-                    value={regulationName}
-                    onChange={(e) => setregulationName(e.target.value)}
-                    aria-describedby="outlined-weight-helper-text"
-                    fullWidth
-                    required
-                    size="small"
-                    notched={false}
-                    label="Law"
-                    sx={{
-                      mt: 1,
-                    }}
-                  />
-
-                  <Typography sx={{ mt: 2 }}>Regulation No.</Typography>
+                  <Typography sx={{ mt: 2 }}>Sub - section No.</Typography>
                   <OutlinedInput
                     id="outlined-adornment-weight"
                     value={regulationNo}
@@ -195,6 +185,29 @@ const SubSectionEditDialog = (props) => {
                     inputFormat="dd/MM/yyyy"
                     value={dateOfUpdate}
                     onChange={(date) => setdateOfUpdate(date)}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        size="small"
+                        variant="outlined"
+                        required
+                        sx={{
+                          mt: 1,
+                          "& legend": { display: "none" },
+                          "& fieldset": { top: 0 },
+                        }}
+                      />
+                    )}
+                  />
+
+                  <Typography sx={{ mt: 2 }}>
+                    Date of last Amendment (if any)
+                  </Typography>
+                  <DesktopDatePicker
+                    //   label="Date desktop"
+                    inputFormat="dd/MM/yyyy"
+                    value={dateOfAmendment}
+                    onChange={(date) => setdateOfAmendment(date)}
                     renderInput={(params) => (
                       <TextField
                         {...params}

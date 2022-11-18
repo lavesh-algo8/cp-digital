@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Card,
+  Collapse,
   FormControl,
   Menu,
   MenuItem,
@@ -26,6 +27,9 @@ import {
   fetchRules,
 } from "../../../../redux/superAdminReducer/superAdminAction";
 import DeleteRuleDialog from "./Rule/DeleteRuleDialog";
+import AddSubRuleDialog from "./Rule/AddSubRuleDialog";
+import EditSubRuleDialog from "./Rule/EditSubRuleDialog";
+import DeleteSubRuleDialog from "./Rule/DeleteSubRuleDialog";
 
 const options = ["Publish", "UnPublish"];
 const ITEM_HEIGHT = 48;
@@ -34,11 +38,23 @@ const Rules = () => {
   const [openDialog, setopenDialog] = React.useState(false);
   const [openEditRuleDialog, setopenEditRuleDialog] = React.useState(false);
   const [openDeleteRuleDialog, setopenDeleteRuleDialog] = React.useState(false);
+  const [openAddSubRuleDialog, setopenAddSubRuleDialog] = React.useState(false);
+  const [openEditSubRuleDialog, setopenEditSubRuleDialog] =
+    React.useState(false);
+  const [openDeleteSubRuleDialog, setopenDeleteSubRuleDialog] =
+    React.useState(false);
   const [rulesDetails, setrulesDetails] = React.useState([]);
+  const [subruleDetails, setsubruleDetails] = React.useState([]);
+
   const [ruleId, setruleId] = React.useState("");
+  const [subruleId, setsubruleId] = React.useState("");
+
+  const [ruleName, setruleName] = React.useState("");
+  const [clickedIndex, setClickedIndex] = React.useState(-1);
 
   const dispatch = useDispatch();
   const { rulesList } = useSelector((state) => state?.SuperAdmin);
+  console.log(rulesList);
 
   // menu action
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -49,49 +65,6 @@ const Rules = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const rows = [
-    {
-      id: "CORPROA1",
-      date: "22.04.2022",
-      rules:
-        "Chapter I The Companies (Specification of Definitions Details) Rules, 2014",
-      rule: "1 to 4",
-      status: "Published",
-    },
-    {
-      id: "CORPROA2",
-      date: "22.04.2022",
-      rules:
-        "Chapter I The Companies (Specification of Definitions Details) Rules, 2014",
-      rule: "1 to 4",
-      status: "Published",
-    },
-    {
-      id: "CORPROA3",
-      date: "22.04.2022",
-      rules:
-        "Chapter I The Companies (Specification of Definitions Details) Rules, 2014",
-      rule: "1 to 4",
-      status: "Unpublished",
-    },
-    {
-      id: "CORPROA4",
-      date: "22.04.2022",
-      rules:
-        "Chapter I The Companies (Specification of Definitions Details) Rules, 2014",
-      rule: "1 to 4",
-      status: "Published",
-    },
-    {
-      id: "CORPROA5",
-      date: "22.04.2022",
-      rules:
-        "Chapter I The Companies (Specification of Definitions Details) Rules, 2014",
-      rule: "1 to 4",
-      status: "Published",
-    },
-  ];
 
   const columns = [
     {
@@ -108,27 +81,66 @@ const Rules = () => {
                   cursor: "pointer",
                 }}
               >
-                {params?.row?.rule_date?.toString().substring(0, 10) ||
+                {params?.row?.rule.rule_date?.toString().substring(0, 10) ||
                   new Date().toISOString().split("T")[0]}
               </Typography>
+              <Collapse
+                in={params?.row?.rule?._id === clickedIndex}
+                sx={{ pt: 1 }}
+              >
+                {params?.row?.subRule?.map((item, index) => (
+                  <Box>
+                    {item.updatedAt?.toString().substring(0, 10) ||
+                      new Date().toISOString().split("T")[0]}
+                  </Box>
+                ))}
+              </Collapse>
             </Box>
           </>
         );
       },
     },
     {
-      field: "rule_name      ",
+      field: "rule_name",
       headerName: "Rules",
       flex: 1,
       renderCell: (params) => {
         return (
-          <Typography
-            sx={{
-              cursor: "pointer",
-            }}
-          >
-            {params.row.rule_name}
-          </Typography>
+          <>
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <Typography
+                sx={{
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setClickedIndex(params?.row?.rule?._id);
+                }}
+              >
+                {params?.row?.rule?.rule_name}
+              </Typography>
+              <Collapse
+                in={params?.row?.rule?._id === clickedIndex}
+                sx={{ pt: 1 }}
+              >
+                {params?.row?.subRule?.map((item, index) => (
+                  <>
+                    <Box
+                      // onClick={() =>
+                      //   navigate(
+                      //     `${pathname}/${item.sub_circular_heading}/${item._id}`
+                      //   )
+                      // }
+                      sx={{
+                        cursor: "pointer",
+                      }}
+                    >
+                      {item.sub_rule_name}
+                    </Box>
+                  </>
+                ))}
+              </Collapse>
+            </Box>
+          </>
         );
       },
     },
@@ -151,11 +163,24 @@ const Rules = () => {
         return (
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Box sx={{ display: "flex" }}>
+              <Tooltip title="Add subrule">
+                <Typography
+                  color="primary"
+                  sx={{ pl: 1, cursor: "pointer" }}
+                  onClick={() => {
+                    setruleName(params?.row?.rule.rule_name);
+                    setruleId(params?.row?.rule._id);
+                    setopenAddSubRuleDialog(true);
+                  }}
+                >
+                  <Add fontSize="small" />
+                </Typography>
+              </Tooltip>
               <Tooltip title="Edit rule">
                 <Typography
                   color="primary"
                   onClick={() => {
-                    setrulesDetails(params?.row);
+                    setrulesDetails(params?.row.rule);
                     setopenEditRuleDialog(true);
                   }}
                   sx={{ pl: 1, cursor: "pointer" }}
@@ -168,7 +193,7 @@ const Rules = () => {
                   color="primary"
                   sx={{ pl: 1, cursor: "pointer" }}
                   onClick={() => {
-                    setruleId(params?.row?._id);
+                    setruleId(params?.row?.rule._id);
                     setopenDeleteRuleDialog(true);
                   }}
                 >
@@ -214,6 +239,41 @@ const Rules = () => {
                 </Menu>
               </div>
             </Box>
+            <Collapse
+              in={params?.row?.rule?._id === clickedIndex}
+              sx={{ pt: 1 }}
+            >
+              {params?.row?.subRule?.map((item, index) => (
+                <>
+                  <Box sx={{ display: "flex" }}>
+                    <Tooltip title="Delete sub-circular">
+                      <Typography
+                        color="primary"
+                        sx={{ pl: 1, cursor: "pointer" }}
+                        onClick={() => {
+                          setsubruleId(item._id);
+                          setopenDeleteSubRuleDialog(true);
+                        }}
+                      >
+                        <Delete fontSize="small" />
+                      </Typography>
+                    </Tooltip>
+                    <Tooltip title="Edit sub-circular">
+                      <Typography
+                        color="primary"
+                        sx={{ pl: 1, cursor: "pointer" }}
+                        onClick={() => {
+                          setsubruleDetails(item);
+                          setopenEditSubRuleDialog(true);
+                        }}
+                      >
+                        <Edit fontSize="small" />
+                      </Typography>
+                    </Tooltip>
+                  </Box>
+                </>
+              ))}
+            </Collapse>
           </Box>
         );
       },
@@ -222,11 +282,39 @@ const Rules = () => {
 
   useEffect(() => {
     dispatch(fetchRules());
-  }, [openDialog, openEditRuleDialog, openDeleteRuleDialog]);
+  }, [
+    openDialog,
+    openEditRuleDialog,
+    openDeleteRuleDialog,
+    openAddSubRuleDialog,
+    openEditSubRuleDialog,
+    openDeleteSubRuleDialog,
+  ]);
 
   return (
     <>
       <AddRuleDialog openDialog={openDialog} setOpenDialog={setopenDialog} />
+      <AddSubRuleDialog
+        ruleName={ruleName}
+        ruleId={ruleId}
+        openDialog={openAddSubRuleDialog}
+        setOpenDialog={setopenAddSubRuleDialog}
+      />
+
+      {openEditSubRuleDialog && (
+        <EditSubRuleDialog
+          openDialog={openEditSubRuleDialog}
+          setOpenDialog={setopenEditSubRuleDialog}
+          subruleDetails={subruleDetails}
+        />
+      )}
+
+      <DeleteSubRuleDialog
+        openDialog={openDeleteSubRuleDialog}
+        setOpenDialog={setopenDeleteSubRuleDialog}
+        subruleId={subruleId}
+      />
+
       <EditRuleDialog
         openDialog={openEditRuleDialog}
         setOpenDialog={setopenEditRuleDialog}
@@ -249,102 +337,6 @@ const Rules = () => {
         >
           Add Rule
         </Button>
-
-        {/* <Card
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            backgroundColor: "#192A3A",
-            color: "white",
-            height: "35px",
-          }}
-        >
-          <Typography sx={{ pr: 8, pl: 2 }}>Chapter (rules)</Typography>
-          <FormControl sx={{ minWidth: 60 }}>
-            <Select
-              size="small"
-              color="whitecol"
-              defaultValue="Name"
-              sx={{
-                "& .MuiOutlinedInput-notchedOutline": {
-                  border: "none",
-                },
-                color: "white",
-                fontSize: "15px",
-                "& .MuiSvgIcon-root": {
-                  color: "white",
-                },
-              }}
-            >
-              <MenuItem value="Name">Select</MenuItem>
-              <MenuItem value="Day Pushlished">Day Published</MenuItem>
-            </Select>
-          </FormControl>
-        </Card>
-        <Card
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            backgroundColor: "#192A3A",
-            color: "white",
-            height: "35px",
-            ml: 2,
-          }}
-        >
-          <Typography sx={{ pr: 4, pl: 2 }}>Section</Typography>
-          <FormControl sx={{}}>
-            <Select
-              size="small"
-              color="whitecol"
-              defaultValue="Name"
-              sx={{
-                "& .MuiOutlinedInput-notchedOutline": {
-                  border: "none",
-                },
-                color: "white",
-                fontSize: "15px",
-                "& .MuiSvgIcon-root": {
-                  color: "white",
-                },
-              }}
-            >
-              <MenuItem value="Name">Select</MenuItem>
-              <MenuItem value="Day Pushlished">Day </MenuItem>
-            </Select>
-          </FormControl>
-        </Card> */}
-        {/* <Card
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            backgroundColor: "#192A3A",
-            color: "white",
-            height: "35px",
-            ml: 2,
-          }}
-        >
-          <Typography sx={{ pr: 4, pl: 2 }}>Date</Typography>
-          <FormControl sx={{}}>
-            <Select
-              size="small"
-              color="whitecol"
-              defaultValue="Name"
-              sx={{
-                "& .MuiOutlinedInput-notchedOutline": {
-                  border: "none",
-                },
-                color: "white",
-                fontSize: "15px",
-                "& .MuiSvgIcon-root": {
-                  color: "white",
-                },
-              }}
-            >
-              <MenuItem value="Name">Select</MenuItem>
-              <MenuItem value="Day Pushlished">Day </MenuItem>
-            </Select>
-          </FormControl>
-        </Card> */}
       </Box>
       <TableContainer
         sx={{
@@ -353,12 +345,13 @@ const Rules = () => {
       >
         <DataGrid
           // hideFooter
-          pageSize={5}
+          pageSize={6}
           rowsPerPageOptions={[5]}
           rows={rulesList || []}
-          getRowId={(row) => row?._id}
+          getRowId={(row) => row?.rule?._id}
           columns={columns}
           disableSelectionOnClick
+          getRowHeight={() => "auto"}
           sx={{
             boxShadow: 0,
             border: 0,

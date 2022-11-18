@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
@@ -10,7 +11,10 @@ import {
   Grid,
   IconButton,
   InputLabel,
+  ListItemText,
+  MenuItem,
   OutlinedInput,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -20,46 +24,39 @@ import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
-import { EditorState, convertToRaw } from "draft-js";
+import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { useDispatch, useSelector } from "react-redux";
-import { addSection } from "../../../../../redux/superAdminReducer/superAdminAction";
+import htmlToDraft from "html-to-draftjs";
+import { editNotification } from "../../../../../redux/superAdminReducer/superAdminAction";
 
-const SectionAddDialog = (props) => {
-  const [section, setsection] = useState("");
-  const [sectionNo, setsectionNo] = useState("");
-  // const [regulationName, setregulationName] = useState("");
-  // const [dateOfUpdate, setdateOfUpdate] = useState(new Date());
-  // const [updatedBy, setupdatedBy] = useState("");
-  // const [sorting, setsorting] = useState("");
-  // const [value, setValue] = useState(EditorState.createEmpty());
-  const { sectionsList } = useSelector((state) => state?.SuperAdmin);
+const EditNotificationDialog = (props) => {
+  const notificationId = props?.notificationsDetails._id;
+
+  const [notificationName, setnotificationName] = useState("");
 
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
   };
+
   const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isNaN(sectionNo)) {
-      alert("Section no should be number");
-      return false;
-    }
     console.log("hey");
+
     const data = {
-      section_name: section,
-      section_no: sectionNo,
+      notification_heading: notificationName,
     };
     console.log(data);
-    await dispatch(addSection(data, props.chapterid));
-    setsection("");
-    setsectionNo("");
+
+    await dispatch(editNotification(data, notificationId));
+    setnotificationName("");
     props.setOpenDialog(false);
   };
 
   useEffect(() => {
-    setsectionNo(sectionsList?.length + 1);
-  }, [sectionsList]);
+    setnotificationName(props?.notificationsDetails.notification_heading);
+  }, [props]);
 
   return (
     <>
@@ -75,7 +72,7 @@ const SectionAddDialog = (props) => {
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle fontWeight={600}>Add Section </DialogTitle>
+        <DialogTitle fontWeight={600}>Edit Notification </DialogTitle>
         <Box position="absolute" top={5} right={10}>
           <IconButton onClick={handleDialogClose}>
             <CloseIcon />
@@ -90,36 +87,13 @@ const SectionAddDialog = (props) => {
                 justifyContent: "center",
               }}
             >
-              <Typography>Section No</Typography>
-              <OutlinedInput
-                id="outlined-adornment-weight"
-                value={sectionNo}
-                onChange={(e) => {
-                  const re = /^[0-9\b]+$/;
-
-                  // if value is not blank, then test the regex
-
-                  if (e.target.value === "" || re.test(e.target.value)) {
-                    setsectionNo(e.target.value);
-                  }
-                }}
-                aria-describedby="outlined-weight-helper-text"
-                fullWidth
-                required
-                size="small"
-                notched={false}
-                label="Law"
-                sx={{
-                  mt: 1,
-                }}
-              />
-              <Typography sx={{ mt: 3 }}>Name of the section</Typography>
+              <Typography sx={{ mt: 2 }}>Name of the Notification</Typography>
               <OutlinedInput
                 multiline
                 rows={3}
                 id="outlined-adornment-weight"
-                value={section}
-                onChange={(e) => setsection(e.target.value)}
+                value={notificationName}
+                onChange={(e) => setnotificationName(e.target.value)}
                 aria-describedby="outlined-weight-helper-text"
                 fullWidth
                 required
@@ -166,7 +140,7 @@ const SectionAddDialog = (props) => {
                   textTransform: "none",
                 }}
               >
-                Create
+                Update
               </Button>
             </Box>
           </form>
@@ -176,4 +150,4 @@ const SectionAddDialog = (props) => {
   );
 };
 
-export default SectionAddDialog;
+export default EditNotificationDialog;

@@ -661,7 +661,7 @@ export const fetchRules = () => async (dispatch) => {
     const data = await axios(config);
     console.log("Rule : ", data.data.result);
 
-    dispatch({
+    await dispatch({
       type: "GET_RULES",
       payload: data.data.result,
     });
@@ -689,24 +689,76 @@ export const addRule = (formData) => async (dispatch) => {
   }
 };
 
-export const editRule = (formData, ruleId) => async (dispatch) => {
+export const addSubRule = (formData, ruleId) => async (dispatch) => {
   try {
     let config = {
-      method: "put",
-      url: `${baseUrl}/cmsrules/editrule/`,
+      method: "post",
+      url: `${baseUrl}/cmsrules/addsubrule/${ruleId}`,
       headers: {
         "content-type": "application/json",
       },
       data: formData,
-      params: {
-        rule_id: ruleId,
+    };
+    console.log(formData);
+    const data = await axios(config);
+    console.log("Sub-rule Added", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const editSubRule = (formData, subruleId) => async (dispatch) => {
+  try {
+    let config = {
+      method: "put",
+      url: `${baseUrl}/cmsrules/editsubrule/${subruleId}`,
+      headers: {
+        "content-type": "application/json",
+      },
+      data: formData,
+    };
+    console.log(subruleId);
+    const data = await axios(config);
+    console.log("Sub-Rule Edited", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const deleteSubRule = (subruleId) => async (dispatch) => {
+  try {
+    let config = {
+      method: "delete",
+      url: `${baseUrl}/cmsrules/deletesubrule/${subruleId}`,
+      headers: {
+        "content-type": "application/json",
       },
     };
-    // console.log(formData);
-    // console.log(ruleId);
+    console.log(subruleId);
+    const data = await axios(config);
+    console.log("Sub-Rule Delete", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const editRule = (formData, ruleId) => async (dispatch) => {
+  try {
+    let config = {
+      method: "put",
+      url: `${baseUrl}/cmsrules/editrule/${ruleId}`,
+      headers: {
+        "content-type": "application/json",
+      },
+      data: formData,
+    };
+    console.log(ruleId);
     const data = await axios(config);
     console.log("Rule Edited", data);
-    // dispatch(openSnackBar(data?.data?.message, "success"));
+    dispatch(openSnackBar(data?.data?.message, "success"));
   } catch (e) {
     console.log(e);
   }
@@ -716,12 +768,9 @@ export const deleteRule = (ruleId) => async (dispatch) => {
   try {
     let config = {
       method: "delete",
-      url: `${baseUrl}/cmsrules/deleterule/`,
+      url: `${baseUrl}/cmsrules/deleterule/${ruleId}`,
       headers: {
         "content-type": "application/json",
-      },
-      params: {
-        rule_id: ruleId,
       },
     };
     const data = await axios(config);
@@ -751,21 +800,78 @@ export const addNotification = (formData) => async (dispatch) => {
   }
 };
 
+export const addSubNotification =
+  (formData, notificationId) => async (dispatch) => {
+    try {
+      let config = {
+        method: "post",
+        url: `${baseUrl}/cmsnotifications/addsubnotifications/${notificationId}`,
+        headers: {
+          "content-type": "application/json",
+        },
+        data: formData,
+      };
+      console.log(formData);
+      const data = await axios(config);
+      console.log("Sub-notification Added", data);
+      dispatch(openSnackBar(data?.data?.message, "success"));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+export const editSubNotification =
+  (formData, subnotificationId) => async (dispatch) => {
+    try {
+      let config = {
+        method: "put",
+        url: `${baseUrl}/cmsnotifications/editsubnotification/${subnotificationId}`,
+        headers: {
+          "content-type": "application/json",
+        },
+        data: formData,
+      };
+      console.log(formData);
+      console.log(subnotificationId);
+      const data = await axios(config);
+      console.log("Sub-Notification Edited", data);
+      dispatch(openSnackBar(data?.data?.message, "success"));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+export const deleteSubNotification =
+  (subnotificationId) => async (dispatch) => {
+    try {
+      let config = {
+        method: "delete",
+        url: `${baseUrl}/cmsnotifications/deletesubnotification/${subnotificationId}`,
+        headers: {
+          "content-type": "application/json",
+        },
+      };
+      const data = await axios(config);
+      console.log("Sub-Notification Deleted", data);
+      dispatch(openSnackBar(data?.data?.message, "success"));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
 export const editNotification =
   (formData, notificationId) => async (dispatch) => {
     try {
       let config = {
         method: "put",
-        url: `${baseUrl}/cmsnotifications/editnotification/`,
+        url: `${baseUrl}/cmsnotifications/editnotification/${notificationId}`,
         headers: {
           "content-type": "application/json",
         },
         data: formData,
-        params: {
-          notification_id: notificationId,
-        },
       };
       console.log(formData);
+      console.log(notificationId);
       const data = await axios(config);
       console.log("Notification Edited", data);
       dispatch(openSnackBar(data?.data?.message, "success"));
@@ -778,12 +884,9 @@ export const deleteNotification = (notificationId) => async (dispatch) => {
   try {
     let config = {
       method: "delete",
-      url: `${baseUrl}/cmsnotifications/deletenotification/`,
+      url: `${baseUrl}/cmsnotifications/deletenotification/${notificationId}`,
       headers: {
         "content-type": "application/json",
-      },
-      params: {
-        notification_id: notificationId,
       },
     };
     const data = await axios(config);
@@ -834,18 +937,73 @@ export const addCircular = (formData) => async (dispatch) => {
   }
 };
 
-export const editCircular = (formData, circularId) => async (dispatch) => {
+export const addSubCircular = (formData, circularId) => async (dispatch) => {
   try {
     let config = {
-      method: "put",
-      url: `${baseUrl}/cmscirculars/editcircular/`,
+      method: "post",
+      url: `${baseUrl}/cmscirculars/addsubcircular/${circularId}`,
       headers: {
         "content-type": "application/json",
       },
       data: formData,
-      params: {
-        circular_id: circularId,
+    };
+    console.log(formData);
+    console.log("circularid: " + circularId);
+    const data = await axios(config);
+    console.log("Sub-circular Added", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const editSubCircular = (formData, circularId) => async (dispatch) => {
+  try {
+    let config = {
+      method: "put",
+      url: `${baseUrl}/cmscirculars/editsubcircular/${circularId}`,
+      headers: {
+        "content-type": "application/json",
       },
+      data: formData,
+    };
+    console.log(formData);
+    console.log("circularid: " + circularId);
+    const data = await axios(config);
+    console.log("Sub-circular Edited", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const deleteSubCircular = (subcircularId) => async (dispatch) => {
+  try {
+    let config = {
+      method: "delete",
+      url: `${baseUrl}/cmscirculars/deletesubcircular/${subcircularId}`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    console.log("subcircularid: " + subcircularId);
+    const data = await axios(config);
+    console.log("Sub-circular deleted", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const editCircular = (formData, circularId) => async (dispatch) => {
+  try {
+    let config = {
+      method: "put",
+      url: `${baseUrl}/cmscirculars/editcircular/${circularId}`,
+      headers: {
+        "content-type": "application/json",
+      },
+      data: formData,
     };
     console.log(formData);
     const data = await axios(config);
@@ -860,12 +1018,9 @@ export const deleteCircular = (circularId) => async (dispatch) => {
   try {
     let config = {
       method: "delete",
-      url: `${baseUrl}/cmscirculars/deletecircular/`,
+      url: `${baseUrl}/cmscirculars/deletecircular/${circularId}`,
       headers: {
         "content-type": "application/json",
-      },
-      params: {
-        circular_id: circularId,
       },
     };
     const data = await axios(config);
@@ -891,6 +1046,25 @@ export const fetchCirculars = () => async (dispatch) => {
       type: "GET_CIRCULARS",
       payload: data.data.result,
     });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const addArticle = (formData) => async (dispatch) => {
+  try {
+    let config = {
+      method: "post",
+      url: `${baseUrl}/cmsarticles/addarticle`,
+      headers: {
+        "content-type": "application/json",
+      },
+      data: formData,
+    };
+    console.log(formData);
+    const data = await axios(config);
+    console.log("Article Added", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
   } catch (e) {
     console.log(e);
   }
@@ -1002,6 +1176,90 @@ export const fetchSubSections = () => async (dispatch) => {
       payload: data.data.result,
     });
     // dispatch(openSnackBar(data?.data?.message, "success"));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const fetchSectionsByChapterId = (chapterid) => async (dispatch) => {
+  try {
+    let config = {
+      method: "get",
+      url: `${baseUrl}/knowledgecentre/fetchsection/${chapterid}`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const data = await axios(config);
+    console.log("SectionsBySectionId : ", data.data.result);
+    await dispatch({
+      type: "GET_SECTIONSBYSECTIONID",
+      payload: data.data.result,
+    });
+    return data.data.result;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const fetchSubSectionsBySectionId = (sectionid) => async (dispatch) => {
+  try {
+    let config = {
+      method: "get",
+      url: `${baseUrl}/knowledgecentre/fetchsubsection/${sectionid}`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const data = await axios(config);
+    console.log("SubSectionsBySectionId : ", data.data.result);
+
+    dispatch({
+      type: "GET_SUBSECTIONSBYSECTIONID",
+      payload: data.data.result,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const fetchAllChapters = () => async (dispatch) => {
+  try {
+    let config = {
+      method: "get",
+      url: `${baseUrl}/knowledgecentre/fetchchapters`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const data = await axios(config);
+    console.log("chapters : ", data.data.result);
+
+    dispatch({
+      type: "GET_ALLCHAPTERS",
+      payload: data.data.result,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const fetchAllSections = () => async (dispatch) => {
+  try {
+    let config = {
+      method: "get",
+      url: `${baseUrl}/knowledgecentre/fetchsections`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const data = await axios(config);
+    console.log("Sections : ", data.data.result);
+
+    dispatch({
+      type: "GET_ALLSECTIONS",
+      payload: data.data.result,
+    });
   } catch (e) {
     console.log(e);
   }

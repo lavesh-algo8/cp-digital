@@ -11,8 +11,10 @@ const initialStore = {
   selectedDocument: {},
   categoryList: [],
   chapterList: [],
+  allChapterList: [],
   sectionsList: [],
   subsectionsList: [],
+  sectionsbychapterList: [],
   rulesList: [],
   notificationsList: [],
   circularsList: [],
@@ -90,11 +92,34 @@ const superAdminReducer = (state = initialStore, action) => {
         ...state,
         sectionsList: action.payload,
       };
-    case "GET_SUBSECTIONS":
+
+    case "GET_SUBSECTIONSBYSECTIONID":
       return {
         ...state,
         subsectionsList: action.payload,
       };
+    case "GET_SECTIONSBYSECTIONID":
+      return {
+        ...state,
+        sectionsbychapterList: action.payload,
+      };
+
+    case "REMOVE_SUBSECTIONSBYSECTIONID":
+      return {
+        ...state,
+        subsectionsList: action.payload,
+      };
+    case "REMOVE_SECTIONSBYSECTIONID":
+      return {
+        ...state,
+        sectionsbychapterList: action.payload,
+      };
+    case "GET_ALLCHAPTERS":
+      return {
+        ...state,
+        allChapterList: action.payload,
+      };
+
     case "GET_RULES":
       return {
         ...state,
