@@ -16,45 +16,61 @@ import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import TableDialog from "./DialogShow/TableDialog";
 import AddIcon from "@mui/icons-material/Add";
 import AddDialog from "../AddDialogCommon/AddDialog";
-import AddRuleDialog from "./Rule/AddRuleDialog";
+import AddCircularDialog from "./Circular/AddCircularDialog";
 import { Delete, Edit } from "@mui/icons-material";
-import Add from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import EditRuleDialog from "./Rule/EditRuleDialog";
+import EditCircularDialog from "./Circular/EditCircularDialog";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchRule,
-  fetchRules,
+  fetchArticles,
+  fetchCirculars,
+  fetchPresentation,
 } from "../../../../redux/superAdminReducer/superAdminAction";
-import DeleteRuleDialog from "./Rule/DeleteRuleDialog";
-import AddSubRuleDialog from "./Rule/AddSubRuleDialog";
-import EditSubRuleDialog from "./Rule/EditSubRuleDialog";
-import DeleteSubRuleDialog from "./Rule/DeleteSubRuleDialog";
+import DeleteCircularDialog from "./Circular/DeleteCircularDialog";
+import Add from "@mui/icons-material/Add";
+import AddSubCircularDialog from "./Circular/AddSubCircularDialog";
+import AddArticleDialog from "./Article/AddArticleDialog";
+import EditArticleDialog from "./Article/EditArticleDialog";
+import DeleteArticleDialog from "./Article/DeleteArticleDialog";
+import AddSubArticleDialog from "./Article/AddSubArticleDialog";
+import EditSubArticleDialog from "./Article/EditSubArticleDialog";
+import DeleteSubArticleDialog from "./Article/DeleteSubArticleDialog";
+import AddPresentationDialog from "./Presentation/AddPresentationDialog";
+import EditPresentationDialog from "./Presentation/EditPresentationDialog";
+import DeletePresentationDialog from "./Presentation/DeletePresentationDialog";
+import AddSubPresentationDialog from "./Presentation/AddSubPresentationDialog";
+import EditSubPresentationDialog from "./Presentation/EditSubPresentationDialog";
+import DeleteSubPresentationDialog from "./Presentation/DeleteSubPresentationDialog";
 
 const options = ["Publish", "UnPublish"];
 const ITEM_HEIGHT = 48;
 
-const Rules = () => {
-  const [openDialog, setopenDialog] = React.useState(false);
-  const [openEditRuleDialog, setopenEditRuleDialog] = React.useState(false);
-  const [openDeleteRuleDialog, setopenDeleteRuleDialog] = React.useState(false);
-  const [openAddSubRuleDialog, setopenAddSubRuleDialog] = React.useState(false);
-  const [openEditSubRuleDialog, setopenEditSubRuleDialog] =
-    React.useState(false);
-  const [openDeleteSubRuleDialog, setopenDeleteSubRuleDialog] =
-    React.useState(false);
-  const [rulesDetails, setrulesDetails] = React.useState([]);
-  const [subruleDetails, setsubruleDetails] = React.useState([]);
-
-  const [ruleId, setruleId] = React.useState("");
-  const [subruleId, setsubruleId] = React.useState("");
-
-  const [ruleName, setruleName] = React.useState("");
+const Presentation = () => {
+  const dispatch = useDispatch();
   const [clickedIndex, setClickedIndex] = React.useState(-1);
 
-  const dispatch = useDispatch();
-  const { rulesList } = useSelector((state) => state?.SuperAdmin);
-  console.log(rulesList);
+  const [openDialog, setopenDialog] = React.useState(false);
+  const [openEditPresentationDialog, setopenEditPresentationDialog] =
+    React.useState(false);
+  const [openaddsubpresentationDialog, setopenaddsubpresentationDialog] =
+    React.useState(false);
+  const [openeditsubpresentationDialog, setopeneditsubpresentationDialog] =
+    React.useState(false);
+  const [opendeletesubpresentationDialog, setopendeletesubpresentationDialog] =
+    React.useState(false);
+
+  const [openDeletePresentationDialog, setopenDeletePresentationDialog] =
+    React.useState(false);
+  const [presentationId, setpresentationId] = React.useState(false);
+  const [subpresentationId, setsubpresentationId] = React.useState(false);
+
+  const [presentationName, setpresentationName] = React.useState(false);
+
+  const { presentationList } = useSelector((state) => state?.SuperAdmin);
+  const [presentationDetails, setpresentationDetails] = React.useState({});
+  const [subpresentationDetails, setsubpresentationDetails] = React.useState(
+    {}
+  );
 
   // menu action
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -68,9 +84,10 @@ const Rules = () => {
 
   const columns = [
     {
-      field: "rule_date",
+      field: "presentation_date",
       headerName: "Date",
       flex: 0.2,
+
       renderCell: (params) => {
         return (
           <>
@@ -80,16 +97,16 @@ const Rules = () => {
                   cursor: "pointer",
                 }}
               >
-                {params?.row?.rule.rule_date?.toString().substring(0, 10) ||
+                {params?.row?.presentation.date?.toString().substring(0, 10) ||
                   new Date().toISOString().split("T")[0]}
               </Typography>
               <Collapse
-                in={params?.row?.rule?._id === clickedIndex}
+                in={params?.row?.presentation?._id === clickedIndex}
                 sx={{ pt: 1 }}
               >
-                {params?.row?.subRule?.map((item, index) => (
+                {params?.row?.sub_presentations?.map((item, index) => (
                   <Box>
-                    {item.updatedAt?.toString().substring(0, 10) ||
+                    {item.date?.toString().substring(0, 10) ||
                       new Date().toISOString().split("T")[0]}
                   </Box>
                 ))}
@@ -100,8 +117,8 @@ const Rules = () => {
       },
     },
     {
-      field: "rule_name",
-      headerName: "Rules",
+      field: "circular_heading",
+      headerName: "Presentation",
       flex: 1,
       renderCell: (params) => {
         return (
@@ -112,28 +129,23 @@ const Rules = () => {
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  setClickedIndex(params?.row?.rule?._id);
+                  setClickedIndex(params?.row?.presentation?._id);
                 }}
               >
-                {params?.row?.rule?.rule_name}
+                {params.row.presentation.title}
               </Typography>
               <Collapse
-                in={params?.row?.rule?._id === clickedIndex}
+                in={params?.row?.presentation?._id === clickedIndex}
                 sx={{ pt: 1 }}
               >
-                {params?.row?.subRule?.map((item, index) => (
+                {params?.row?.sub_presentations?.map((item, index) => (
                   <>
                     <Box
-                      // onClick={() =>
-                      //   navigate(
-                      //     `${pathname}/${item.sub_circular_heading}/${item._id}`
-                      //   )
-                      // }
                       sx={{
                         cursor: "pointer",
                       }}
                     >
-                      {item.sub_rule_name}
+                      {item.sub_title}
                     </Box>
                   </>
                 ))}
@@ -162,38 +174,38 @@ const Rules = () => {
         return (
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Box sx={{ display: "flex" }}>
-              <Tooltip title="Add subrule">
+              <Tooltip title="Add subPresentation">
                 <Typography
                   color="primary"
                   sx={{ pl: 1, cursor: "pointer" }}
                   onClick={() => {
-                    setruleName(params?.row?.rule.rule_name);
-                    setruleId(params?.row?.rule._id);
-                    setopenAddSubRuleDialog(true);
+                    setpresentationName(params?.row?.presentation.title);
+                    setpresentationId(params?.row?.presentation?._id);
+                    setopenaddsubpresentationDialog(true);
                   }}
                 >
                   <Add fontSize="small" />
                 </Typography>
               </Tooltip>
-              <Tooltip title="Edit rule">
+              <Tooltip title="Edit Presentation">
                 <Typography
                   color="primary"
                   onClick={() => {
-                    setrulesDetails(params?.row.rule);
-                    setopenEditRuleDialog(true);
+                    setpresentationDetails(params?.row?.presentation);
+                    setopenEditPresentationDialog(true);
                   }}
                   sx={{ pl: 1, cursor: "pointer" }}
                 >
                   <Edit fontSize="small" />
                 </Typography>
               </Tooltip>
-              <Tooltip title="Delete rule">
+              <Tooltip title="Delete Presentation">
                 <Typography
                   color="primary"
                   sx={{ pl: 1, cursor: "pointer" }}
                   onClick={() => {
-                    setruleId(params?.row?.rule._id);
-                    setopenDeleteRuleDialog(true);
+                    setpresentationId(params?.row?.presentation?._id);
+                    setopenDeletePresentationDialog(true);
                   }}
                 >
                   <Delete fontSize="small" />
@@ -239,31 +251,31 @@ const Rules = () => {
               </div>
             </Box>
             <Collapse
-              in={params?.row?.rule?._id === clickedIndex}
+              in={params?.row?.presentation?._id === clickedIndex}
               sx={{ pt: 1 }}
             >
-              {params?.row?.subRule?.map((item, index) => (
+              {params?.row?.sub_presentations?.map((item, index) => (
                 <>
                   <Box sx={{ display: "flex" }}>
-                    <Tooltip title="Delete sub-rule">
+                    <Tooltip title="Delete sub-presentation">
                       <Typography
                         color="primary"
                         sx={{ pl: 1, cursor: "pointer" }}
                         onClick={() => {
-                          setsubruleId(item._id);
-                          setopenDeleteSubRuleDialog(true);
+                          setsubpresentationId(item._id);
+                          setopendeletesubpresentationDialog(true);
                         }}
                       >
                         <Delete fontSize="small" />
                       </Typography>
                     </Tooltip>
-                    <Tooltip title="Edit sub-rule">
+                    <Tooltip title="Edit sub-presentation">
                       <Typography
                         color="primary"
                         sx={{ pl: 1, cursor: "pointer" }}
                         onClick={() => {
-                          setsubruleDetails(item);
-                          setopenEditSubRuleDialog(true);
+                          setsubpresentationDetails(item);
+                          setopeneditsubpresentationDialog(true);
                         }}
                       >
                         <Edit fontSize="small" />
@@ -280,50 +292,52 @@ const Rules = () => {
   ];
 
   useEffect(() => {
-    dispatch(fetchRules());
+    dispatch(fetchPresentation());
   }, [
     openDialog,
-    openEditRuleDialog,
-    openDeleteRuleDialog,
-    openAddSubRuleDialog,
-    openEditSubRuleDialog,
-    openDeleteSubRuleDialog,
+    openEditPresentationDialog,
+    openDeletePresentationDialog,
+    openaddsubpresentationDialog,
+    openeditsubpresentationDialog,
+    opendeletesubpresentationDialog,
   ]);
 
   return (
     <>
-      <AddRuleDialog openDialog={openDialog} setOpenDialog={setopenDialog} />
-      <AddSubRuleDialog
-        ruleName={ruleName}
-        ruleId={ruleId}
-        openDialog={openAddSubRuleDialog}
-        setOpenDialog={setopenAddSubRuleDialog}
+      <AddPresentationDialog
+        openDialog={openDialog}
+        setOpenDialog={setopenDialog}
       />
 
-      {openEditSubRuleDialog && (
-        <EditSubRuleDialog
-          openDialog={openEditSubRuleDialog}
-          setOpenDialog={setopenEditSubRuleDialog}
-          subruleDetails={subruleDetails}
-        />
-      )}
-
-      <DeleteSubRuleDialog
-        openDialog={openDeleteSubRuleDialog}
-        setOpenDialog={setopenDeleteSubRuleDialog}
-        subruleId={subruleId}
+      <AddSubPresentationDialog
+        openDialog={openaddsubpresentationDialog}
+        setOpenDialog={setopenaddsubpresentationDialog}
+        presentationName={presentationName}
+        presentationId={presentationId}
       />
 
-      <EditRuleDialog
-        openDialog={openEditRuleDialog}
-        setOpenDialog={setopenEditRuleDialog}
-        rulesDetails={rulesDetails}
+      <EditSubPresentationDialog
+        openDialog={openeditsubpresentationDialog}
+        setOpenDialog={setopeneditsubpresentationDialog}
+        subpresentationDetails={subpresentationDetails}
       />
 
-      <DeleteRuleDialog
-        openDialog={openDeleteRuleDialog}
-        setOpenDialog={setopenDeleteRuleDialog}
-        ruleId={ruleId}
+      <DeleteSubPresentationDialog
+        openDialog={opendeletesubpresentationDialog}
+        setOpenDialog={setopendeletesubpresentationDialog}
+        subpresentationId={subpresentationId}
+      />
+
+      <EditPresentationDialog
+        openDialog={openEditPresentationDialog}
+        setOpenDialog={setopenEditPresentationDialog}
+        presentationDetails={presentationDetails}
+      />
+
+      <DeletePresentationDialog
+        openDialog={openDeletePresentationDialog}
+        setOpenDialog={setopenDeletePresentationDialog}
+        presentationId={presentationId}
       />
 
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -334,7 +348,7 @@ const Rules = () => {
           sx={{ mr: 2 }}
           onClick={() => setopenDialog(true)}
         >
-          Add Rule
+          Add Presentation
         </Button>
       </Box>
       <TableContainer
@@ -343,11 +357,10 @@ const Rules = () => {
         }}
       >
         <DataGrid
-          // hideFooter
-          pageSize={6}
+          pageSize={5}
           rowsPerPageOptions={[5]}
-          rows={rulesList || []}
-          getRowId={(row) => row?.rule?._id}
+          rows={presentationList || []}
+          getRowId={(row) => row?.presentation._id}
           columns={columns}
           disableSelectionOnClick
           getRowHeight={() => "auto"}
@@ -377,4 +390,4 @@ const Rules = () => {
   );
 };
 
-export default Rules;
+export default Presentation;

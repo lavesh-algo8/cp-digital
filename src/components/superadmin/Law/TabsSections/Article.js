@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Card,
+  Collapse,
   FormControl,
   Menu,
   MenuItem,
@@ -20,30 +21,47 @@ import { Delete, Edit } from "@mui/icons-material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditCircularDialog from "./Circular/EditCircularDialog";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCirculars } from "../../../../redux/superAdminReducer/superAdminAction";
+import {
+  fetchArticles,
+  fetchCirculars,
+} from "../../../../redux/superAdminReducer/superAdminAction";
 import DeleteCircularDialog from "./Circular/DeleteCircularDialog";
 import Add from "@mui/icons-material/Add";
 import AddSubCircularDialog from "./Circular/AddSubCircularDialog";
 import AddArticleDialog from "./Article/AddArticleDialog";
+import EditArticleDialog from "./Article/EditArticleDialog";
+import DeleteArticleDialog from "./Article/DeleteArticleDialog";
+import AddSubArticleDialog from "./Article/AddSubArticleDialog";
+import EditSubArticleDialog from "./Article/EditSubArticleDialog";
+import DeleteSubArticleDialog from "./Article/DeleteSubArticleDialog";
 
 const options = ["Publish", "UnPublish"];
 const ITEM_HEIGHT = 48;
 
 const Article = () => {
   const dispatch = useDispatch();
+  const [clickedIndex, setClickedIndex] = React.useState(-1);
 
   const [openDialog, setopenDialog] = React.useState(false);
-  const [openaddsubcircularDialog, setopenaddsubcircularDialog] =
+  const [openEditArticleRuleDialog, setopenEditArticleRuleDialog] =
     React.useState(false);
-  const [openEditCircularRuleDialog, setopenEditCircularRuleDialog] =
+  const [openaddsubarticleDialog, setopenaddsubarticleDialog] =
     React.useState(false);
-  const [openDeleteCircularDialog, setopenDeleteCircularDialog] =
+  const [openeditsubarticleDialog, setopeneditsubarticleDialog] =
     React.useState(false);
-  const [circularId, setcircularId] = React.useState(false);
-  const [circularName, setcircularName] = React.useState(false);
+  const [opendeletesubarticleDialog, setopendeletesubarticleDialog] =
+    React.useState(false);
 
-  const { articleList } = useSelector((state) => state?.SuperAdmin);
-  const [circularsDetails, setcircularsDetails] = React.useState({});
+  const [openDeleteArticleDialog, setopenDeleteArticleDialog] =
+    React.useState(false);
+  const [articleId, setarticleId] = React.useState(false);
+  const [subarticleId, setsubarticleId] = React.useState(false);
+
+  const [articleName, setarticleName] = React.useState(false);
+
+  const { articlesList } = useSelector((state) => state?.SuperAdmin);
+  const [articleDetails, setarticleDetails] = React.useState({});
+  const [subarticleDetails, setsubarticleDetails] = React.useState({});
 
   // menu action
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -57,7 +75,7 @@ const Article = () => {
 
   const columns = [
     {
-      field: "circular_date",
+      field: "article_date",
       headerName: "Date",
       flex: 0.2,
 
@@ -70,9 +88,20 @@ const Article = () => {
                   cursor: "pointer",
                 }}
               >
-                {params?.row?.circular_date?.toString().substring(0, 10) ||
+                {params?.row?.article.date?.toString().substring(0, 10) ||
                   new Date().toISOString().split("T")[0]}
               </Typography>
+              <Collapse
+                in={params?.row?.article?._id === clickedIndex}
+                sx={{ pt: 1 }}
+              >
+                {params?.row?.subArticles?.map((item, index) => (
+                  <Box>
+                    {item.date?.toString().substring(0, 10) ||
+                      new Date().toISOString().split("T")[0]}
+                  </Box>
+                ))}
+              </Collapse>
             </Box>
           </>
         );
@@ -84,14 +113,36 @@ const Article = () => {
       flex: 1,
       renderCell: (params) => {
         return (
-          <Typography
-            sx={{
-              cursor: "pointer",
-            }}
-            // onClick={handleOpenSection}
-          >
-            {params.row.circular_heading}
-          </Typography>
+          <>
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <Typography
+                sx={{
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setClickedIndex(params?.row?.article?._id);
+                }}
+              >
+                {params.row.article.title}
+              </Typography>
+              <Collapse
+                in={params?.row?.article?._id === clickedIndex}
+                sx={{ pt: 1 }}
+              >
+                {params?.row?.subArticles?.map((item, index) => (
+                  <>
+                    <Box
+                      sx={{
+                        cursor: "pointer",
+                      }}
+                    >
+                      {item.sub_title}
+                    </Box>
+                  </>
+                ))}
+              </Collapse>
+            </Box>
+          </>
         );
       },
     },
@@ -114,38 +165,38 @@ const Article = () => {
         return (
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Box sx={{ display: "flex" }}>
-              <Tooltip title="Add subcircular">
+              <Tooltip title="Add subArticle">
                 <Typography
                   color="primary"
                   sx={{ pl: 1, cursor: "pointer" }}
                   onClick={() => {
-                    setcircularName(params?.row?.circular_heading);
-                    setcircularId(params?.row?._id);
-                    setopenaddsubcircularDialog(true);
+                    setarticleName(params?.row?.article.title);
+                    setarticleId(params?.row?.article?._id);
+                    setopenaddsubarticleDialog(true);
                   }}
                 >
                   <Add fontSize="small" />
                 </Typography>
               </Tooltip>
-              <Tooltip title="Edit section">
+              <Tooltip title="Edit Article">
                 <Typography
                   color="primary"
                   onClick={() => {
-                    setcircularsDetails(params?.row);
-                    setopenEditCircularRuleDialog(true);
+                    setarticleDetails(params?.row?.article);
+                    setopenEditArticleRuleDialog(true);
                   }}
                   sx={{ pl: 1, cursor: "pointer" }}
                 >
                   <Edit fontSize="small" />
                 </Typography>
               </Tooltip>
-              <Tooltip title="Delete Section">
+              <Tooltip title="Delete Article">
                 <Typography
                   color="primary"
                   sx={{ pl: 1, cursor: "pointer" }}
                   onClick={() => {
-                    setcircularId(params?.row?._id);
-                    setopenDeleteCircularDialog(true);
+                    setarticleId(params?.row?.article?._id);
+                    setopenDeleteArticleDialog(true);
                   }}
                 >
                   <Delete fontSize="small" />
@@ -190,6 +241,41 @@ const Article = () => {
                 </Menu>
               </div>
             </Box>
+            <Collapse
+              in={params?.row?.article?._id === clickedIndex}
+              sx={{ pt: 1 }}
+            >
+              {params?.row?.subArticles?.map((item, index) => (
+                <>
+                  <Box sx={{ display: "flex" }}>
+                    <Tooltip title="Delete sub-article">
+                      <Typography
+                        color="primary"
+                        sx={{ pl: 1, cursor: "pointer" }}
+                        onClick={() => {
+                          setsubarticleId(item._id);
+                          setopendeletesubarticleDialog(true);
+                        }}
+                      >
+                        <Delete fontSize="small" />
+                      </Typography>
+                    </Tooltip>
+                    <Tooltip title="Edit sub-article">
+                      <Typography
+                        color="primary"
+                        sx={{ pl: 1, cursor: "pointer" }}
+                        onClick={() => {
+                          setsubarticleDetails(item);
+                          setopeneditsubarticleDialog(true);
+                        }}
+                      >
+                        <Edit fontSize="small" />
+                      </Typography>
+                    </Tooltip>
+                  </Box>
+                </>
+              ))}
+            </Collapse>
           </Box>
         );
       },
@@ -197,31 +283,50 @@ const Article = () => {
   ];
 
   useEffect(() => {
-    dispatch(fetchCirculars());
-  }, [openDialog, openEditCircularRuleDialog, openDeleteCircularDialog]);
+    dispatch(fetchArticles());
+  }, [
+    openDialog,
+    openEditArticleRuleDialog,
+    openDeleteArticleDialog,
+    openaddsubarticleDialog,
+    openeditsubarticleDialog,
+    opendeletesubarticleDialog,
+  ]);
 
   return (
     <>
       <AddArticleDialog openDialog={openDialog} setOpenDialog={setopenDialog} />
 
-      {/* <AddSubCircularDialog
-        openDialog={openaddsubcircularDialog}
-        setOpenDialog={setopenaddsubcircularDialog}
-        circularName={circularName}
-        circularId={circularId}
+      <AddSubArticleDialog
+        openDialog={openaddsubarticleDialog}
+        setOpenDialog={setopenaddsubarticleDialog}
+        articleName={articleName}
+        articleId={articleId}
       />
 
-      <EditCircularDialog
-        openDialog={openEditCircularRuleDialog}
-        setOpenDialog={setopenEditCircularRuleDialog}
-        circularsDetails={circularsDetails}
+      <EditSubArticleDialog
+        openDialog={openeditsubarticleDialog}
+        setOpenDialog={setopeneditsubarticleDialog}
+        subarticleDetails={subarticleDetails}
       />
 
-      <DeleteCircularDialog
-        openDialog={openDeleteCircularDialog}
-        setOpenDialog={setopenDeleteCircularDialog}
-        circularId={circularId}
-      /> */}
+      <DeleteSubArticleDialog
+        openDialog={opendeletesubarticleDialog}
+        setOpenDialog={setopendeletesubarticleDialog}
+        subarticleId={subarticleId}
+      />
+
+      <EditArticleDialog
+        openDialog={openEditArticleRuleDialog}
+        setOpenDialog={setopenEditArticleRuleDialog}
+        articleDetails={articleDetails}
+      />
+
+      <DeleteArticleDialog
+        openDialog={openDeleteArticleDialog}
+        setOpenDialog={setopenDeleteArticleDialog}
+        articleId={articleId}
+      />
 
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Button
@@ -242,8 +347,8 @@ const Article = () => {
         <DataGrid
           pageSize={5}
           rowsPerPageOptions={[5]}
-          rows={articleList || []}
-          getRowId={(row) => row?._id}
+          rows={articlesList || []}
+          getRowId={(row) => row?.article._id}
           columns={columns}
           disableSelectionOnClick
           getRowHeight={() => "auto"}
@@ -262,7 +367,6 @@ const Article = () => {
             },
             "& .MuiDataGrid-cell": {
               borderBottom: "none",
-              py: "8px",
             },
             "& .MuiDataGrid-columnHeaderTitle": {
               color: "#bfc0c9",

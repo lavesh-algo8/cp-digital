@@ -16,45 +16,55 @@ import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import TableDialog from "./DialogShow/TableDialog";
 import AddIcon from "@mui/icons-material/Add";
 import AddDialog from "../AddDialogCommon/AddDialog";
-import AddRuleDialog from "./Rule/AddRuleDialog";
+import AddCircularDialog from "./Circular/AddCircularDialog";
 import { Delete, Edit } from "@mui/icons-material";
-import Add from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import EditRuleDialog from "./Rule/EditRuleDialog";
+import EditCircularDialog from "./Circular/EditCircularDialog";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchRule,
-  fetchRules,
+  fetchArticles,
+  fetchCirculars,
+  fetchNews,
 } from "../../../../redux/superAdminReducer/superAdminAction";
-import DeleteRuleDialog from "./Rule/DeleteRuleDialog";
-import AddSubRuleDialog from "./Rule/AddSubRuleDialog";
-import EditSubRuleDialog from "./Rule/EditSubRuleDialog";
-import DeleteSubRuleDialog from "./Rule/DeleteSubRuleDialog";
+import DeleteCircularDialog from "./Circular/DeleteCircularDialog";
+import Add from "@mui/icons-material/Add";
+import AddSubCircularDialog from "./Circular/AddSubCircularDialog";
+import AddArticleDialog from "./Article/AddArticleDialog";
+import EditArticleDialog from "./Article/EditArticleDialog";
+import DeleteArticleDialog from "./Article/DeleteArticleDialog";
+import AddSubArticleDialog from "./Article/AddSubArticleDialog";
+import EditSubArticleDialog from "./Article/EditSubArticleDialog";
+import DeleteSubArticleDialog from "./Article/DeleteSubArticleDialog";
+import AddNewsDialog from "./News/AddNewsDialog";
+import EditNewsDialog from "./News/EditNewsDialog";
+import DeleteNewsDialog from "./News/DeleteNewsDialog";
+import AddSubNewsDialog from "./News/AddSubNewsDialog";
 
 const options = ["Publish", "UnPublish"];
 const ITEM_HEIGHT = 48;
 
-const Rules = () => {
-  const [openDialog, setopenDialog] = React.useState(false);
-  const [openEditRuleDialog, setopenEditRuleDialog] = React.useState(false);
-  const [openDeleteRuleDialog, setopenDeleteRuleDialog] = React.useState(false);
-  const [openAddSubRuleDialog, setopenAddSubRuleDialog] = React.useState(false);
-  const [openEditSubRuleDialog, setopenEditSubRuleDialog] =
-    React.useState(false);
-  const [openDeleteSubRuleDialog, setopenDeleteSubRuleDialog] =
-    React.useState(false);
-  const [rulesDetails, setrulesDetails] = React.useState([]);
-  const [subruleDetails, setsubruleDetails] = React.useState([]);
-
-  const [ruleId, setruleId] = React.useState("");
-  const [subruleId, setsubruleId] = React.useState("");
-
-  const [ruleName, setruleName] = React.useState("");
+const News = () => {
+  const dispatch = useDispatch();
   const [clickedIndex, setClickedIndex] = React.useState(-1);
 
-  const dispatch = useDispatch();
-  const { rulesList } = useSelector((state) => state?.SuperAdmin);
-  console.log(rulesList);
+  const [openDialog, setopenDialog] = React.useState(false);
+  const [openEditNewsRuleDialog, setopenEditNewsRuleDialog] =
+    React.useState(false);
+  const [openaddsubnewsDialog, setopenaddsubnewsDialog] = React.useState(false);
+  const [openeditsubarticleDialog, setopeneditsubarticleDialog] =
+    React.useState(false);
+  const [opendeletesubarticleDialog, setopendeletesubarticleDialog] =
+    React.useState(false);
+
+  const [openDeleteNewsDialog, setopenDeleteNewsDialog] = React.useState(false);
+  const [newsId, setnewsId] = React.useState(false);
+  const [subnewsId, setsubnewsId] = React.useState(false);
+
+  const [newsName, setnewsName] = React.useState(false);
+
+  const { newsList } = useSelector((state) => state?.SuperAdmin);
+  const [newsDetails, setnewsDetails] = React.useState({});
+  const [subnewsDetails, setsubnewsDetails] = React.useState({});
 
   // menu action
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -68,9 +78,10 @@ const Rules = () => {
 
   const columns = [
     {
-      field: "rule_date",
+      field: "date",
       headerName: "Date",
       flex: 0.2,
+
       renderCell: (params) => {
         return (
           <>
@@ -80,16 +91,16 @@ const Rules = () => {
                   cursor: "pointer",
                 }}
               >
-                {params?.row?.rule.rule_date?.toString().substring(0, 10) ||
+                {params?.row?.news.date?.toString().substring(0, 10) ||
                   new Date().toISOString().split("T")[0]}
               </Typography>
               <Collapse
-                in={params?.row?.rule?._id === clickedIndex}
+                in={params?.row?.news?._id === clickedIndex}
                 sx={{ pt: 1 }}
               >
-                {params?.row?.subRule?.map((item, index) => (
+                {params?.row?.sub_news?.map((item, index) => (
                   <Box>
-                    {item.updatedAt?.toString().substring(0, 10) ||
+                    {item.date?.toString().substring(0, 10) ||
                       new Date().toISOString().split("T")[0]}
                   </Box>
                 ))}
@@ -100,8 +111,8 @@ const Rules = () => {
       },
     },
     {
-      field: "rule_name",
-      headerName: "Rules",
+      field: "heading",
+      headerName: "News",
       flex: 1,
       renderCell: (params) => {
         return (
@@ -112,28 +123,23 @@ const Rules = () => {
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  setClickedIndex(params?.row?.rule?._id);
+                  setClickedIndex(params?.row?.news?._id);
                 }}
               >
-                {params?.row?.rule?.rule_name}
+                {params.row.news.heading}
               </Typography>
               <Collapse
-                in={params?.row?.rule?._id === clickedIndex}
+                in={params?.row?.news?._id === clickedIndex}
                 sx={{ pt: 1 }}
               >
-                {params?.row?.subRule?.map((item, index) => (
+                {params?.row?.sub_news?.map((item, index) => (
                   <>
                     <Box
-                      // onClick={() =>
-                      //   navigate(
-                      //     `${pathname}/${item.sub_circular_heading}/${item._id}`
-                      //   )
-                      // }
                       sx={{
                         cursor: "pointer",
                       }}
                     >
-                      {item.sub_rule_name}
+                      {item.sub_heading}
                     </Box>
                   </>
                 ))}
@@ -162,38 +168,38 @@ const Rules = () => {
         return (
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Box sx={{ display: "flex" }}>
-              <Tooltip title="Add subrule">
+              <Tooltip title="Add subNews">
                 <Typography
                   color="primary"
                   sx={{ pl: 1, cursor: "pointer" }}
                   onClick={() => {
-                    setruleName(params?.row?.rule.rule_name);
-                    setruleId(params?.row?.rule._id);
-                    setopenAddSubRuleDialog(true);
+                    setnewsName(params?.row?.news.heading);
+                    setnewsId(params?.row?.news?._id);
+                    setopenaddsubnewsDialog(true);
                   }}
                 >
                   <Add fontSize="small" />
                 </Typography>
               </Tooltip>
-              <Tooltip title="Edit rule">
+              <Tooltip title="Edit News">
                 <Typography
                   color="primary"
                   onClick={() => {
-                    setrulesDetails(params?.row.rule);
-                    setopenEditRuleDialog(true);
+                    setnewsDetails(params?.row?.news);
+                    setopenEditNewsRuleDialog(true);
                   }}
                   sx={{ pl: 1, cursor: "pointer" }}
                 >
                   <Edit fontSize="small" />
                 </Typography>
               </Tooltip>
-              <Tooltip title="Delete rule">
+              <Tooltip title="Delete News">
                 <Typography
                   color="primary"
                   sx={{ pl: 1, cursor: "pointer" }}
                   onClick={() => {
-                    setruleId(params?.row?.rule._id);
-                    setopenDeleteRuleDialog(true);
+                    setnewsId(params?.row?.news?._id);
+                    setopenDeleteNewsDialog(true);
                   }}
                 >
                   <Delete fontSize="small" />
@@ -239,31 +245,31 @@ const Rules = () => {
               </div>
             </Box>
             <Collapse
-              in={params?.row?.rule?._id === clickedIndex}
+              in={params?.row?.news?._id === clickedIndex}
               sx={{ pt: 1 }}
             >
-              {params?.row?.subRule?.map((item, index) => (
+              {params?.row?.sub_news?.map((item, index) => (
                 <>
                   <Box sx={{ display: "flex" }}>
-                    <Tooltip title="Delete sub-rule">
+                    <Tooltip title="Delete sub-news">
                       <Typography
                         color="primary"
                         sx={{ pl: 1, cursor: "pointer" }}
                         onClick={() => {
-                          setsubruleId(item._id);
-                          setopenDeleteSubRuleDialog(true);
+                          setsubnewsId(item._id);
+                          setopendeletesubarticleDialog(true);
                         }}
                       >
                         <Delete fontSize="small" />
                       </Typography>
                     </Tooltip>
-                    <Tooltip title="Edit sub-rule">
+                    <Tooltip title="Edit sub-news">
                       <Typography
                         color="primary"
                         sx={{ pl: 1, cursor: "pointer" }}
                         onClick={() => {
-                          setsubruleDetails(item);
-                          setopenEditSubRuleDialog(true);
+                          setsubnewsDetails(item);
+                          setopeneditsubarticleDialog(true);
                         }}
                       >
                         <Edit fontSize="small" />
@@ -280,50 +286,49 @@ const Rules = () => {
   ];
 
   useEffect(() => {
-    dispatch(fetchRules());
+    dispatch(fetchNews());
   }, [
     openDialog,
-    openEditRuleDialog,
-    openDeleteRuleDialog,
-    openAddSubRuleDialog,
-    openEditSubRuleDialog,
-    openDeleteSubRuleDialog,
+    openEditNewsRuleDialog,
+    openDeleteNewsDialog,
+    openaddsubnewsDialog,
+    openeditsubarticleDialog,
+    opendeletesubarticleDialog,
   ]);
 
   return (
     <>
-      <AddRuleDialog openDialog={openDialog} setOpenDialog={setopenDialog} />
-      <AddSubRuleDialog
-        ruleName={ruleName}
-        ruleId={ruleId}
-        openDialog={openAddSubRuleDialog}
-        setOpenDialog={setopenAddSubRuleDialog}
+      <AddNewsDialog openDialog={openDialog} setOpenDialog={setopenDialog} />
+
+      <AddSubNewsDialog
+        openDialog={openaddsubnewsDialog}
+        setOpenDialog={setopenaddsubnewsDialog}
+        newsName={newsName}
+        newsId={newsId}
       />
 
-      {openEditSubRuleDialog && (
-        <EditSubRuleDialog
-          openDialog={openEditSubRuleDialog}
-          setOpenDialog={setopenEditSubRuleDialog}
-          subruleDetails={subruleDetails}
-        />
-      )}
+      {/* <EditSubArticleDialog
+        openDialog={openeditsubarticleDialog}
+        setOpenDialog={setopeneditsubarticleDialog}
+        subnewsDetails={subnewsDetails}
+      /> */}
 
-      <DeleteSubRuleDialog
-        openDialog={openDeleteSubRuleDialog}
-        setOpenDialog={setopenDeleteSubRuleDialog}
-        subruleId={subruleId}
+      {/* <DeleteSubArticleDialog
+        openDialog={opendeletesubarticleDialog}
+        setOpenDialog={setopendeletesubarticleDialog}
+        subnewsId={subnewsId}
+      /> */}
+
+      <EditNewsDialog
+        openDialog={openEditNewsRuleDialog}
+        setOpenDialog={setopenEditNewsRuleDialog}
+        newsDetails={newsDetails}
       />
 
-      <EditRuleDialog
-        openDialog={openEditRuleDialog}
-        setOpenDialog={setopenEditRuleDialog}
-        rulesDetails={rulesDetails}
-      />
-
-      <DeleteRuleDialog
-        openDialog={openDeleteRuleDialog}
-        setOpenDialog={setopenDeleteRuleDialog}
-        ruleId={ruleId}
+      <DeleteNewsDialog
+        openDialog={openDeleteNewsDialog}
+        setOpenDialog={setopenDeleteNewsDialog}
+        newsId={newsId}
       />
 
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -334,7 +339,7 @@ const Rules = () => {
           sx={{ mr: 2 }}
           onClick={() => setopenDialog(true)}
         >
-          Add Rule
+          Add News
         </Button>
       </Box>
       <TableContainer
@@ -343,11 +348,10 @@ const Rules = () => {
         }}
       >
         <DataGrid
-          // hideFooter
-          pageSize={6}
+          pageSize={5}
           rowsPerPageOptions={[5]}
-          rows={rulesList || []}
-          getRowId={(row) => row?.rule?._id}
+          rows={newsList || []}
+          getRowId={(row) => row?.news._id}
           columns={columns}
           disableSelectionOnClick
           getRowHeight={() => "auto"}
@@ -377,4 +381,4 @@ const Rules = () => {
   );
 };
 
-export default Rules;
+export default News;

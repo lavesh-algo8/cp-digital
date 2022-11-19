@@ -193,7 +193,7 @@ const Notifications = () => {
                   <Add fontSize="small" />
                 </Typography>
               </Tooltip>
-              <Tooltip title="Edit section">
+              <Tooltip title="Edit notification">
                 <Typography
                   color="primary"
                   onClick={() => {
@@ -205,7 +205,7 @@ const Notifications = () => {
                   <Edit fontSize="small" />
                 </Typography>
               </Tooltip>
-              <Tooltip title="Delete Section">
+              <Tooltip title="Delete notification">
                 <Typography
                   color="primary"
                   sx={{ pl: 1, cursor: "pointer" }}
@@ -263,7 +263,7 @@ const Notifications = () => {
               {params?.row?.sub_notifications?.map((item, index) => (
                 <>
                   <Box sx={{ display: "flex" }}>
-                    <Tooltip title="Delete sub-circular">
+                    <Tooltip title="Delete sub-notification">
                       <Typography
                         color="primary"
                         sx={{ pl: 1, cursor: "pointer" }}
@@ -275,7 +275,7 @@ const Notifications = () => {
                         <Delete fontSize="small" />
                       </Typography>
                     </Tooltip>
-                    <Tooltip title="Edit sub-circular">
+                    <Tooltip title="Edit sub-notification">
                       <Typography
                         color="primary"
                         sx={{ pl: 1, cursor: "pointer" }}

@@ -72,8 +72,7 @@ const Circular = () => {
     {
       field: "circular_date",
       headerName: "Date",
-      flex: 0.3,
-
+      flex: 0.2,
       renderCell: (params) => {
         return (
           <>

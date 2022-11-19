@@ -21,6 +21,9 @@ const initialStore = {
   rulesListBySubSections: [],
   notificationsListBySubSection: [],
   circularsListBySubSection: [],
+  articlesList: [],
+  newsList: [],
+  presentationList: [],
   procedureHeadingsList: [],
 };
 
@@ -149,6 +152,24 @@ const superAdminReducer = (state = initialStore, action) => {
       return {
         ...state,
         circularsListBySubSection: action.payload,
+      };
+
+    case "GET_ARTICLES":
+      return {
+        ...state,
+        articlesList: action.payload,
+      };
+
+    case "GET_NEWS":
+      return {
+        ...state,
+        newsList: action.payload,
+      };
+
+    case "GET_PRESENTATION":
+      return {
+        ...state,
+        presentationList: action.payload,
       };
 
     case "GET_PROCEDURE_HEADINGS":

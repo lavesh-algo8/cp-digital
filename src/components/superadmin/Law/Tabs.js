@@ -12,6 +12,8 @@ import Forms from "./TabsSections/Forms";
 import AccountingStandards from "./TabsSections/AccountingStandards";
 import AmendmentsActs from "./TabsSections/AmendmentsActs";
 import Article from "./TabsSections/Article";
+import News from "./TabsSections/News";
+import Presentation from "./TabsSections/Presentation";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -78,11 +80,13 @@ export default function BasicTabs() {
             "Notifications",
             "Circulars",
             "Articles",
-            "Forms",
-            "Secretarial Standards",
-            "Accounting Standards",
-            "Case Laws",
-            "Amendments Acts",
+            "News",
+            "Presentations",
+            // "Forms",
+            // "Secretarial Standards",
+            // "Accounting Standards",
+            // "Case Laws",
+            // "Amendments Acts",
           ].map((label, index) => (
             <Tab
               key={index}
@@ -115,20 +119,26 @@ export default function BasicTabs() {
         <Article />
       </TabPanel>
       <TabPanel value={value} index={5}>
-        <Forms />
+        <News />
       </TabPanel>
       <TabPanel value={value} index={6}>
-        Secretarial Standards
+        <Presentation />
       </TabPanel>
-      <TabPanel value={value} index={7}>
-        <AccountingStandards />
+      {/* <TabPanel value={value} index={7}>
+        <Forms />
       </TabPanel>
       <TabPanel value={value} index={8}>
-        Case Laws
+        Secretarial Standards
       </TabPanel>
       <TabPanel value={value} index={9}>
-        <AmendmentsActs />
+        <AccountingStandards />
       </TabPanel>
+      <TabPanel value={value} index={10}>
+        Case Laws
+      </TabPanel> */}
+      {/* <TabPanel value={value} index={11}>
+        <AmendmentsActs />
+      </TabPanel> */}
     </Box>
   );
 }
