@@ -192,14 +192,14 @@ const CompanyAct = () => {
   if (params.act === undefined) {
     return (
       <>
-        <Box sx={{ width: "100%", p: 5 }}>
+        <Box sx={{ width: "100%" }}>
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-              height: `calc(100vh - ${200}px)`,
+              height: `calc(100vh - ${217}px)`,
             }}
           >
             <Typography variant="h6" align="center" sx={{ color: "#21415F" }}>
