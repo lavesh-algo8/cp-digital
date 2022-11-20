@@ -344,7 +344,8 @@ const News = () => {
       </Box>
       <TableContainer
         sx={{
-          height: `calc(100vh - ${250}px)`,
+          height: `calc(100vh - ${265}px)`,
+          mt: 2,
         }}
       >
         <DataGrid

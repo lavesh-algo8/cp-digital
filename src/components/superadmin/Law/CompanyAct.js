@@ -273,13 +273,13 @@ const CompanyAct = () => {
         <Delete />
       </Button> */}
 
-      <Box sx={{ width: "100%", p: 5 }}>
+      <Box sx={{ width: "100%" }}>
         <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            mb: 3,
+            px: 1,
           }}
         >
           <Typography variant="h6">{params.act}</Typography>
@@ -311,47 +311,12 @@ const CompanyAct = () => {
             >
               Edit Act Name
             </Button>
-
-            {/* <IconButton>
-              <Delete sx={{ color: "red" }} />
-            </IconButton> */}
-            {/* <Card
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                backgroundColor: "#192A3A",
-                color: "white",
-                height: "35px",
-                ml: 2,
-              }}
-            >
-              <Typography sx={{ pr: 2, pl: 2 }}>Sort</Typography>
-              <FormControl sx={{}}>
-                <Select
-                  size="small"
-                  color="whitecol"
-                  defaultValue="Name"
-                  sx={{
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      border: "none",
-                    },
-                    color: "white",
-                    fontSize: "15px",
-                    "& .MuiSvgIcon-root": {
-                      color: "white",
-                    },
-                  }}
-                >
-                  <MenuItem value="Name">All</MenuItem>
-                  <MenuItem value="Day Pushlished">Day </MenuItem>
-                </Select>
-              </FormControl>
-            </Card> */}
           </Box>
         </Box>
         <TableContainer
           sx={{
-            height: `calc(100vh - ${250}px)`,
+            height: `calc(100vh - ${265}px)`,
+            mt: 2,
           }}
         >
           <DataGrid
