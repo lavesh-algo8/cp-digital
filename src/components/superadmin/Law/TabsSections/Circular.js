@@ -24,10 +24,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCirculars } from "../../../../redux/superAdminReducer/superAdminAction";
 import DeleteCircularDialog from "./Circular/DeleteCircularDialog";
 import Add from "@mui/icons-material/Add";
-import AddSubCircularDialog from "./Circular/AddSubCircularDialog";
+import AddSubCircularDialog from "./Circular/AddCircularDialog";
 import { useLocation, useNavigate } from "react-router-dom";
-import EditSubCircularDialog from "./Circular/EditSubCircularDialog";
-import DeleteSubCircularDialog from "./Circular/DeleteSubCircularDialog";
 
 const options = ["Publish", "UnPublish"];
 const ITEM_HEIGHT = 48;
@@ -82,14 +80,10 @@ const Circular = () => {
                   cursor: "pointer",
                 }}
               >
-                {params?.row?.circular?.circular_date
-                  ?.toString()
-                  .substring(0, 10) || new Date().toISOString().split("T")[0]}
+                {params?.upload_date?.toString().substring(0, 10) ||
+                  new Date().toISOString().split("T")[0]}
               </Typography>
-              <Collapse
-                in={params?.row?.circular?._id === clickedIndex}
-                sx={{ pt: 1 }}
-              >
+              <Collapse in={params?.row?._id === clickedIndex} sx={{ pt: 1 }}>
                 {params?.row?.sub_circulars?.map((item, index) => (
                   <Box>
                     {item.updatedAt?.toString().substring(0, 10) ||
@@ -110,37 +104,7 @@ const Circular = () => {
         return (
           <>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
-              <Typography
-                sx={{
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  setClickedIndex(params?.row?.circular?._id);
-                }}
-              >
-                {params.row.circular.circular_heading}
-              </Typography>
-              <Collapse
-                in={params?.row?.circular?._id === clickedIndex}
-                sx={{ pt: 1 }}
-              >
-                {params?.row?.sub_circulars?.map((item, index) => (
-                  <>
-                    <Box
-                      onClick={() =>
-                        navigate(
-                          `${pathname}/${item.sub_circular_heading}/${item._id}`
-                        )
-                      }
-                      sx={{
-                        cursor: "pointer",
-                      }}
-                    >
-                      {item.sub_circular_heading}
-                    </Box>
-                  </>
-                ))}
-              </Collapse>
+              <Typography>{params.row.circular_heading}</Typography>
             </Box>
           </>
         );
@@ -166,19 +130,6 @@ const Circular = () => {
         return (
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Box sx={{ display: "flex" }}>
-              <Tooltip title="Add subcircular">
-                <Typography
-                  color="primary"
-                  sx={{ pl: 1, cursor: "pointer" }}
-                  onClick={() => {
-                    setcircularName(params?.row?.circular.circular_heading);
-                    setcircularId(params?.row?.circular._id);
-                    setopenaddsubcircularDialog(true);
-                  }}
-                >
-                  <Add fontSize="small" />
-                </Typography>
-              </Tooltip>
               <Tooltip title="Edit Circular">
                 <Typography
                   color="primary"
@@ -196,7 +147,7 @@ const Circular = () => {
                   color="primary"
                   sx={{ pl: 1, cursor: "pointer" }}
                   onClick={() => {
-                    setcircularId(params?.row?.circular?._id);
+                    setcircularId(params?.row?._id);
                     setopenDeleteCircularDialog(true);
                   }}
                 >
@@ -242,41 +193,6 @@ const Circular = () => {
                 </Menu>
               </div>
             </Box>
-            <Collapse
-              in={params?.row?.circular?._id === clickedIndex}
-              sx={{ pt: 1 }}
-            >
-              {params?.row?.sub_circulars?.map((item, index) => (
-                <>
-                  <Box sx={{ display: "flex" }}>
-                    <Tooltip title="Delete sub-circular">
-                      <Typography
-                        color="primary"
-                        sx={{ pl: 1, cursor: "pointer" }}
-                        onClick={() => {
-                          setsubcircularId(item._id);
-                          setopendeletesubcircularDialog(true);
-                        }}
-                      >
-                        <Delete fontSize="small" />
-                      </Typography>
-                    </Tooltip>
-                    <Tooltip title="Edit sub-circular">
-                      <Typography
-                        color="primary"
-                        sx={{ pl: 1, cursor: "pointer" }}
-                        onClick={() => {
-                          setsubcircularDetails(item);
-                          setopeneditsubcircularDialog(true);
-                        }}
-                      >
-                        <Edit fontSize="small" />
-                      </Typography>
-                    </Tooltip>
-                  </Box>
-                </>
-              ))}
-            </Collapse>
           </Box>
         );
       },
@@ -285,42 +201,13 @@ const Circular = () => {
 
   useEffect(() => {
     dispatch(fetchCirculars());
-  }, [
-    openDialog,
-    openEditCircularRuleDialog,
-    openDeleteCircularDialog,
-    openaddsubcircularDialog,
-    openeditsubcircularDialog,
-    opendeletesubcircularDialog,
-  ]);
+  }, [openDialog, openEditCircularRuleDialog, openDeleteCircularDialog]);
 
   return (
     <>
       <AddCircularDialog
         openDialog={openDialog}
         setOpenDialog={setopenDialog}
-      />
-
-      {openaddsubcircularDialog && (
-        <AddSubCircularDialog
-          openDialog={openaddsubcircularDialog}
-          setOpenDialog={setopenaddsubcircularDialog}
-          circularName={circularName}
-          circularId={circularId}
-        />
-      )}
-
-      {openeditsubcircularDialog && (
-        <EditSubCircularDialog
-          openDialog={openeditsubcircularDialog}
-          setOpenDialog={setopeneditsubcircularDialog}
-          subcircularDetails={subcircularDetails}
-        />
-      )}
-      <DeleteSubCircularDialog
-        openDialog={opendeletesubcircularDialog}
-        setOpenDialog={setopendeletesubcircularDialog}
-        subcircularId={subcircularId}
       />
 
       <EditCircularDialog
@@ -356,7 +243,7 @@ const Circular = () => {
           pageSize={5}
           rowsPerPageOptions={[5]}
           rows={circularsList || []}
-          getRowId={(row) => row?.circular?._id}
+          getRowId={(row) => row?._id}
           columns={columns}
           disableSelectionOnClick
           getRowHeight={() => "auto"}

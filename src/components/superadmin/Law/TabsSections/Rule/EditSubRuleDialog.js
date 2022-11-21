@@ -28,7 +28,10 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   editSubCircular,
   editSubRule,
+  fetchActByCategory,
+  fetchAllCategory,
   fetchAllChapters,
+  fetchChapters,
   fetchSectionsByChapterId,
   fetchSubSectionsBySectionId,
 } from "../../../../../redux/superAdminReducer/superAdminAction";
@@ -52,12 +55,20 @@ const EditSubRuleDialog = (props) => {
   const [subsectionName, setsubsectionName] = React.useState([]);
   const [sectionName, setsectionName] = React.useState([]);
   const [chapterName, setchapterName] = React.useState([]);
+  const [actName, setactName] = React.useState([]);
+  const [lawName, setlawName] = React.useState([]);
 
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
   };
-  const { subsectionsList, allChapterList, sectionsbychapterList } =
-    useSelector((state) => state?.SuperAdmin);
+  const {
+    categoryAllList,
+    actsByCategoryList,
+    chapterList,
+    subsectionsList,
+    allChapterList,
+    sectionsbychapterList,
+  } = useSelector((state) => state?.SuperAdmin);
 
   const dispatch = useDispatch();
 
@@ -66,7 +77,7 @@ const EditSubRuleDialog = (props) => {
     const {
       target: { value },
     } = event;
-    setsubsectionName(typeof value === "string" ? value.split(",") : value);
+    setsubsectionName(value);
   };
 
   const handleSectionSelectionChange = async (event, key) => {
@@ -113,6 +124,50 @@ const EditSubRuleDialog = (props) => {
     }
   };
 
+  const handleActSelectionChange = async (event, key) => {
+    console.log(event);
+    let itemKey;
+    if (key.key) {
+      setchapterName("");
+      itemKey = key.key.slice(2); //Removes the .$ from the key.
+      console.log(itemKey);
+    } else {
+      itemKey = key;
+    }
+    await dispatch(fetchChapters(itemKey));
+    if (key.key) {
+      const {
+        target: { value },
+      } = event;
+      setactName(
+        // On autofill we get a the stringified value.
+        typeof value === "string" ? value.split(",") : value
+      );
+    }
+  };
+
+  const handleLawSelectionChange = async (event, key) => {
+    console.log(event);
+    let itemKey;
+    if (key.key) {
+      setactName("");
+      itemKey = key.key.slice(2); //Removes the .$ from the key.
+      console.log(itemKey);
+    } else {
+      itemKey = key;
+    }
+    await dispatch(fetchActByCategory(itemKey));
+    if (key.key) {
+      const {
+        target: { value },
+      } = event;
+      setlawName(
+        // On autofill we get a the stringified value.
+        typeof value === "string" ? value.split(",") : value
+      );
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("hey");
@@ -122,9 +177,11 @@ const EditSubRuleDialog = (props) => {
       upload_date: dateOfRule,
       details: sectionData,
       amendment_date: dateOfAmendment,
+      law: lawName.toString(),
+      act: actName.toString(),
       chapter: chapterName.toString(),
       section: sectionName.toString(),
-      sub_section: subsectionName.toString(),
+      sub_section_no: parseFloat(subsectionName.toString()),
     };
     console.log(data);
     await dispatch(editSubRule(data, props?.subruleDetails._id));
@@ -165,14 +222,14 @@ const EditSubRuleDialog = (props) => {
   };
 
   useEffect(() => {
-    dispatch(fetchAllChapters());
+    dispatch(fetchAllCategory());
   }, []);
 
   useEffect(() => {
     if (props) {
       setsubrule(props.subruleDetails.sub_rule_name);
       setdateOfRule(props.subruleDetails.upload_date);
-      setsubsectionName([props?.subruleDetails?.sub_section?.sub_section_name]);
+      setsubsectionName([props?.subruleDetails?.subsection?.sub_regulation_no]);
       if (props.subruleDetails?.section?.section_name != null) {
         setsectionName([props?.subruleDetails?.section?.section_name]);
         handleSectionSelectionChange(12, props?.subruleDetails?.section?._id);
@@ -184,6 +241,14 @@ const EditSubRuleDialog = (props) => {
       setdateOfAmendment(props.subruleDetails.amendment_date);
       if (props?.subruleDetails) {
         setValue(htmlToDraftBlocks(props.subruleDetails.sub_rule_details));
+      }
+      if (props.subruleDetails?.act?.act != null) {
+        setactName([props?.subruleDetails?.act?.act]);
+        handleChapterSelectionChange(23, props?.subruleDetails?.act?._id);
+      }
+      if (props.subruleDetails?.law?.category != null) {
+        setlawName([props?.subruleDetails?.law?.category]);
+        handleChapterSelectionChange(23, props?.subruleDetails?.law?._id);
       }
     }
   }, [copyData]);
@@ -220,7 +285,7 @@ const EditSubRuleDialog = (props) => {
                   }}
                 >
                   <Box>
-                    <Typography>Name of the Sub-Rule</Typography>
+                    <Typography>Sub-Rule Name / Sub-Rule Number</Typography>
                     <OutlinedInput
                       id="outlined-adornment-weight"
                       value={subrule}
@@ -261,7 +326,7 @@ const EditSubRuleDialog = (props) => {
 
                   <Box>
                     <Typography sx={{ mt: 2 }}>
-                      Date of last Amendment (if any)
+                      Date of last Amendment
                     </Typography>
                     <DesktopDatePicker
                       //   label="Date desktop"
@@ -330,6 +395,94 @@ const EditSubRuleDialog = (props) => {
                     sx={{ mt: 2 }}
                   >
                     <Typography htmlFor="age-native-simple">
+                      Map Law (optional)
+                    </Typography>
+                    <Select
+                      labelId="demo-mutiple-checkbox-label"
+                      id="demo-mutiple-checkbox"
+                      // multiple
+                      value={lawName}
+                      name="first"
+                      onChange={handleLawSelectionChange}
+                      input={
+                        <OutlinedInput
+                          sx={{ mt: 1 }}
+                          notched={false}
+                          label="Tag"
+                          size="small"
+                        />
+                      }
+                      renderValue={(selected) =>
+                        selected
+                          .map(
+                            (obj) =>
+                              // console.log(obj);
+                              obj
+                          )
+                          .join(", ")
+                      }
+                    >
+                      {categoryAllList?.map((category) => (
+                        <MenuItem key={category._id} value={category?.category}>
+                          <Checkbox
+                            checked={lawName.indexOf(category?.category) > -1}
+                          />
+                          <ListItemText primary={category?.category} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+
+                  <FormControl
+                    className={{
+                      minWidth: 300,
+                    }}
+                    sx={{ mt: 2 }}
+                  >
+                    <Typography htmlFor="age-native-simple">
+                      Map Act (optional)
+                    </Typography>
+                    <Select
+                      labelId="demo-mutiple-checkbox-label"
+                      id="demo-mutiple-checkbox"
+                      // multiple
+                      value={actName}
+                      name="first"
+                      onChange={handleActSelectionChange}
+                      input={
+                        <OutlinedInput
+                          sx={{ mt: 1 }}
+                          notched={false}
+                          label="Tag"
+                          size="small"
+                        />
+                      }
+                      renderValue={(selected) =>
+                        selected
+                          .map(
+                            (obj) =>
+                              // console.log(obj);
+                              obj
+                          )
+                          .join(", ")
+                      }
+                    >
+                      {actsByCategoryList?.map((act) => (
+                        <MenuItem key={act._id} value={act?.act}>
+                          <Checkbox checked={actName.indexOf(act?.act) > -1} />
+                          <ListItemText primary={act?.act} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+
+                  <FormControl
+                    className={{
+                      minWidth: 300,
+                    }}
+                    sx={{ mt: 2 }}
+                  >
+                    <Typography htmlFor="age-native-simple">
                       Map chapter
                     </Typography>
                     <Select
@@ -337,7 +490,7 @@ const EditSubRuleDialog = (props) => {
                       id="demo-mutiple-checkbox"
                       // multiple
                       value={chapterName}
-                      name={chapterName}
+                      name="first"
                       onChange={handleChapterSelectionChange}
                       input={
                         <OutlinedInput
@@ -347,9 +500,21 @@ const EditSubRuleDialog = (props) => {
                           size="small"
                         />
                       }
+                      renderValue={(selected) =>
+                        selected
+                          .map(
+                            (obj) =>
+                              // console.log(obj);
+                              obj
+                          )
+                          .join(", ")
+                      }
                     >
-                      {allChapterList?.map((chapter) => (
+                      {chapterList?.map((chapter) => (
                         <MenuItem key={chapter._id} value={chapter?.chapter}>
+                          <Checkbox
+                            checked={chapterName.indexOf(chapter?.chapter) > -1}
+                          />
                           <ListItemText primary={chapter?.chapter} />
                         </MenuItem>
                       ))}
@@ -370,7 +535,7 @@ const EditSubRuleDialog = (props) => {
                       id="demo-mutiple-checkbox"
                       // multiple
                       value={sectionName}
-                      name={sectionName}
+                      name="first"
                       onChange={handleSectionSelectionChange}
                       input={
                         <OutlinedInput
@@ -395,6 +560,13 @@ const EditSubRuleDialog = (props) => {
                           key={section.section._id}
                           value={section?.section.section_name}
                         >
+                          <Checkbox
+                            checked={
+                              sectionName.indexOf(
+                                section?.section.section_name
+                              ) > -1
+                            }
+                          />
                           <ListItemText
                             primary={section?.section.section_name}
                           />
@@ -417,7 +589,7 @@ const EditSubRuleDialog = (props) => {
                       id="demo-mutiple-checkbox"
                       // multiple
                       value={subsectionName}
-                      name={subsectionName}
+                      name="first"
                       onChange={handleSubSectionSelectionChange}
                       input={
                         <OutlinedInput
@@ -427,22 +599,14 @@ const EditSubRuleDialog = (props) => {
                           size="small"
                         />
                       }
-                      renderValue={(selected) =>
-                        selected
-                          .map(
-                            (obj) =>
-                              // console.log(obj);
-                              obj
-                          )
-                          .join(", ")
-                      }
+                      renderValue={(selected) => selected}
                     >
                       {subsectionsList?.map((section) => (
                         <MenuItem
                           key={section._id}
-                          value={section?.sub_section_name}
+                          value={section?.sub_regulation_no}
                         >
-                          <ListItemText primary={section?.sub_section_name} />
+                          <ListItemText primary={section?.sub_regulation_no} />
                         </MenuItem>
                       ))}
                     </Select>
@@ -461,7 +625,7 @@ const EditSubRuleDialog = (props) => {
                     border: "1px solid #f1f1f1",
                     padding: "5px",
                     borderRadius: "2px",
-                    height: "450px",
+                    height: "625px",
                     width: "100%",
                   }}
                   onEditorStateChange={(item) => {

@@ -140,16 +140,16 @@ const Section = () => {
                 {params?.row?.sub_sections?.map((item, index) => (
                   <>
                     <Box
-                      onClick={() =>
-                        navigate(
-                          `${pathname}/${item.sub_section_name}/${item._id}`
-                        )
-                      }
+                      // onClick={() =>
+                      //   navigate(
+                      //     `${pathname}/${item.sub_regulation_no}/${item._id}`
+                      //   )
+                      // }
                       sx={{
                         cursor: "pointer",
                       }}
                     >
-                      {item.sub_section_name}
+                      {item.sub_regulation_no || <Typography>.....</Typography>}
                     </Box>
                   </>
                 ))}
@@ -345,70 +345,6 @@ const Section = () => {
         >
           Add Section
         </Button>
-
-        {/* <Card
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            backgroundColor: "#192A3A",
-            color: "white",
-            height: "35px",
-          }}
-        >
-          <Typography sx={{ pr: 8, pl: 2 }}>Chapter (rules)</Typography>
-          <FormControl sx={{ minWidth: 60 }}>
-            <Select
-              size="small"
-              color="whitecol"
-              defaultValue="Name"
-              sx={{
-                "& .MuiOutlinedInput-notchedOutline": {
-                  border: "none",
-                },
-                color: "white",
-                fontSize: "15px",
-                "& .MuiSvgIcon-root": {
-                  color: "white",
-                },
-              }}
-            >
-              <MenuItem value="Name">Select</MenuItem>
-              <MenuItem value="Day Pushlished">Day Published</MenuItem>
-            </Select>
-          </FormControl>
-        </Card>
-        <Card
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            backgroundColor: "#192A3A",
-            color: "white",
-            height: "35px",
-            ml: 2,
-          }}
-        >
-          <Typography sx={{ pr: 4, pl: 2 }}>Date</Typography>
-          <FormControl sx={{}}>
-            <Select
-              size="small"
-              color="whitecol"
-              defaultValue="Name"
-              sx={{
-                "& .MuiOutlinedInput-notchedOutline": {
-                  border: "none",
-                },
-                color: "white",
-                fontSize: "15px",
-                "& .MuiSvgIcon-root": {
-                  color: "white",
-                },
-              }}
-            >
-              <MenuItem value="Name">Select</MenuItem>
-              <MenuItem value="Day Pushlished">Day </MenuItem>
-            </Select>
-          </FormControl>
-        </Card> */}
       </Box>
       <TableContainer
         sx={{

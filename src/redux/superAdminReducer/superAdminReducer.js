@@ -10,6 +10,8 @@ const initialStore = {
   listOfDocuments: [],
   selectedDocument: {},
   categoryList: [],
+  categoryAllList: [],
+  actsByCategoryList: [],
   chapterList: [],
   allChapterList: [],
   sectionsList: [],
@@ -83,6 +85,18 @@ const superAdminReducer = (state = initialStore, action) => {
       return {
         ...state,
         categoryList: action.payload,
+      };
+
+    case "GET_ALLCATEGORY":
+      return {
+        ...state,
+        categoryAllList: action.payload,
+      };
+
+    case "GET_ACTS_BY_CATEGORY":
+      return {
+        ...state,
+        actsByCategoryList: action.payload,
       };
 
     case "GET_CHAPTERS":

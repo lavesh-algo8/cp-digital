@@ -30,6 +30,9 @@ import {
   addRule,
   addSection,
   addSubRule,
+  fetchActByCategory,
+  fetchAllCategory,
+  fetchChapters,
   fetchSections,
   fetchSectionsByChapterId,
   fetchSubSections,
@@ -37,15 +40,15 @@ import {
 } from "../../../../../redux/superAdminReducer/superAdminAction";
 
 const AddSubRuleDialog = (props) => {
-  const { subsectionsList, allChapterList, sectionsbychapterList } =
-    useSelector((state) => state?.SuperAdmin);
+  const {
+    categoryAllList,
+    actsByCategoryList,
+    chapterList,
+    subsectionsList,
+    allChapterList,
+    sectionsbychapterList,
+  } = useSelector((state) => state?.SuperAdmin);
   const dispatch = useDispatch();
-  const [file, setFile] = useState(undefined);
-
-  const handleChange = (event) => {
-    setFile(event.target.files[0]);
-    console.log(event.target.files[0]);
-  };
 
   const handleSubSectionSelectionChange = (event) => {
     console.log(event);
@@ -67,7 +70,6 @@ const AddSubRuleDialog = (props) => {
   };
 
   const handleChapterSelectionChange = async (event, key) => {
-    fetchSections();
     console.log(event);
     const itemKey = key.key.slice(2); //Removes the .$ from the key.
     console.log(itemKey);
@@ -81,6 +83,34 @@ const AddSubRuleDialog = (props) => {
     );
   };
 
+  const handleActSelectionChange = async (event, key) => {
+    console.log(event);
+    const itemKey = key.key.slice(2); //Removes the .$ from the key.
+    console.log(itemKey);
+    await dispatch(fetchChapters(itemKey));
+    const {
+      target: { value },
+    } = event;
+    setactName(
+      // On autofill we get a the stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+
+  const handleLawSelectionChange = async (event, key) => {
+    console.log(event);
+    const itemKey = key.key.slice(2); //Removes the .$ from the key.
+    console.log(itemKey);
+    await dispatch(fetchActByCategory(itemKey));
+    const {
+      target: { value },
+    } = event;
+    setlawName(
+      // On autofill we get a the stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+
   const [rule, setrule] = useState("");
   const [subrule, setsubrule] = useState("");
   const [dateOfRule, setdateOfRule] = useState(new Date());
@@ -89,6 +119,8 @@ const AddSubRuleDialog = (props) => {
   const [subsectionName, setsubsectionName] = React.useState([]);
   const [sectionName, setsectionName] = React.useState([]);
   const [chapterName, setchapterName] = React.useState([]);
+  const [actName, setactName] = React.useState([]);
+  const [lawName, setlawName] = React.useState([]);
 
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
@@ -103,9 +135,11 @@ const AddSubRuleDialog = (props) => {
       upload_date: dateOfRule,
       details: sectionData,
       amendment_date: dateOfAmendment,
+      law: lawName.toString(),
+      act: actName.toString(),
       chapter: chapterName.toString(),
       section: sectionName.toString(),
-      sub_section: subsectionName.toString(),
+      sub_section_no: parseFloat(subsectionName.toString()),
     };
     console.log(data);
     await dispatch(addSubRule(data, props.ruleId));
@@ -126,7 +160,7 @@ const AddSubRuleDialog = (props) => {
   }, [props]);
 
   useEffect(() => {
-    dispatch(fetchSubSections());
+    dispatch(fetchAllCategory());
   }, []);
 
   return (
@@ -155,7 +189,7 @@ const AddSubRuleDialog = (props) => {
               <Grid item lg={5} md={12}>
                 <Box
                   sx={{
-                    height: "470px",
+                    height: "100%",
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
@@ -180,7 +214,9 @@ const AddSubRuleDialog = (props) => {
                     />
                   </Box>
                   <Box>
-                    <Typography sx={{ mt: 2 }}>Name of the Sub-Rule</Typography>
+                    <Typography sx={{ mt: 2 }}>
+                      Sub-Rule Name / Sub-Rule Number
+                    </Typography>
                     <OutlinedInput
                       id="outlined-adornment-weight"
                       value={subrule}
@@ -221,7 +257,7 @@ const AddSubRuleDialog = (props) => {
 
                   <Box>
                     <Typography sx={{ mt: 2 }}>
-                      Date of last Amendment (if any)
+                      Date of last Amendment
                     </Typography>
                     <DesktopDatePicker
                       //   label="Date desktop"
@@ -245,42 +281,49 @@ const AddSubRuleDialog = (props) => {
                     />
                   </Box>
 
-                  <FormControl>
-                    <Typography sx={{ mt: 2, mb: 1 }}>
-                      Upload Rule File
+                  <FormControl
+                    className={{
+                      minWidth: 300,
+                    }}
+                    sx={{ mt: 2 }}
+                  >
+                    <Typography htmlFor="age-native-simple">
+                      Map Law (optional)
                     </Typography>
-                    <Box
-                      sx={{
-                        border: "1px solid #919191",
-                        borderRadius: "5px",
-                        px: 2,
-                      }}
+                    <Select
+                      labelId="demo-mutiple-checkbox-label"
+                      id="demo-mutiple-checkbox"
+                      // multiple
+                      value={lawName}
+                      name="first"
+                      onChange={handleLawSelectionChange}
+                      input={
+                        <OutlinedInput
+                          sx={{ mt: 1 }}
+                          notched={false}
+                          label="Tag"
+                          size="small"
+                        />
+                      }
+                      renderValue={(selected) =>
+                        selected
+                          .map(
+                            (obj) =>
+                              // console.log(obj);
+                              obj
+                          )
+                          .join(", ")
+                      }
                     >
-                      <input
-                        accept=".pdf,.doc,.docx"
-                        style={{ display: "none" }}
-                        id="raised-button-file"
-                        multiple
-                        type="file"
-                        onChange={handleChange}
-                        // required
-                      />
-                      {/* preview of file */}
-
-                      <label htmlFor="raised-button-file">
-                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                          <Button
-                            variant="contained"
-                            component="span"
-                            sx={{ mt: 1, mr: 3 }}
-                            size="small"
-                          >
-                            Upload File
-                          </Button>
-                          {file && file.name}
-                        </Box>
-                      </label>
-                    </Box>
+                      {categoryAllList?.map((category) => (
+                        <MenuItem key={category._id} value={category?.category}>
+                          <Checkbox
+                            checked={lawName.indexOf(category?.category) > -1}
+                          />
+                          <ListItemText primary={category?.category} />
+                        </MenuItem>
+                      ))}
+                    </Select>
                   </FormControl>
 
                   <FormControl
@@ -290,7 +333,50 @@ const AddSubRuleDialog = (props) => {
                     sx={{ mt: 2 }}
                   >
                     <Typography htmlFor="age-native-simple">
-                      Map chapter
+                      Map Act (optional)
+                    </Typography>
+                    <Select
+                      labelId="demo-mutiple-checkbox-label"
+                      id="demo-mutiple-checkbox"
+                      // multiple
+                      value={actName}
+                      name="first"
+                      onChange={handleActSelectionChange}
+                      input={
+                        <OutlinedInput
+                          sx={{ mt: 1 }}
+                          notched={false}
+                          label="Tag"
+                          size="small"
+                        />
+                      }
+                      renderValue={(selected) =>
+                        selected
+                          .map(
+                            (obj) =>
+                              // console.log(obj);
+                              obj
+                          )
+                          .join(", ")
+                      }
+                    >
+                      {actsByCategoryList?.map((act) => (
+                        <MenuItem key={act._id} value={act?.act}>
+                          <Checkbox checked={actName.indexOf(act?.act) > -1} />
+                          <ListItemText primary={act?.act} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+
+                  <FormControl
+                    className={{
+                      minWidth: 300,
+                    }}
+                    sx={{ mt: 2 }}
+                  >
+                    <Typography htmlFor="age-native-simple">
+                      Map chapter (optional)
                     </Typography>
                     <Select
                       labelId="demo-mutiple-checkbox-label"
@@ -317,7 +403,7 @@ const AddSubRuleDialog = (props) => {
                           .join(", ")
                       }
                     >
-                      {allChapterList?.map((chapter) => (
+                      {chapterList?.map((chapter) => (
                         <MenuItem key={chapter._id} value={chapter?.chapter}>
                           <Checkbox
                             checked={chapterName.indexOf(chapter?.chapter) > -1}
@@ -406,29 +492,14 @@ const AddSubRuleDialog = (props) => {
                           size="small"
                         />
                       }
-                      renderValue={(selected) =>
-                        selected
-                          .map(
-                            (obj) =>
-                              // console.log(obj);
-                              obj
-                          )
-                          .join(", ")
-                      }
+                      renderValue={(selected) => selected}
                     >
                       {subsectionsList?.map((section) => (
                         <MenuItem
                           key={section._id}
-                          value={section?.sub_section_name}
+                          value={section?.sub_regulation_no}
                         >
-                          <Checkbox
-                            checked={
-                              subsectionName.indexOf(
-                                section?.sub_section_name
-                              ) > -1
-                            }
-                          />
-                          <ListItemText primary={section?.sub_section_name} />
+                          <ListItemText primary={section?.sub_regulation_no} />
                         </MenuItem>
                       ))}
                     </Select>
@@ -447,7 +518,7 @@ const AddSubRuleDialog = (props) => {
                     border: "1px solid #f1f1f1",
                     padding: "5px",
                     borderRadius: "2px",
-                    height: "540px",
+                    height: "640px",
                     width: "100%",
                   }}
                   onEditorStateChange={(item) => {

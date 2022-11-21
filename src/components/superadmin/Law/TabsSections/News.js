@@ -1,70 +1,38 @@
 import {
   Box,
   Button,
-  Card,
-  Collapse,
-  FormControl,
   Menu,
   MenuItem,
-  Select,
   TableContainer,
   Tooltip,
   Typography,
 } from "@mui/material";
 import React, { useEffect } from "react";
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import TableDialog from "./DialogShow/TableDialog";
+import { DataGrid } from "@mui/x-data-grid";
 import AddIcon from "@mui/icons-material/Add";
-import AddDialog from "../AddDialogCommon/AddDialog";
-import AddCircularDialog from "./Circular/AddCircularDialog";
 import { Delete, Edit } from "@mui/icons-material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import EditCircularDialog from "./Circular/EditCircularDialog";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchArticles,
-  fetchCirculars,
-  fetchNews,
-} from "../../../../redux/superAdminReducer/superAdminAction";
-import DeleteCircularDialog from "./Circular/DeleteCircularDialog";
-import Add from "@mui/icons-material/Add";
-import AddSubCircularDialog from "./Circular/AddSubCircularDialog";
-import AddArticleDialog from "./Article/AddArticleDialog";
-import EditArticleDialog from "./Article/EditArticleDialog";
-import DeleteArticleDialog from "./Article/DeleteArticleDialog";
-import AddSubArticleDialog from "./Article/AddSubArticleDialog";
-import EditSubArticleDialog from "./Article/EditSubArticleDialog";
-import DeleteSubArticleDialog from "./Article/DeleteSubArticleDialog";
+import { fetchNews } from "../../../../redux/superAdminReducer/superAdminAction";
+
 import AddNewsDialog from "./News/AddNewsDialog";
 import EditNewsDialog from "./News/EditNewsDialog";
 import DeleteNewsDialog from "./News/DeleteNewsDialog";
-import AddSubNewsDialog from "./News/AddSubNewsDialog";
 
 const options = ["Publish", "UnPublish"];
 const ITEM_HEIGHT = 48;
 
 const News = () => {
   const dispatch = useDispatch();
-  const [clickedIndex, setClickedIndex] = React.useState(-1);
 
   const [openDialog, setopenDialog] = React.useState(false);
-  const [openEditNewsRuleDialog, setopenEditNewsRuleDialog] =
-    React.useState(false);
-  const [openaddsubnewsDialog, setopenaddsubnewsDialog] = React.useState(false);
-  const [openeditsubarticleDialog, setopeneditsubarticleDialog] =
-    React.useState(false);
-  const [opendeletesubarticleDialog, setopendeletesubarticleDialog] =
-    React.useState(false);
+  const [openeditnewsDialog, setopeneditnewsDialog] = React.useState(false);
 
   const [openDeleteNewsDialog, setopenDeleteNewsDialog] = React.useState(false);
   const [newsId, setnewsId] = React.useState(false);
-  const [subnewsId, setsubnewsId] = React.useState(false);
-
-  const [newsName, setnewsName] = React.useState(false);
 
   const { newsList } = useSelector((state) => state?.SuperAdmin);
   const [newsDetails, setnewsDetails] = React.useState({});
-  const [subnewsDetails, setsubnewsDetails] = React.useState({});
 
   // menu action
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -91,20 +59,9 @@ const News = () => {
                   cursor: "pointer",
                 }}
               >
-                {params?.row?.news.date?.toString().substring(0, 10) ||
+                {params?.row?.date?.toString().substring(0, 10) ||
                   new Date().toISOString().split("T")[0]}
               </Typography>
-              <Collapse
-                in={params?.row?.news?._id === clickedIndex}
-                sx={{ pt: 1 }}
-              >
-                {params?.row?.sub_news?.map((item, index) => (
-                  <Box>
-                    {item.date?.toString().substring(0, 10) ||
-                      new Date().toISOString().split("T")[0]}
-                  </Box>
-                ))}
-              </Collapse>
             </Box>
           </>
         );
@@ -118,32 +75,7 @@ const News = () => {
         return (
           <>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
-              <Typography
-                sx={{
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  setClickedIndex(params?.row?.news?._id);
-                }}
-              >
-                {params.row.news.heading}
-              </Typography>
-              <Collapse
-                in={params?.row?.news?._id === clickedIndex}
-                sx={{ pt: 1 }}
-              >
-                {params?.row?.sub_news?.map((item, index) => (
-                  <>
-                    <Box
-                      sx={{
-                        cursor: "pointer",
-                      }}
-                    >
-                      {item.sub_heading}
-                    </Box>
-                  </>
-                ))}
-              </Collapse>
+              <Typography>{params.row.heading}</Typography>
             </Box>
           </>
         );
@@ -153,7 +85,6 @@ const News = () => {
       field: "status",
       headerName: "Status",
       renderCell: (params) =>
-        //   console.log(params.row.status),
         params.row.status === "Published" ? (
           <Typography sx={{ color: "green" }}>Published</Typography>
         ) : (
@@ -168,25 +99,12 @@ const News = () => {
         return (
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Box sx={{ display: "flex" }}>
-              <Tooltip title="Add subNews">
-                <Typography
-                  color="primary"
-                  sx={{ pl: 1, cursor: "pointer" }}
-                  onClick={() => {
-                    setnewsName(params?.row?.news.heading);
-                    setnewsId(params?.row?.news?._id);
-                    setopenaddsubnewsDialog(true);
-                  }}
-                >
-                  <Add fontSize="small" />
-                </Typography>
-              </Tooltip>
               <Tooltip title="Edit News">
                 <Typography
                   color="primary"
                   onClick={() => {
-                    setnewsDetails(params?.row?.news);
-                    setopenEditNewsRuleDialog(true);
+                    setnewsDetails(params?.row);
+                    setopeneditnewsDialog(true);
                   }}
                   sx={{ pl: 1, cursor: "pointer" }}
                 >
@@ -198,7 +116,7 @@ const News = () => {
                   color="primary"
                   sx={{ pl: 1, cursor: "pointer" }}
                   onClick={() => {
-                    setnewsId(params?.row?.news?._id);
+                    setnewsId(params?.row?._id);
                     setopenDeleteNewsDialog(true);
                   }}
                 >
@@ -244,41 +162,6 @@ const News = () => {
                 </Menu>
               </div>
             </Box>
-            <Collapse
-              in={params?.row?.news?._id === clickedIndex}
-              sx={{ pt: 1 }}
-            >
-              {params?.row?.sub_news?.map((item, index) => (
-                <>
-                  <Box sx={{ display: "flex" }}>
-                    <Tooltip title="Delete sub-news">
-                      <Typography
-                        color="primary"
-                        sx={{ pl: 1, cursor: "pointer" }}
-                        onClick={() => {
-                          setsubnewsId(item._id);
-                          setopendeletesubarticleDialog(true);
-                        }}
-                      >
-                        <Delete fontSize="small" />
-                      </Typography>
-                    </Tooltip>
-                    <Tooltip title="Edit sub-news">
-                      <Typography
-                        color="primary"
-                        sx={{ pl: 1, cursor: "pointer" }}
-                        onClick={() => {
-                          setsubnewsDetails(item);
-                          setopeneditsubarticleDialog(true);
-                        }}
-                      >
-                        <Edit fontSize="small" />
-                      </Typography>
-                    </Tooltip>
-                  </Box>
-                </>
-              ))}
-            </Collapse>
           </Box>
         );
       },
@@ -287,41 +170,15 @@ const News = () => {
 
   useEffect(() => {
     dispatch(fetchNews());
-  }, [
-    openDialog,
-    openEditNewsRuleDialog,
-    openDeleteNewsDialog,
-    openaddsubnewsDialog,
-    openeditsubarticleDialog,
-    opendeletesubarticleDialog,
-  ]);
+  }, [openDialog, openeditnewsDialog, openDeleteNewsDialog]);
 
   return (
     <>
       <AddNewsDialog openDialog={openDialog} setOpenDialog={setopenDialog} />
 
-      <AddSubNewsDialog
-        openDialog={openaddsubnewsDialog}
-        setOpenDialog={setopenaddsubnewsDialog}
-        newsName={newsName}
-        newsId={newsId}
-      />
-
-      {/* <EditSubArticleDialog
-        openDialog={openeditsubarticleDialog}
-        setOpenDialog={setopeneditsubarticleDialog}
-        subnewsDetails={subnewsDetails}
-      /> */}
-
-      {/* <DeleteSubArticleDialog
-        openDialog={opendeletesubarticleDialog}
-        setOpenDialog={setopendeletesubarticleDialog}
-        subnewsId={subnewsId}
-      /> */}
-
       <EditNewsDialog
-        openDialog={openEditNewsRuleDialog}
-        setOpenDialog={setopenEditNewsRuleDialog}
+        openDialog={openeditnewsDialog}
+        setOpenDialog={setopeneditnewsDialog}
         newsDetails={newsDetails}
       />
 
@@ -352,7 +209,7 @@ const News = () => {
           pageSize={5}
           rowsPerPageOptions={[5]}
           rows={newsList || []}
-          getRowId={(row) => row?.news._id}
+          getRowId={(row) => row?._id}
           columns={columns}
           disableSelectionOnClick
           getRowHeight={() => "auto"}

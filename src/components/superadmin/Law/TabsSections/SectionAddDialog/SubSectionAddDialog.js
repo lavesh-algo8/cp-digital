@@ -91,10 +91,10 @@ const SubSectionAddDialog = (props) => {
       setsubsectionNo(
         parseFloat(props.sectionno + "." + parseInt(props.subSectionLength + 1))
       );
-      setupdatedBy(props.sectionDetails.updatedBy);
-      if (props?.sectionDetails) {
-        setValue(htmlToDraftBlocks(props?.sectionDetails?.section_details));
-      }
+      // setupdatedBy(props.sectionDetails.updatedBy);
+      // if (props?.sectionDetails) {
+      //   setValue(htmlToDraftBlocks(props?.sectionDetails?.section_details));
+      // }
     }
   }, [props]);
 
@@ -126,7 +126,8 @@ const SubSectionAddDialog = (props) => {
                   sx={{
                     display: "flex",
                     flexDirection: "column",
-                    justifyContent: "center",
+                    justifyContent: "space-between",
+                    height: "100%",
                   }}
                 >
                   <Typography>Name of the section</Typography>
@@ -168,23 +169,6 @@ const SubSectionAddDialog = (props) => {
                     }}
                   />
 
-                  <Typography sx={{ mt: 2 }}>
-                    Name of the sub section
-                  </Typography>
-                  <OutlinedInput
-                    id="outlined-adornment-weight"
-                    value={subsection}
-                    onChange={(e) => setsubsection(e.target.value)}
-                    aria-describedby="outlined-weight-helper-text"
-                    fullWidth
-                    size="small"
-                    notched={false}
-                    label="Law"
-                    sx={{
-                      mt: 1,
-                    }}
-                  />
-
                   <Typography sx={{ mt: 2 }}>Date of update</Typography>
                   <DesktopDatePicker
                     //   label="Date desktop"
@@ -206,9 +190,7 @@ const SubSectionAddDialog = (props) => {
                     )}
                   />
 
-                  <Typography sx={{ mt: 2 }}>
-                    Date of last Amendment (if any)
-                  </Typography>
+                  <Typography sx={{ mt: 2 }}>Date of last Amendment</Typography>
                   <DesktopDatePicker
                     //   label="Date desktop"
                     inputFormat="dd/MM/yyyy"

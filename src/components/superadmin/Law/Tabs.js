@@ -76,12 +76,12 @@ export default function BasicTabs() {
         >
           {[
             "Sections",
-            // "Rules",
-            // "Notifications",
-            // "Circulars",
-            // "Articles",
-            // "News",
-            // "Presentations",
+            "Rules",
+            "Notifications",
+            "Circulars",
+            "Articles",
+            "News",
+            "Presentations",
             // "Forms",
             // "Secretarial Standards",
             // "Accounting Standards",
@@ -106,7 +106,7 @@ export default function BasicTabs() {
       <TabPanel value={value} index={0}>
         <Section />
       </TabPanel>
-      {/* <TabPanel value={value} index={1}>
+      <TabPanel value={value} index={1}>
         <Rules />
       </TabPanel>
       <TabPanel value={value} index={2}>
@@ -123,7 +123,7 @@ export default function BasicTabs() {
       </TabPanel>
       <TabPanel value={value} index={6}>
         <Presentation />
-      </TabPanel> */}
+      </TabPanel>
       {/* <TabPanel value={value} index={7}>
         <Forms />
       </TabPanel>

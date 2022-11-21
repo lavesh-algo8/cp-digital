@@ -83,8 +83,6 @@ const SubSectionEditDialog = (props) => {
     console.log("hey");
     const sectionData = draftToHtml(convertToRaw(value.getCurrentContent()));
     const data = {
-      sub_section_name: section,
-      // sub_regulation: regulationName,
       sub_regulation_no: regulationNo,
       updatedAt: dateOfUpdate,
       amendment_date: dateOfAmendment,
@@ -93,7 +91,6 @@ const SubSectionEditDialog = (props) => {
     };
     console.log(data);
     await dispatch(editSubSection(data, props.subsectionDetails._id));
-    setsection("");
     setdateOfAmendment("");
     setregulationNo("");
     setdateOfUpdate("");
@@ -104,7 +101,7 @@ const SubSectionEditDialog = (props) => {
 
   useEffect(() => {
     console.log(props);
-    setsection(props.subsectionDetails.sub_section_name);
+    // setsection(props.subsectionDetails.sub_section_name);
     setregulationNo(props.subsectionDetails.sub_regulation_no);
     setdateOfUpdate(props.subsectionDetails.updatedAt);
     setupdatedBy(props.subsectionDetails.updatedBy);
@@ -144,26 +141,11 @@ const SubSectionEditDialog = (props) => {
                   sx={{
                     display: "flex",
                     flexDirection: "column",
-                    justifyContent: "center",
+                    justifyContent: "space-between",
+                    height: "100%",
                   }}
                 >
-                  <Typography>Name of the sub - section</Typography>
-                  <OutlinedInput
-                    id="outlined-adornment-weight"
-                    value={section}
-                    onChange={(e) => setsection(e.target.value)}
-                    aria-describedby="outlined-weight-helper-text"
-                    fullWidth
-                    required
-                    size="small"
-                    notched={false}
-                    label="Law"
-                    sx={{
-                      mt: 1,
-                    }}
-                  />
-
-                  <Typography sx={{ mt: 2 }}>Sub - section No.</Typography>
+                  <Typography>Sub - section No.</Typography>
                   <OutlinedInput
                     id="outlined-adornment-weight"
                     value={regulationNo}
@@ -200,9 +182,7 @@ const SubSectionEditDialog = (props) => {
                     )}
                   />
 
-                  <Typography sx={{ mt: 2 }}>
-                    Date of last Amendment (if any)
-                  </Typography>
+                  <Typography sx={{ mt: 2 }}>Date of last Amendment</Typography>
                   <DesktopDatePicker
                     //   label="Date desktop"
                     inputFormat="dd/MM/yyyy"

@@ -32,17 +32,11 @@ const AddRuleDialog = (props) => {
   const { subsectionsList } = useSelector((state) => state?.SuperAdmin);
   const dispatch = useDispatch();
 
-  const [subsectionName, setsubsectionName] = React.useState([]);
+  const [file, setFile] = useState(undefined);
 
-  const handleSubSectionSelectionChange = (event) => {
-    console.log(event);
-    const {
-      target: { value },
-    } = event;
-    setsubsectionName(
-      // On autofill we get a the stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
+  const handleChange = (event) => {
+    setFile(event.target.files[0]);
+    console.log(event.target.files[0]);
   };
 
   const [rule, setrule] = useState("");
@@ -111,6 +105,42 @@ const AddRuleDialog = (props) => {
                   }}
                 />
               </Box>
+
+              <FormControl>
+                <Typography sx={{ mt: 2, mb: 1 }}>Upload Rule File</Typography>
+                <Box
+                  sx={{
+                    border: "1px solid #919191",
+                    borderRadius: "5px",
+                    px: 2,
+                  }}
+                >
+                  <input
+                    accept=".pdf,.doc,.docx"
+                    style={{ display: "none" }}
+                    id="raised-button-file"
+                    multiple
+                    type="file"
+                    onChange={handleChange}
+                    // required
+                  />
+                  {/* preview of file */}
+
+                  <label htmlFor="raised-button-file">
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <Button
+                        variant="contained"
+                        component="span"
+                        sx={{ mt: 1, mr: 3 }}
+                        size="small"
+                      >
+                        Upload File
+                      </Button>
+                      {file && file.name}
+                    </Box>
+                  </label>
+                </Box>
+              </FormControl>
             </Box>
 
             <Box
