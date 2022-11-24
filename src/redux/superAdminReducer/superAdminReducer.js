@@ -1,4 +1,5 @@
 const initialStore = {
+  loading: false,
   isLoggedIn: false,
   token: null,
   refreshToken: null,
@@ -31,6 +32,11 @@ const initialStore = {
 
 const superAdminReducer = (state = initialStore, action) => {
   switch (action.type) {
+    case "LOADING":
+      return {
+        ...state,
+        loading: action.payload,
+      };
     case "LOGIN":
       return {
         ...state,

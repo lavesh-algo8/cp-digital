@@ -60,10 +60,11 @@ const DocumentTables = () => {
   const [selectedRowData, setSelectedRowData] = React.useState(null);
   const [openDialogEdit, setOpenDialogEdit] = useState(false);
   const [openDialogDelete, setOpenDialogDelete] = useState(false);
+  const [procedureDetails, setprocedureDetails] = useState("");
 
   React.useEffect(() => {
     dispatch(getDocuments());
-  }, []);
+  }, [openDialogEdit, openDialogDelete]);
 
   const columns = [
     {
@@ -175,6 +176,7 @@ const DocumentTables = () => {
           label="Delete"
           showInMenu
           onClick={() => {
+            setprocedureDetails(params?.row);
             setOpenDialogDelete(true);
           }}
         />,
@@ -210,6 +212,7 @@ const DocumentTables = () => {
       <DeleteProcedureDocument
         openDialog={openDialogDelete}
         setOpenDialog={setOpenDialogDelete}
+        procedureDetails={procedureDetails}
       />
 
       <DocumentViewer

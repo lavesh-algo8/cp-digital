@@ -39,6 +39,7 @@ import { useNavigate } from "react-router-dom";
 import { Logout } from "@mui/icons-material";
 import { superAdminLogout } from "../../redux/superAdminReducer/superAdminAction";
 import { useDispatch } from "react-redux";
+import NotificationBell from "../common/Notifications/NotificationBell";
 
 const drawerWidth = 120;
 
@@ -445,24 +446,7 @@ export default function Layout({ children }) {
               placeholder="Search...."
             /> */}
           </Box>
-
-          <Button
-            variant="contained"
-            sx={{
-              display: { xs: "none", md: "block", lg: "block", xl: "block" },
-              mr: 5,
-              py: 1,
-            }}
-            color="whitecol"
-            size="small"
-          >
-            <Badge color="notificationcol" variant="dot" overlap="circular">
-              <NotificationsIcon
-                color="maincolor"
-                sx={{ transform: "rotate(-25deg)" }}
-              />
-            </Badge>
-          </Button>
+          <NotificationBell />
           <Typography
             noWrap
             component="div"

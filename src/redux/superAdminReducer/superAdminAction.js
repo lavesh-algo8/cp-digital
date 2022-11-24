@@ -225,6 +225,23 @@ export const getDocuments = () => async (dispatch) => {
 
 // Doc Generator
 
+export const deleteProcedure = (procedureId) => async (dispatch) => {
+  try {
+    let config = {
+      method: "delete",
+      url: `${baseUrl}/docgen/deleteproc/${procedureId}`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const data = await axios(config);
+    console.log("Procedure Deleted", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 export const addDocument = (formData) => async (dispatch) => {
   try {
     let config = {
@@ -1250,6 +1267,14 @@ export const fetchActByCategory = (categoryId) => async (dispatch) => {
 
 export const fetchChapters = (act) => async (dispatch) => {
   try {
+    dispatch({
+      type: "GET_CHAPTERS",
+      payload: [],
+    });
+    dispatch({
+      type: "LOADING",
+      payload: true,
+    });
     let config = {
       method: "get",
       url: `${baseUrl}/knowledgecentre/fetchchapter/${act}`,
@@ -1264,9 +1289,17 @@ export const fetchChapters = (act) => async (dispatch) => {
       type: "GET_CHAPTERS",
       payload: data.data.result,
     });
+    dispatch({
+      type: "LOADING",
+      payload: false,
+    });
     // dispatch(openSnackBar(data?.data?.message, "success"));
   } catch (e) {
     console.log(e);
+    dispatch({
+      type: "LOADING",
+      payload: false,
+    });
   }
 };
 

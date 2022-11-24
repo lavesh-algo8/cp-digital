@@ -9,12 +9,14 @@ import {
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
+import { deleteProcedure } from "../../../redux/superAdminReducer/superAdminAction";
 
 const DeleteProcedureDocument = (props) => {
   const dispatch = useDispatch();
 
   const handleClick = async () => {
-    // await dispatch(deleteRule(props.ruleId));
+    console.log(props?.procedureDetails?.procedure_id);
+    await dispatch(deleteProcedure(props?.procedureDetails?.procedure_id));
     props.setOpenDialog(false);
   };
 
