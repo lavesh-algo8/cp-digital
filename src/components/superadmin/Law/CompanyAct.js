@@ -29,27 +29,12 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { fetchChapters } from "../../../redux/superAdminReducer/superAdminAction";
 import { useDispatch, useSelector } from "react-redux";
-import { Delete, Edit } from "@mui/icons-material";
+import { Block, Delete, Edit } from "@mui/icons-material";
 import EditChapterDialog from "./EditChapterDialog/EditChapterDialog";
 import DeleteChapterDialog from "./DeleteChapterDialog/DeleteChapterDialog";
 import DeleteActDialog from "./AddActDialog/DeleteActDialog";
 import EditActDialog from "./AddActDialog/EditActDialog";
 import { styled } from "@mui/material/styles";
-
-function CustomPagination() {
-  const apiRef = useGridApiContext();
-  const page = useGridSelector(apiRef, gridPageSelector);
-  const pageCount = useGridSelector(apiRef, gridPageCountSelector);
-
-  return (
-    <Pagination
-      color="primary"
-      count={pageCount}
-      page={page + 1}
-      onChange={(event, value) => apiRef.current.setPage(value - 1)}
-    />
-  );
-}
 
 const StyledGridOverlay = styled("div")(({ theme }) => ({
   display: "flex",
@@ -140,6 +125,7 @@ const CompanyAct = () => {
   };
 
   const navigate = useNavigate();
+  const [pageSize, setPageSize] = React.useState(6);
   const [openDialogAddChapter, setOpenDialogAddChapter] = useState(false);
   const [openDialogEditChapter, setOpenDialogEditChapter] = useState(false);
   const [openDialogDeleteChapter, setOpenDialogDeleteChapter] = useState(false);
@@ -156,6 +142,53 @@ const CompanyAct = () => {
     // alert(row._id);
     navigate(`${pathname}/${row.chapter}/${row._id}`);
   };
+
+  function CustomPagination() {
+    const apiRef = useGridApiContext();
+    const page = useGridSelector(apiRef, gridPageSelector);
+    const pageCount = useGridSelector(apiRef, gridPageCountSelector);
+
+    return (
+      <>
+        <FormControl
+          variant="standard"
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            flexGrow: 1,
+            ml: 1,
+            mt: 2,
+          }}
+        >
+          <Typography sx={{ mr: 2, color: "#121D28" }}>
+            Rows Per Page :
+          </Typography>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={pageSize}
+            label="Size"
+            onChange={(e) => setPageSize(e.target.value)}
+          >
+            <MenuItem value={6}>06</MenuItem>
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={20}>20</MenuItem>
+            <MenuItem value={30}>30</MenuItem>
+            <MenuItem value={40}>40</MenuItem>
+            <MenuItem value={50}>50</MenuItem>
+          </Select>
+        </FormControl>
+        <Pagination
+          sx={{ mt: 2 }}
+          color="primary"
+          count={pageCount}
+          page={page + 1}
+          onChange={(event, value) => apiRef.current.setPage(value - 1)}
+        />
+      </>
+    );
+  }
 
   const columns = [
     {
@@ -426,19 +459,17 @@ const CompanyAct = () => {
           }}
         >
           <DataGrid
-            pagination
             loading={loading}
+            pageSize={pageSize}
+            getRowId={(row) => row?._id}
+            rows={chapterList || []}
+            columns={columns}
+            disableSelectionOnClick
             components={{
               Pagination: CustomPagination,
               NoRowsOverlay: CustomNoRowsOverlay,
               LoadingOverlay: LinearProgress,
             }}
-            pageSize={6}
-            rowsPerPageOptions={[5]}
-            getRowId={(row) => row?._id}
-            rows={chapterList || []}
-            columns={columns}
-            disableSelectionOnClick
             sx={{
               boxShadow: 0,
               border: 0,

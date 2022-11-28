@@ -1,10 +1,12 @@
 import {
   Box,
   Button,
+  FormControl,
   LinearProgress,
   Menu,
   MenuItem,
   Pagination,
+  Select,
   TableContainer,
   Tooltip,
   Typography,
@@ -27,21 +29,6 @@ import AddNewsDialog from "./News/AddNewsDialog";
 import EditNewsDialog from "./News/EditNewsDialog";
 import DeleteNewsDialog from "./News/DeleteNewsDialog";
 import { styled } from "@mui/material/styles";
-
-function CustomPagination() {
-  const apiRef = useGridApiContext();
-  const page = useGridSelector(apiRef, gridPageSelector);
-  const pageCount = useGridSelector(apiRef, gridPageCountSelector);
-
-  return (
-    <Pagination
-      color="primary"
-      count={pageCount}
-      page={page + 1}
-      onChange={(event, value) => apiRef.current.setPage(value - 1)}
-    />
-  );
-}
 
 const StyledGridOverlay = styled("div")(({ theme }) => ({
   display: "flex",
@@ -119,6 +106,7 @@ const ITEM_HEIGHT = 48;
 
 const News = () => {
   const dispatch = useDispatch();
+  const [pageSize, setPageSize] = React.useState(6);
 
   const [openDialog, setopenDialog] = React.useState(false);
   const [openeditnewsDialog, setopeneditnewsDialog] = React.useState(false);
@@ -138,6 +126,53 @@ const News = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  function CustomPagination() {
+    const apiRef = useGridApiContext();
+    const page = useGridSelector(apiRef, gridPageSelector);
+    const pageCount = useGridSelector(apiRef, gridPageCountSelector);
+
+    return (
+      <>
+        <FormControl
+          variant="standard"
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            flexGrow: 1,
+            ml: 1,
+            mt: 2,
+          }}
+        >
+          <Typography sx={{ mr: 2, color: "#121D28" }}>
+            Rows Per Page :
+          </Typography>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={pageSize}
+            label="Size"
+            onChange={(e) => setPageSize(e.target.value)}
+          >
+            <MenuItem value={6}>06</MenuItem>
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={20}>20</MenuItem>
+            <MenuItem value={30}>30</MenuItem>
+            <MenuItem value={40}>40</MenuItem>
+            <MenuItem value={50}>50</MenuItem>
+          </Select>
+        </FormControl>
+        <Pagination
+          sx={{ mt: 2 }}
+          color="primary"
+          count={pageCount}
+          page={page + 1}
+          onChange={(event, value) => apiRef.current.setPage(value - 1)}
+        />
+      </>
+    );
+  }
 
   const columns = [
     {
