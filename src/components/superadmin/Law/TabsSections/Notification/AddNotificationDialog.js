@@ -38,6 +38,7 @@ import {
   fetchSubSections,
   fetchSubSectionsBySectionId,
 } from "../../../../../redux/superAdminReducer/superAdminAction";
+import { CKEditor } from "ckeditor4-react";
 
 const AddNotificationDialog = (props) => {
   const [file, setFile] = useState(undefined);
@@ -138,9 +139,10 @@ const AddNotificationDialog = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("hey");
-    const notificationDetails = draftToHtml(
-      convertToRaw(value.getCurrentContent())
-    );
+    // const notificationDetails = draftToHtml(
+    //   convertToRaw(value.getCurrentContent())
+    // );
+    const notificationDetails = value;
     const data = {
       notification_no: notificationNo,
       notification_heading: notificationName,
@@ -185,6 +187,7 @@ const AddNotificationDialog = (props) => {
         }}
         fullWidth
         maxWidth="lg"
+        disableEnforceFocus
       >
         <DialogTitle fontWeight={600}>Add Notification </DialogTitle>
         <Box position="absolute" top={5} right={10}>
@@ -562,7 +565,7 @@ const AddNotificationDialog = (props) => {
                 <Typography sx={{ mb: 1 }}>
                   Notification Descriptions
                 </Typography>
-                <Editor
+                {/* <Editor
                   placeholder="Start Typing........"
                   editorState={value}
                   toolbarClassName="toolbarClassName"
@@ -580,6 +583,111 @@ const AddNotificationDialog = (props) => {
                       draftToHtml(convertToRaw(item.getCurrentContent()))
                     );
                     setValue(item);
+                  }}
+                /> */}
+
+                <CKEditor
+                  config={{
+                    allowedContent: true,
+                    // forceEnterMode: true,
+                    enterMode: "p",
+                    extraPlugins: ["amendments"],
+                    height: "895px",
+                    resize_enabled: false,
+                    removeButtons: false,
+                  }}
+                  initData="
+                  <style type='text/css'>.tooltip {
+                    position: relative;
+                    text-decoration: underline ;
+                    width:100%;
+                  }
+                  
+                  .tooltip .tooltiptext {
+                    visibility: hidden;
+                    background-color: black;
+                    color: #fff;
+                    border-radius: 6px;
+                    padding: 5px 5px;
+                  
+                    /* Position the tooltip */
+                    position: absolute;
+                    top:100%;
+                    z-index: 1;
+                  }
+                  
+                  .tooltip:hover .tooltiptext {
+                    visibility: visible;
+                    left:2%;
+                  }
+                  </style>
+                    <div>Welcome to CKEditor 4!</div>
+                  "
+                  onInstanceReady={() => {
+                    //   alert("Editor is ready!");
+                  }}
+                  onChange={(e) => {
+                    setValue(e.editor.getData());
+                    console.log(e.editor.getData());
+                  }}
+                  onBeforeLoad={(CKEDITOR) => {
+                    if (!CKEDITOR.plugins.registered["timestamp"]) {
+                      CKEDITOR.plugins.add("timestamp", {
+                        init: function (editor) {
+                          editor.addCommand("insertTimestamp", {
+                            exec: function (editor) {
+                              var now = new Date();
+                              alert("yo");
+                              editor.insertHtml(
+                                "The current date and time is: <em>" +
+                                  now.toString() +
+                                  "</em>"
+                              );
+                            },
+                          });
+                          editor.ui.addButton("Timestamp", {
+                            label: "Insert Timestamp",
+                            command: "insertTimestamp",
+                            toolbar: "insert",
+                            icon: "https://cdn4.iconfinder.com/data/icons/24x24-free-pixel-icons/24/Clock.png",
+                          });
+                        },
+                      });
+                    }
+
+                    if (!CKEDITOR.plugins.registered["amendments"]) {
+                      CKEDITOR.plugins.add("amendments", {
+                        init: function (editor) {
+                          editor.addCommand("addAmendments", {
+                            exec: function (editor) {
+                              if (editor.getSelection().getSelectedText()) {
+                                // alert(editor.getSelection().getSelectedText());
+                                // handleClickOpen();
+                                const amentmentText = window.prompt(
+                                  "Type Amendment text here...",
+                                  ""
+                                );
+                                // amentmentText + editor.getSelection().getSelectedText()
+                                editor.insertHtml(
+                                  // "<p>This is a new paragraph.</p>"
+                                  " <span class=tooltip>" +
+                                    amentmentText +
+                                    " <span class=tooltiptext>" +
+                                    editor.getSelection().getSelectedText() +
+                                    "</span> </span>"
+                                );
+                              }
+                            },
+                          });
+                          editor.ui.addButton("Amendments", {
+                            label: "Add Amendments",
+                            command: "addAmendments",
+                            toolbar: "insert",
+                            icon: "https://cdn-icons-png.flaticon.com/512/6846/6846310.png",
+                          });
+                        },
+                      });
+                    }
                   }}
                 />
               </Grid>

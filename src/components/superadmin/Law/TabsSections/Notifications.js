@@ -316,11 +316,13 @@ const Notifications = () => {
         setOpenDialog={setopenDialog}
       />
 
-      <EditNotificationDialog
-        openDialog={openEditNotificationDialog}
-        setOpenDialog={setopenEditNotificationDialog}
-        notificationsDetails={notificationsDetails}
-      />
+      {openEditNotificationDialog && (
+        <EditNotificationDialog
+          openDialog={openEditNotificationDialog}
+          setOpenDialog={setopenEditNotificationDialog}
+          notificationsDetails={notificationsDetails}
+        />
+      )}
 
       <DeleteNotificationDialog
         openDialog={openDeleteNotificationDialog}

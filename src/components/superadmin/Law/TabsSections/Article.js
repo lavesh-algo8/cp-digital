@@ -325,11 +325,13 @@ const Article = () => {
         articleId={articleId}
       />
 
-      <EditArticleDialog
-        openDialog={openEditArticleRuleDialog}
-        setOpenDialog={setopenEditArticleRuleDialog}
-        articleDetails={articleDetails}
-      />
+      {openEditArticleRuleDialog && (
+        <EditArticleDialog
+          openDialog={openEditArticleRuleDialog}
+          setOpenDialog={setopenEditArticleRuleDialog}
+          articleDetails={articleDetails}
+        />
+      )}
 
       <DeleteArticleDialog
         openDialog={openDeleteArticleDialog}

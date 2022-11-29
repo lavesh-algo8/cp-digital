@@ -459,11 +459,13 @@ const Section = () => {
         setOpenDialog={setsectionEditDialog}
         sectionDetails={sectionDetails}
       />
-      <SubSectionEditDialog
-        openDialog={subsectionEditDialog}
-        setOpenDialog={setsubsectionEditDialog}
-        subsectionDetails={subsectionDetails}
-      />
+      {subsectionEditDialog && (
+        <SubSectionEditDialog
+          openDialog={subsectionEditDialog}
+          setOpenDialog={setsubsectionEditDialog}
+          subsectionDetails={subsectionDetails}
+        />
+      )}
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Button
           variant="contained"

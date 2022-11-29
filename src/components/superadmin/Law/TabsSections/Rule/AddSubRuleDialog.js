@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
   FormControl,
   FormHelperText,
@@ -38,6 +39,7 @@ import {
   fetchSubSections,
   fetchSubSectionsBySectionId,
 } from "../../../../../redux/superAdminReducer/superAdminAction";
+import { CKEditor } from "ckeditor4-react";
 
 const AddSubRuleDialog = (props) => {
   const {
@@ -129,7 +131,8 @@ const AddSubRuleDialog = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("hey");
-    const sectionData = draftToHtml(convertToRaw(value.getCurrentContent()));
+    // const sectionData = draftToHtml(convertToRaw(value.getCurrentContent()));
+    const sectionData = value;
     const data = {
       sub_rule_name: subrule,
       upload_date: dateOfRule,
@@ -163,9 +166,51 @@ const AddSubRuleDialog = (props) => {
     dispatch(fetchAllCategory());
   }, []);
 
+  const [open, setOpen] = React.useState(false);
+  const [amendment_text, setamendment_text] = React.useState("");
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <>
-      {/* add admins dialog */}
+      {/* Add Amendments */}
+      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
+        <DialogTitle>Add Amendments</DialogTitle>
+        <DialogContent>
+          {/* <DialogContentText>
+            Add Amendments
+          </DialogContentText> */}
+          <TextField
+            autoFocus
+            margin="dense"
+            id="amendment"
+            label="Amendment"
+            type="text"
+            fullWidth
+            multiline
+            rows={3}
+            value={amendment_text}
+            onChange={(e) => setamendment_text(e.target.value)}
+            variant="outlined"
+          />
+        </DialogContent>
+        <DialogActions
+          sx={{ display: "flex", justifyContent: "center", mb: 2 }}
+        >
+          <Button onClick={handleClose} variant="contained" sx={{ px: 5 }}>
+            Add
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* Add Amendments */}
+
+      {/* add  dialog */}
       <Dialog
         open={props.openDialog} // Use value directly here
         onClose={handleDialogClose}
@@ -176,6 +221,7 @@ const AddSubRuleDialog = (props) => {
         }}
         fullWidth
         maxWidth="lg"
+        disableEnforceFocus
       >
         <DialogTitle fontWeight={600}>Add Sub-Rule </DialogTitle>
         <Box position="absolute" top={5} right={10}>
@@ -508,7 +554,7 @@ const AddSubRuleDialog = (props) => {
               </Grid>
               <Grid item lg={7} md={12}>
                 <Typography sx={{ mb: 1 }}>Rule Descriptions</Typography>
-                <Editor
+                {/* <Editor
                   placeholder="Start Typing........"
                   editorState={value}
                   toolbarClassName="toolbarClassName"
@@ -526,6 +572,110 @@ const AddSubRuleDialog = (props) => {
                       draftToHtml(convertToRaw(item.getCurrentContent()))
                     );
                     setValue(item);
+                  }}
+                /> */}
+                <CKEditor
+                  config={{
+                    allowedContent: true,
+                    // forceEnterMode: true,
+                    enterMode: "p",
+                    extraPlugins: ["amendments"],
+                    height: "700px",
+                    resize_enabled: false,
+                    removeButtons: false,
+                  }}
+                  initData="
+                  <style type='text/css'>.tooltip {
+                    position: relative;
+                    text-decoration: underline ;
+                    width:100%;
+                  }
+                  
+                  .tooltip .tooltiptext {
+                    visibility: hidden;
+                    background-color: black;
+                    color: #fff;
+                    border-radius: 6px;
+                    padding: 5px 5px;
+                  
+                    /* Position the tooltip */
+                    position: absolute;
+                    top:100%;
+                    z-index: 1;
+                  }
+                  
+                  .tooltip:hover .tooltiptext {
+                    visibility: visible;
+                    left:2%;
+                  }
+                  </style>
+                    <div>Welcome to CKEditor 4!</div>
+                  "
+                  onInstanceReady={() => {
+                    //   alert("Editor is ready!");
+                  }}
+                  onChange={(e) => {
+                    setValue(e.editor.getData());
+                    console.log(e.editor.getData());
+                  }}
+                  onBeforeLoad={(CKEDITOR) => {
+                    if (!CKEDITOR.plugins.registered["timestamp"]) {
+                      CKEDITOR.plugins.add("timestamp", {
+                        init: function (editor) {
+                          editor.addCommand("insertTimestamp", {
+                            exec: function (editor) {
+                              var now = new Date();
+                              alert("yo");
+                              editor.insertHtml(
+                                "The current date and time is: <em>" +
+                                  now.toString() +
+                                  "</em>"
+                              );
+                            },
+                          });
+                          editor.ui.addButton("Timestamp", {
+                            label: "Insert Timestamp",
+                            command: "insertTimestamp",
+                            toolbar: "insert",
+                            icon: "https://cdn4.iconfinder.com/data/icons/24x24-free-pixel-icons/24/Clock.png",
+                          });
+                        },
+                      });
+                    }
+
+                    if (!CKEDITOR.plugins.registered["amendments"]) {
+                      CKEDITOR.plugins.add("amendments", {
+                        init: function (editor) {
+                          editor.addCommand("addAmendments", {
+                            exec: function (editor) {
+                              if (editor.getSelection().getSelectedText()) {
+                                // alert(editor.getSelection().getSelectedText());
+                                // handleClickOpen();
+                                const amentmentText = window.prompt(
+                                  "Type Amendment text here...",
+                                  ""
+                                );
+                                // amentmentText + editor.getSelection().getSelectedText()
+                                editor.insertHtml(
+                                  // "<p>This is a new paragraph.</p>"
+                                  " <span class=tooltip>" +
+                                    amentmentText +
+                                    " <span class=tooltiptext>" +
+                                    editor.getSelection().getSelectedText() +
+                                    "</span> </span>"
+                                );
+                              }
+                            },
+                          });
+                          editor.ui.addButton("Amendments", {
+                            label: "Add Amendments",
+                            command: "addAmendments",
+                            toolbar: "insert",
+                            icon: "https://cdn-icons-png.flaticon.com/512/6846/6846310.png",
+                          });
+                        },
+                      });
+                    }
                   }}
                 />
               </Grid>

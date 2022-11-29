@@ -306,11 +306,13 @@ const News = () => {
     <>
       <AddNewsDialog openDialog={openDialog} setOpenDialog={setopenDialog} />
 
-      <EditNewsDialog
-        openDialog={openeditnewsDialog}
-        setOpenDialog={setopeneditnewsDialog}
-        newsDetails={newsDetails}
-      />
+      {openeditnewsDialog && (
+        <EditNewsDialog
+          openDialog={openeditnewsDialog}
+          setOpenDialog={setopeneditnewsDialog}
+          newsDetails={newsDetails}
+        />
+      )}
 
       <DeleteNewsDialog
         openDialog={openDeleteNewsDialog}

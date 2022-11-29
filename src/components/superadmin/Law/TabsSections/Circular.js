@@ -330,11 +330,13 @@ const Circular = () => {
         setOpenDialog={setopenDialog}
       />
 
-      <EditCircularDialog
-        openDialog={openEditCircularRuleDialog}
-        setOpenDialog={setopenEditCircularRuleDialog}
-        circularsDetails={circularsDetails}
-      />
+      {openEditCircularRuleDialog && (
+        <EditCircularDialog
+          openDialog={openEditCircularRuleDialog}
+          setOpenDialog={setopenEditCircularRuleDialog}
+          circularsDetails={circularsDetails}
+        />
+      )}
 
       <DeleteCircularDialog
         openDialog={openDeleteCircularDialog}
