@@ -19,7 +19,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { Editor } from "react-draft-wysiwyg";
@@ -38,11 +38,31 @@ import {
   fetchSectionsByChapterId,
   fetchSubSections,
   fetchSubSectionsBySectionId,
+  getDataTree,
 } from "../../../../../redux/superAdminReducer/superAdminAction";
 import { CKEditor } from "ckeditor4-react";
+import DropdownTreeSelect from "react-dropdown-tree-select";
+import "react-dropdown-tree-select/dist/styles.css";
+// import TreeView from "@mui/lab/TreeView";
+// import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+// import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+// import TreeItem from "@mui/lab/TreeItem";
 
 const AddSubRuleDialog = (props) => {
+  const [rule, setrule] = useState("");
+  const [subrule, setsubrule] = useState("");
+  const [dateOfRule, setdateOfRule] = useState(new Date());
+  const [value, setValue] = useState("");
+  const [dateOfAmendment, setdateOfAmendment] = useState(new Date());
+  const [treeData, settreeData] = useState([]);
+  const [subsectionName, setsubsectionName] = React.useState([]);
+  const [sectionName, setsectionName] = React.useState([]);
+  const [chapterName, setchapterName] = React.useState([]);
+  const [actName, setactName] = React.useState([]);
+  const [lawName, setlawName] = React.useState([]);
+
   const {
+    dataTree,
     categoryAllList,
     actsByCategoryList,
     chapterList,
@@ -51,6 +71,25 @@ const AddSubRuleDialog = (props) => {
     sectionsbychapterList,
   } = useSelector((state) => state?.SuperAdmin);
   const dispatch = useDispatch();
+
+  const DropDownTreeSelect = useMemo(() => {
+    return (
+      <DropdownTreeSelect
+        data={dataTree}
+        onChange={(currentNode, selectedNodes) => {
+          console.log("onChange::", currentNode, selectedNodes);
+          let arr = [];
+          selectedNodes.map((node) => arr.push(node.label));
+          console.log(arr);
+          settreeData(arr);
+        }}
+        // className="bootstrap-demo"
+        // showDropdown="always"
+        // texts={{ placeholder: "Search" }}
+        // showPartiallySelected="true"
+      />
+    );
+  }, [dataTree]);
 
   const handleSubSectionSelectionChange = (event) => {
     console.log(event);
@@ -113,17 +152,6 @@ const AddSubRuleDialog = (props) => {
     );
   };
 
-  const [rule, setrule] = useState("");
-  const [subrule, setsubrule] = useState("");
-  const [dateOfRule, setdateOfRule] = useState(new Date());
-  const [value, setValue] = useState(EditorState.createEmpty());
-  const [dateOfAmendment, setdateOfAmendment] = useState(new Date());
-  const [subsectionName, setsubsectionName] = React.useState([]);
-  const [sectionName, setsectionName] = React.useState([]);
-  const [chapterName, setchapterName] = React.useState([]);
-  const [actName, setactName] = React.useState([]);
-  const [lawName, setlawName] = React.useState([]);
-
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
   };
@@ -131,18 +159,18 @@ const AddSubRuleDialog = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("hey");
-    // const sectionData = draftToHtml(convertToRaw(value.getCurrentContent()));
     const sectionData = value;
     const data = {
       sub_rule_name: subrule,
       upload_date: dateOfRule,
       details: sectionData,
       amendment_date: dateOfAmendment,
-      law: lawName.toString(),
-      act: actName.toString(),
-      chapter: chapterName.toString(),
-      section: sectionName.toString(),
-      sub_section_no: parseFloat(subsectionName.toString()),
+      // law: lawName.toString(),
+      // act: actName.toString(),
+      // chapter: chapterName.toString(),
+      // section: sectionName.toString(),
+      // sub_section_no: parseFloat(subsectionName.toString()),
+      mapTo: treeData,
     };
     console.log(data);
     await dispatch(addSubRule(data, props.ruleId));
@@ -150,9 +178,6 @@ const AddSubRuleDialog = (props) => {
     setdateOfRule("");
     setValue("");
     setdateOfAmendment("");
-    setsubsectionName([]);
-    setsectionName([]);
-    setchapterName([]);
     props.setOpenDialog(false);
   };
 
@@ -164,6 +189,7 @@ const AddSubRuleDialog = (props) => {
 
   useEffect(() => {
     dispatch(fetchAllCategory());
+    dispatch(getDataTree());
   }, []);
 
   const [open, setOpen] = React.useState(false);
@@ -235,7 +261,7 @@ const AddSubRuleDialog = (props) => {
               <Grid item lg={5} md={12}>
                 <Box
                   sx={{
-                    height: "100%",
+                    // height: "100%",
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
@@ -327,7 +353,7 @@ const AddSubRuleDialog = (props) => {
                     />
                   </Box>
 
-                  <FormControl
+                  {/* <FormControl
                     className={{
                       minWidth: 300,
                     }}
@@ -550,10 +576,80 @@ const AddSubRuleDialog = (props) => {
                       ))}
                     </Select>
                   </FormControl>
+
+                  <FormControl
+                    className={{
+                      minWidth: 300,
+                    }}
+                    sx={{ mt: 2 }}
+                  >
+                    <Typography htmlFor="age-native-simple">
+                      Map Law (optional)
+                    </Typography>
+                    <Select
+                      labelId="demo-mutiple-checkbox-label"
+                      id="demo-mutiple-checkbox"
+                      multiple
+                      value={lawName}
+                      name="first"
+                      onChange={handleLawSelectionChange}
+                      input={
+                        <OutlinedInput
+                          sx={{ mt: 1 }}
+                          notched={false}
+                          label="Tag"
+                          size="small"
+                        />
+                      }
+                      renderValue={(selected) =>
+                        selected
+                          .map(
+                            (obj) =>
+                              // console.log(obj);
+                              obj
+                          )
+                          .join(", ")
+                      }
+                    >
+                      {categoryAllList?.map((category) => (
+                        <MenuItem key={category._id} value={category?.category}>
+                          <Checkbox
+                            checked={lawName.indexOf(category?.category) > -1}
+                          />
+                          <ListItemText primary={category?.category} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl> */}
+                  <FormControl
+                    sx={{
+                      mt: 3,
+                      borderRadius: "6px",
+                      ".dropdown": {
+                        width: "100%",
+                        ".dropdown-trigger ": {
+                          width: "100%",
+                          borderRadius: "4px",
+                          ".tag-list .tag-item": {
+                            width: "93%",
+                          },
+                        },
+                      },
+
+                      ".dropdown-content": {
+                        maxHeight: "420px",
+                        overflowY: "auto",
+                        minWidth: "100%",
+                      },
+                    }}
+                  >
+                    <Typography sx={{ mb: 1 }}>Map To</Typography>
+                    {DropDownTreeSelect}
+                  </FormControl>
                 </Box>
               </Grid>
               <Grid item lg={7} md={12}>
-                <Typography sx={{ mb: 1 }}>Rule Descriptions</Typography>
+                <Typography sx={{ mb: 1 }}>Sub-Rule Descriptions</Typography>
                 {/* <Editor
                   placeholder="Start Typing........"
                   editorState={value}
@@ -580,7 +676,7 @@ const AddSubRuleDialog = (props) => {
                     // forceEnterMode: true,
                     enterMode: "p",
                     extraPlugins: ["amendments"],
-                    height: "700px",
+                    height: "300px",
                     resize_enabled: false,
                     removeButtons: false,
                   }}

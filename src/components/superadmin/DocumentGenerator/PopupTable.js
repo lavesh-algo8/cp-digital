@@ -35,7 +35,7 @@ function PopupTable() {
 
   useEffect(() => {
     dispatch(fetchProcedureHeadings(params.procedureId));
-  }, [params]);
+  }, [params, addSection]);
 
   return (
     <>
@@ -200,9 +200,6 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
               <IconButton sx={{ ml: 1 }} onClick={(e) => e.stopPropagation()}>
                 <Delete color="primary" />
               </IconButton>
-              <IconButton onClick={(e) => e.stopPropagation()}>
-                <Edit />
-              </IconButton>
               {/* <Typography sx={{ ml: 2 }}>
                 {expand ? <ExpandMoreIcon /> : <ExpandLessIcon />}
               </Typography> */}
@@ -294,9 +291,13 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
                     <IconButton sx={{ ml: 1 }} onClick={() => {}}>
                       <Delete sx={{ color: "white" }} />
                     </IconButton>
-                    <IconButton onClick={() => {}}>
-                      <Edit sx={{ color: "white" }} />
-                    </IconButton>
+                    {items?.formData ? (
+                      ""
+                    ) : (
+                      <IconButton onClick={() => {}}>
+                        <Edit sx={{ color: "white" }} />
+                      </IconButton>
+                    )}
                   </Grid>
                 </Grid>
               </Grid>

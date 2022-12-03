@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-export const baseUrl = "https://cp-digital-backend.herokuapp.com";
+export const baseUrl = "http://20.235.248.221:8080";
 
 const getUrl = (path) => `${baseUrl}/${path}`;
 

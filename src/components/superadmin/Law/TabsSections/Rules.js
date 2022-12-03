@@ -422,12 +422,15 @@ const Rules = () => {
   return (
     <>
       <AddRuleDialog openDialog={openDialog} setOpenDialog={setopenDialog} />
-      <AddSubRuleDialog
-        ruleName={ruleName}
-        ruleId={ruleId}
-        openDialog={openAddSubRuleDialog}
-        setOpenDialog={setopenAddSubRuleDialog}
-      />
+
+      {openAddSubRuleDialog && (
+        <AddSubRuleDialog
+          ruleName={ruleName}
+          ruleId={ruleId}
+          openDialog={openAddSubRuleDialog}
+          setOpenDialog={setopenAddSubRuleDialog}
+        />
+      )}
 
       {openEditSubRuleDialog && (
         <EditSubRuleDialog

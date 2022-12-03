@@ -408,6 +408,27 @@ export const saveSubheadingDocument =
 
 // Knowlege hub law, catergory
 
+export const getDataTree = () => async (dispatch) => {
+  try {
+    let config = {
+      method: "get",
+      url: `${baseUrl}/knowledgecentre/datatree`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const data = await axios(config);
+    console.log("DataTree : ", data.data.data);
+
+    await dispatch({
+      type: "GET_DATA_TREE",
+      payload: data.data.data,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 export const addCategory = (formData) => async (dispatch) => {
   try {
     let config = {

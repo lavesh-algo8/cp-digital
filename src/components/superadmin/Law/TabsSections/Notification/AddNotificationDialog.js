@@ -18,7 +18,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { Editor } from "react-draft-wysiwyg";
@@ -39,6 +39,7 @@ import {
   fetchSubSectionsBySectionId,
 } from "../../../../../redux/superAdminReducer/superAdminAction";
 import { CKEditor } from "ckeditor4-react";
+import DropdownTreeSelect from "react-dropdown-tree-select";
 
 const AddNotificationDialog = (props) => {
   const [file, setFile] = useState(undefined);
@@ -60,11 +61,13 @@ const AddNotificationDialog = (props) => {
   const [actName, setactName] = React.useState([]);
   const [lawName, setlawName] = React.useState([]);
   const [dateOfAmendment, setdateOfAmendment] = useState(new Date());
+  const [treeData, settreeData] = useState([]);
 
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
   };
   const {
+    dataTree,
     categoryAllList,
     actsByCategoryList,
     chapterList,
@@ -74,6 +77,25 @@ const AddNotificationDialog = (props) => {
   } = useSelector((state) => state?.SuperAdmin);
 
   const dispatch = useDispatch();
+
+  const DropDownTreeSelect = useMemo(() => {
+    return (
+      <DropdownTreeSelect
+        data={dataTree}
+        onChange={(currentNode, selectedNodes) => {
+          console.log("onChange::", currentNode, selectedNodes);
+          let arr = [];
+          selectedNodes.map((node) => arr.push(node.label));
+          console.log(arr);
+          settreeData(arr);
+        }}
+        // className="bootstrap-demo"
+        // showDropdown="always"
+        // texts={{ placeholder: "Search" }}
+        // showPartiallySelected="true"
+      />
+    );
+  }, [dataTree]);
 
   const handleSubSectionSelectionChange = (event) => {
     console.log(event);
@@ -150,11 +172,12 @@ const AddNotificationDialog = (props) => {
       short_desc: notificationShortDescription,
       notification_details: notificationDetails,
       amendment_date: dateOfAmendment,
-      law: lawName.toString(),
-      act: actName.toString(),
-      chapter: chapterName.toString(),
-      section: sectionName.toString(),
-      sub_section_no: parseFloat(subsectionName.toString()),
+      mapTo: treeData,
+      // law: lawName.toString(),
+      // act: actName.toString(),
+      // chapter: chapterName.toString(),
+      // section: sectionName.toString(),
+      // sub_section_no: parseFloat(subsectionName.toString()),
     };
     console.log(data);
 
@@ -163,9 +186,9 @@ const AddNotificationDialog = (props) => {
     setnotificationNo("");
     setnotificationShortDescription("");
     setdateOfNotification("");
-    setsubsectionName([]);
-    setchapterName([]);
-    setsectionName([]);
+    // setsubsectionName([]);
+    // setchapterName([]);
+    // setsectionName([]);
     setValue("");
     props.setOpenDialog(false);
   };
@@ -336,7 +359,7 @@ const AddNotificationDialog = (props) => {
                     </Box>
                   </FormControl>
 
-                  <FormControl
+                  {/* <FormControl
                     className={{
                       minWidth: 300,
                     }}
@@ -558,6 +581,32 @@ const AddNotificationDialog = (props) => {
                         </MenuItem>
                       ))}
                     </Select>
+                  </FormControl> */}
+
+                  <FormControl
+                    sx={{
+                      mt: 3,
+                      borderRadius: "6px",
+                      ".dropdown": {
+                        width: "100%",
+                        ".dropdown-trigger ": {
+                          width: "100%",
+                          borderRadius: "4px",
+                          ".tag-list .tag-item": {
+                            width: "93%",
+                          },
+                        },
+                      },
+
+                      ".dropdown-content": {
+                        maxHeight: "420px",
+                        overflowY: "auto",
+                        minWidth: "100%",
+                      },
+                    }}
+                  >
+                    <Typography sx={{ mb: 1 }}>Map To</Typography>
+                    {DropDownTreeSelect}
                   </FormControl>
                 </Box>
               </Grid>
@@ -592,7 +641,7 @@ const AddNotificationDialog = (props) => {
                     // forceEnterMode: true,
                     enterMode: "p",
                     extraPlugins: ["amendments"],
-                    height: "895px",
+                    height: "555px",
                     resize_enabled: false,
                     removeButtons: false,
                   }}
