@@ -644,7 +644,7 @@ const AddSubRuleDialog = (props) => {
                     }}
                   >
                     <Typography sx={{ mb: 1 }}>Map To</Typography>
-                    {DropDownTreeSelect}
+                    {dataTree && DropDownTreeSelect}
                   </FormControl>
                 </Box>
               </Grid>

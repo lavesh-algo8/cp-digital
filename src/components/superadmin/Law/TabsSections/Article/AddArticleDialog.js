@@ -35,6 +35,7 @@ import {
   fetchSections,
   fetchSectionsByChapterId,
   fetchSubSectionsBySectionId,
+  getDataTree,
 } from "../../../../../redux/superAdminReducer/superAdminAction";
 import { CKEditor } from "ckeditor4-react";
 import DropdownTreeSelect from "react-dropdown-tree-select";
@@ -192,6 +193,7 @@ const AddArticleDialog = (props) => {
 
   useEffect(() => {
     dispatch(fetchAllCategory());
+    dispatch(getDataTree());
   }, []);
 
   return (
@@ -525,7 +527,7 @@ const AddArticleDialog = (props) => {
                     }}
                   >
                     <Typography sx={{ mb: 1 }}>Map To</Typography>
-                    {DropDownTreeSelect}
+                    {dataTree && DropDownTreeSelect}
                   </FormControl>
                 </Box>
               </Grid>

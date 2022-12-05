@@ -368,7 +368,7 @@ const Circular = () => {
             NoRowsOverlay: CustomNoRowsOverlay,
             LoadingOverlay: LinearProgress,
           }}
-          pageSize={5}
+          pageSize={pageSize}
           rowsPerPageOptions={[5]}
           rows={circularsList || []}
           getRowId={(row) => row?._id}

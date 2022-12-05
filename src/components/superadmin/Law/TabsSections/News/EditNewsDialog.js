@@ -18,7 +18,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { Editor } from "react-draft-wysiwyg";
@@ -35,13 +35,27 @@ import {
   fetchChapters,
   fetchSectionsByChapterId,
   fetchSubSectionsBySectionId,
+  getDataTree,
 } from "../../../../../redux/superAdminReducer/superAdminAction";
 import { CKEditor } from "ckeditor4-react";
+import DropdownTreeSelect from "react-dropdown-tree-select";
 
 const EditNewsDialog = (props) => {
   const copyData = props?.newsDetails;
 
+  const [news, setnews] = useState("");
+  const [newsSource, setnewsSource] = useState("");
+  const [dateOfNews, setdateOfNews] = useState(new Date());
+  const [value, setValue] = useState(EditorState.createEmpty());
+  const [treeData, settreeData] = useState([]);
+  const [subsectionName, setsubsectionName] = React.useState([]);
+  const [sectionName, setsectionName] = React.useState([]);
+  const [chapterName, setchapterName] = React.useState([]);
+  const [actName, setactName] = React.useState([]);
+  const [lawName, setlawName] = React.useState([]);
+
   const {
+    dataTree,
     categoryAllList,
     actsByCategoryList,
     chapterList,
@@ -56,6 +70,25 @@ const EditNewsDialog = (props) => {
     setFile(event.target.files[0]);
     console.log(event.target.files[0]);
   };
+
+  const DropDownTreeSelect = useMemo(() => {
+    return (
+      <DropdownTreeSelect
+        data={dataTree}
+        onChange={(currentNode, selectedNodes) => {
+          console.log("onChange::", currentNode, selectedNodes);
+          let arr = [];
+          selectedNodes.map((node) => arr.push(node.label));
+          console.log(arr);
+          settreeData(arr);
+        }}
+        // className="bootstrap-demo"
+        // showDropdown="always"
+        // texts={{ placeholder: "Search" }}
+        // showPartiallySelected="true"
+      />
+    );
+  }, [dataTree]);
 
   const handleSubSectionSelectionChange = (event) => {
     console.log(event);
@@ -152,15 +185,6 @@ const EditNewsDialog = (props) => {
       );
     }
   };
-  const [news, setnews] = useState("");
-  const [newsSource, setnewsSource] = useState("");
-  const [dateOfNews, setdateOfNews] = useState(new Date());
-  const [value, setValue] = useState(EditorState.createEmpty());
-  const [subsectionName, setsubsectionName] = React.useState([]);
-  const [sectionName, setsectionName] = React.useState([]);
-  const [chapterName, setchapterName] = React.useState([]);
-  const [actName, setactName] = React.useState([]);
-  const [lawName, setlawName] = React.useState([]);
 
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
@@ -176,11 +200,12 @@ const EditNewsDialog = (props) => {
       date: dateOfNews,
       description: newsData,
       source: newsSource,
-      law: lawName.toString(),
-      act: actName.toString(),
-      chapter: chapterName.toString(),
-      section: sectionName.toString(),
-      sub_section_no: parseFloat(subsectionName.toString()),
+      mapTo: treeData,
+      // law: lawName.toString(),
+      // act: actName.toString(),
+      // chapter: chapterName.toString(),
+      // section: sectionName.toString(),
+      // sub_section_no: parseFloat(subsectionName.toString()),
     };
     console.log(data);
     await dispatch(editNews(data, props?.newsDetails._id));
@@ -215,6 +240,7 @@ const EditNewsDialog = (props) => {
 
   useEffect(() => {
     dispatch(fetchAllCategory());
+    dispatch(getDataTree());
   }, []);
 
   useEffect(() => {
@@ -273,7 +299,7 @@ const EditNewsDialog = (props) => {
               <Grid item lg={5} md={12}>
                 <Box
                   sx={{
-                    height: "470px",
+                    // height: "470px",
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
@@ -375,7 +401,7 @@ const EditNewsDialog = (props) => {
                     />
                   </Box>
 
-                  <FormControl
+                  {/* <FormControl
                     className={{
                       minWidth: 300,
                     }}
@@ -597,6 +623,32 @@ const EditNewsDialog = (props) => {
                         </MenuItem>
                       ))}
                     </Select>
+                  </FormControl> */}
+
+                  <FormControl
+                    sx={{
+                      mt: 3,
+                      borderRadius: "6px",
+                      ".dropdown": {
+                        width: "100%",
+                        ".dropdown-trigger ": {
+                          width: "100%",
+                          borderRadius: "4px",
+                          ".tag-list .tag-item": {
+                            width: "93%",
+                          },
+                        },
+                      },
+
+                      ".dropdown-content": {
+                        maxHeight: "420px",
+                        overflowY: "auto",
+                        minWidth: "100%",
+                      },
+                    }}
+                  >
+                    <Typography sx={{ mb: 1 }}>Map To</Typography>
+                    {dataTree && DropDownTreeSelect}
                   </FormControl>
                 </Box>
               </Grid>
@@ -629,7 +681,7 @@ const EditNewsDialog = (props) => {
                     // forceEnterMode: true,
                     enterMode: "p",
                     extraPlugins: ["amendments"],
-                    height: "650px",
+                    height: "320px",
                     resize_enabled: false,
                     removeButtons: false,
                   }}

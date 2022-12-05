@@ -18,7 +18,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { Editor } from "react-draft-wysiwyg";
@@ -35,10 +35,12 @@ import {
   fetchChapters,
   fetchSectionsByChapterId,
   fetchSubSectionsBySectionId,
+  getDataTree,
 } from "../../../../../redux/superAdminReducer/superAdminAction";
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import htmlToDraft from "html-to-draftjs";
 import { CKEditor } from "ckeditor4-react";
+import DropdownTreeSelect from "react-dropdown-tree-select";
 
 const EditArticleDialog = (props) => {
   const [file, setFile] = useState(undefined);
@@ -58,11 +60,13 @@ const EditArticleDialog = (props) => {
   const [chapterName, setchapterName] = React.useState([]);
   const [actName, setactName] = React.useState([]);
   const [lawName, setlawName] = React.useState([]);
+  const [treeData, settreeData] = useState([]);
 
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
   };
   const {
+    dataTree,
     categoryAllList,
     actsByCategoryList,
     chapterList,
@@ -72,6 +76,25 @@ const EditArticleDialog = (props) => {
   } = useSelector((state) => state?.SuperAdmin);
 
   const dispatch = useDispatch();
+
+  const DropDownTreeSelect = useMemo(() => {
+    return (
+      <DropdownTreeSelect
+        data={dataTree}
+        onChange={(currentNode, selectedNodes) => {
+          console.log("onChange::", currentNode, selectedNodes);
+          let arr = [];
+          selectedNodes.map((node) => arr.push(node.label));
+          console.log(arr);
+          settreeData(arr);
+        }}
+        // className="bootstrap-demo"
+        // showDropdown="always"
+        // texts={{ placeholder: "Search" }}
+        // showPartiallySelected="true"
+      />
+    );
+  }, [dataTree]);
 
   const handleSubSectionSelectionChange = (event) => {
     console.log(event);
@@ -181,11 +204,13 @@ const EditArticleDialog = (props) => {
       date: dateOfArticle,
       description: articlesDetails,
       written_by: ArticleWrittenBy,
-      law: lawName.toString(),
-      act: actName.toString(),
-      chapter: chapterName.toString(),
-      section: sectionName.toString(),
-      sub_section_no: parseFloat(subsectionName.toString()),
+      mapTo: treeData,
+
+      // law: lawName.toString(),
+      // act: actName.toString(),
+      // chapter: chapterName.toString(),
+      // section: sectionName.toString(),
+      // sub_section_no: parseFloat(subsectionName.toString()),
     };
     console.log(data);
     await dispatch(editArticle(data, props?.articleDetails._id));
@@ -227,6 +252,7 @@ const EditArticleDialog = (props) => {
 
   useEffect(() => {
     dispatch(fetchAllCategory());
+    dispatch(getDataTree());
   }, []);
 
   useEffect(() => {
@@ -290,7 +316,7 @@ const EditArticleDialog = (props) => {
                     justifyContent: "center",
                   }}
                 >
-                  <Typography sx={{ mt: 2 }}>Name of the Article</Typography>
+                  <Typography>Name of the Article</Typography>
                   <OutlinedInput
                     id="outlined-adornment-weight"
                     value={articleName}
@@ -342,7 +368,7 @@ const EditArticleDialog = (props) => {
                     }}
                   />
 
-                  <FormControl
+                  {/* <FormControl
                     className={{
                       minWidth: 300,
                     }}
@@ -564,6 +590,32 @@ const EditArticleDialog = (props) => {
                         </MenuItem>
                       ))}
                     </Select>
+                  </FormControl> */}
+
+                  <FormControl
+                    sx={{
+                      mt: 3,
+                      borderRadius: "6px",
+                      ".dropdown": {
+                        width: "100%",
+                        ".dropdown-trigger ": {
+                          width: "100%",
+                          borderRadius: "4px",
+                          ".tag-list .tag-item": {
+                            width: "93%",
+                          },
+                        },
+                      },
+
+                      ".dropdown-content": {
+                        maxHeight: "420px",
+                        overflowY: "auto",
+                        minWidth: "100%",
+                      },
+                    }}
+                  >
+                    <Typography sx={{ mb: 1 }}>Map To</Typography>
+                    {dataTree && DropDownTreeSelect}
                   </FormControl>
                 </Box>
               </Grid>
@@ -596,7 +648,7 @@ const EditArticleDialog = (props) => {
                     // forceEnterMode: true,
                     enterMode: "p",
                     extraPlugins: ["amendments"],
-                    height: "650px",
+                    height: "215px",
                     resize_enabled: false,
                     removeButtons: false,
                   }}

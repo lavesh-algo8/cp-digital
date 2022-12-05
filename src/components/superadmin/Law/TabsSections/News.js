@@ -344,7 +344,7 @@ const News = () => {
             NoRowsOverlay: CustomNoRowsOverlay,
             LoadingOverlay: LinearProgress,
           }}
-          pageSize={5}
+          pageSize={pageSize}
           rowsPerPageOptions={[5]}
           rows={newsList || []}
           getRowId={(row) => row?._id}

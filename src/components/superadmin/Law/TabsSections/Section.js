@@ -490,7 +490,7 @@ const Section = () => {
             NoRowsOverlay: CustomNoRowsOverlay,
             LoadingOverlay: LinearProgress,
           }}
-          pageSize={5}
+          pageSize={pageSize}
           rowsPerPageOptions={[5]}
           getRowId={(row) => row?.section?._id}
           rows={sectionsList || []}

@@ -363,7 +363,7 @@ const Article = () => {
             NoRowsOverlay: CustomNoRowsOverlay,
             LoadingOverlay: LinearProgress,
           }}
-          pageSize={5}
+          pageSize={pageSize}
           rowsPerPageOptions={[5]}
           rows={articlesList || []}
           getRowId={(row) => row?._id}

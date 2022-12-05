@@ -18,7 +18,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { Editor } from "react-draft-wysiwyg";
@@ -36,12 +36,25 @@ import {
   fetchSectionsByChapterId,
   fetchSubSections,
   fetchSubSectionsBySectionId,
+  getDataTree,
 } from "../../../../../redux/superAdminReducer/superAdminAction";
+import DropdownTreeSelect from "react-dropdown-tree-select";
 
 const EditPresentationDialog = (props) => {
   const copyData = props?.presentationDetails;
 
+  const [presentation, setpresentation] = useState("");
+  const [presentationAuthor, setpresentationAuthor] = useState("");
+  const [dateOfPresentation, setdateOfPresentation] = useState(new Date());
+  const [subsectionName, setsubsectionName] = React.useState("");
+  const [sectionName, setsectionName] = React.useState([]);
+  const [chapterName, setchapterName] = React.useState([]);
+  const [actName, setactName] = React.useState([]);
+  const [lawName, setlawName] = React.useState([]);
+  const [treeData, settreeData] = useState([]);
+
   const {
+    dataTree,
     categoryAllList,
     actsByCategoryList,
     chapterList,
@@ -55,6 +68,25 @@ const EditPresentationDialog = (props) => {
     setFile(event.target.files[0]);
     console.log(event.target.files[0]);
   };
+
+  const DropDownTreeSelect = useMemo(() => {
+    return (
+      <DropdownTreeSelect
+        data={dataTree}
+        onChange={(currentNode, selectedNodes) => {
+          console.log("onChange::", currentNode, selectedNodes);
+          let arr = [];
+          selectedNodes.map((node) => arr.push(node.label));
+          console.log(arr);
+          settreeData(arr);
+        }}
+        // className="bootstrap-demo"
+        // showDropdown="always"
+        // texts={{ placeholder: "Search" }}
+        // showPartiallySelected="true"
+      />
+    );
+  }, [dataTree]);
 
   const handleSubSectionSelectionChange = (event) => {
     console.log(event);
@@ -152,15 +184,6 @@ const EditPresentationDialog = (props) => {
     }
   };
 
-  const [presentation, setpresentation] = useState("");
-  const [presentationAuthor, setpresentationAuthor] = useState("");
-  const [dateOfPresentation, setdateOfPresentation] = useState(new Date());
-  const [subsectionName, setsubsectionName] = React.useState("");
-  const [sectionName, setsectionName] = React.useState([]);
-  const [chapterName, setchapterName] = React.useState([]);
-  const [actName, setactName] = React.useState([]);
-  const [lawName, setlawName] = React.useState([]);
-
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
   };
@@ -172,11 +195,12 @@ const EditPresentationDialog = (props) => {
       title: presentation,
       date: dateOfPresentation,
       author: presentationAuthor,
-      law: lawName.toString(),
-      act: actName.toString(),
-      chapter: chapterName.toString(),
-      section: sectionName.toString(),
-      sub_section_no: parseFloat(subsectionName.toString()),
+      mapTo: treeData,
+      // law: lawName.toString(),
+      // act: actName.toString(),
+      // chapter: chapterName.toString(),
+      // section: sectionName.toString(),
+      // sub_section_no: parseFloat(subsectionName.toString()),
     };
     console.log(data);
     await dispatch(editPresentation(data, props?.presentationDetails._id));
@@ -191,6 +215,7 @@ const EditPresentationDialog = (props) => {
 
   useEffect(() => {
     dispatch(fetchAllCategory());
+    dispatch(getDataTree());
   }, []);
 
   useEffect(() => {
@@ -351,7 +376,7 @@ const EditPresentationDialog = (props) => {
                 />
               </Box>
 
-              <FormControl
+              {/* <FormControl
                 className={{
                   minWidth: 300,
                 }}
@@ -568,6 +593,31 @@ const EditPresentationDialog = (props) => {
                     </MenuItem>
                   ))}
                 </Select>
+              </FormControl> */}
+              <FormControl
+                sx={{
+                  mt: 3,
+                  borderRadius: "6px",
+                  ".dropdown": {
+                    width: "100%",
+                    ".dropdown-trigger ": {
+                      width: "100%",
+                      borderRadius: "4px",
+                      ".tag-list .tag-item": {
+                        width: "93%",
+                      },
+                    },
+                  },
+
+                  ".dropdown-content": {
+                    maxHeight: "420px",
+                    overflowY: "auto",
+                    minWidth: "100%",
+                  },
+                }}
+              >
+                <Typography sx={{ mb: 1 }}>Map To</Typography>
+                {dataTree && DropDownTreeSelect}
               </FormControl>
             </Box>
 

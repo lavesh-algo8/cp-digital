@@ -33,6 +33,7 @@ import {
   fetchSectionsByChapterId,
   fetchSubSections,
   fetchSubSectionsBySectionId,
+  getDataTree,
 } from "../../../../../redux/superAdminReducer/superAdminAction";
 import DropdownTreeSelect from "react-dropdown-tree-select";
 
@@ -174,6 +175,7 @@ const AddSubPresentationDialog = (props) => {
 
   useEffect(() => {
     dispatch(fetchAllCategory());
+    dispatch(getDataTree());
   }, []);
 
   return (
@@ -546,7 +548,7 @@ const AddSubPresentationDialog = (props) => {
                 }}
               >
                 <Typography sx={{ mb: 1 }}>Map To</Typography>
-                {DropDownTreeSelect}
+                {dataTree && DropDownTreeSelect}
               </FormControl>
             </Box>
 

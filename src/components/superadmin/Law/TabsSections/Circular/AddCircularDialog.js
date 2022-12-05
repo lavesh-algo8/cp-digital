@@ -40,6 +40,7 @@ import {
   fetchSectionsByChapterId,
   fetchSubSections,
   fetchSubSectionsBySectionId,
+  getDataTree,
 } from "../../../../../redux/superAdminReducer/superAdminAction";
 import { CKEditor } from "ckeditor4-react";
 import DropdownTreeSelect from "react-dropdown-tree-select";
@@ -209,6 +210,7 @@ const AddCircularDialog = (props) => {
 
   useEffect(() => {
     dispatch(fetchAllCategory());
+    dispatch(getDataTree());
   }, []);
 
   return (
@@ -619,7 +621,7 @@ const AddCircularDialog = (props) => {
                     }}
                   >
                     <Typography sx={{ mb: 1 }}>Map To</Typography>
-                    {DropDownTreeSelect}
+                    {dataTree && DropDownTreeSelect}
                   </FormControl>
                 </Box>
               </Grid>
