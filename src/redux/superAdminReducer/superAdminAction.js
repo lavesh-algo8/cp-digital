@@ -273,9 +273,9 @@ export const editDocument = (formData, procedureId) => async (dispatch) => {
       method: "put",
       url: `${baseUrl}/docgen/editheadings/${procedureId}`,
       headers: {
-        "content-type": "application/x-www-form-urlencoded",
+        "content-type": "application/json",
       },
-      data: qs.stringify(formData),
+      data: formData,
     };
 
     console.log(config);
@@ -383,7 +383,71 @@ export const addSectionDocumentHeading =
     }
   };
 
+export const editSectionDocumentHeading =
+  (sectionHeadingId, sections) => async (dispatch) => {
+    try {
+      let config = {
+        method: "PUT",
+        url: `${baseUrl}/docgen/editsectiontitle/${sectionHeadingId}`,
+        headers: {
+          "content-type": "application/json",
+        },
+        data: { title: sections },
+      };
+      console.log(config);
+      const resp = await axios(config);
+      console.log(resp);
+      if (resp?.data.message === "titles edited successfully") {
+        dispatch(openSnackBar(resp?.data.message, "success"));
+        return true;
+      } else {
+        dispatch(openSnackBar(resp?.data.message, "error"));
+        return false;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+export const deleteSectionDocumentHeading = (sectionId) => async (dispatch) => {
+  try {
+    let config = {
+      method: "delete",
+      url: `${baseUrl}/docgen/deleteform/${sectionId}`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const data = await axios(config);
+    console.log("section Deleted", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 export const saveSubheadingDocument =
+  (formData, subheadingId) => async (dispatch) => {
+    try {
+      let config = {
+        method: "post",
+        url: `${baseUrl}/docgen/savedocument/${subheadingId}`,
+        headers: {
+          "content-type": "application/json",
+        },
+        data: { formData: formData },
+      };
+      console.log(formData);
+      const data = await axios(config);
+      console.log("Form Saved", data);
+      dispatch(openSnackBar(data?.data?.message, "success"));
+      return data;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+export const editSubheadingDocument =
   (formData, subheadingId) => async (dispatch) => {
     try {
       let config = {

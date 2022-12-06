@@ -5,6 +5,7 @@ import CalculatorPage from "../../../pages/superadmin/Calculator/CalculatorPage"
 import Dashboard from "../../../pages/superadmin/Dashboard";
 import DocumentGenerator from "../../../pages/superadmin/DocumentGenerator/DocumentGenerator";
 import EditDocument from "../../../pages/superadmin/DocumentGenerator/EditDocument";
+import EditDocumentTitles from "../../../pages/superadmin/DocumentGenerator/EditDocumentTitles";
 import GenerateNewDocument from "../../../pages/superadmin/DocumentGenerator/GenerateNewDocument";
 import Laws from "../../../pages/superadmin/Category/Laws";
 import Login from "../../../pages/superadmin/Login";
@@ -37,11 +38,10 @@ function Navigation() {
             path="/superadmin/documentGenerator/editdocument/:procedure/:procedureId"
             element={<EditDocument />}
           />
-
-          {/* <Route
-          path="/superadmin/documentGenerator/generatenewdocument/:procedure/:heading/:sectiontitle"
-          element={<GenerateNewDocument />}
-        /> */}
+          <Route
+            path="/superadmin/documentGenerator/editsectiondocument/:subheadingtitle/:subheadingId"
+            element={<EditDocumentTitles />}
+          />
           <Route
             path="/superadmin/documentGenerator/generatenewdocument/:sectiontitle/:procedureId"
             element={<GenerateNewDocument />}

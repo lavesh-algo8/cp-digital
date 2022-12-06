@@ -88,14 +88,16 @@ const DocumentTables = () => {
     },
 
     {
-      field: "category_name",
+      field: "law_name",
       headerName: "Law",
+      valueGetter: (params) => params?.row?.law_name?.category,
       flex: 0.3,
     },
     {
       field: "act_name",
       headerName: "Act",
-      flex: 0.3,
+      valueGetter: (params) => params?.row?.act_name?.act,
+      flex: 0.4,
     },
 
     {

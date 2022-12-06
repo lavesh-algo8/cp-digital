@@ -18,6 +18,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { fetchProcedureHeadings } from "../../../redux/superAdminReducer/superAdminAction";
 import { Add, Delete, Edit } from "@mui/icons-material";
+import EditSection from "./EditSection";
+import DeleteSection from "./DeleteSection";
 
 function PopupTable() {
   const params = useParams();
@@ -31,11 +33,14 @@ function PopupTable() {
   console.log(procedureHeadingsList);
   const navigate = useNavigate();
   const [addSection, SetAddSection] = useState(false);
+  const [editSection, SetEditSection] = useState(false);
+  const [deleteSection, SetDeleteSection] = useState(false);
   const [selectedHeading, setSelectedHeading] = useState(null);
+  const [selectedSectionData, setSelectedSectionData] = useState(null);
 
   useEffect(() => {
     dispatch(fetchProcedureHeadings(params.procedureId));
-  }, [params, addSection]);
+  }, [params, addSection, deleteSection, selectedSectionData]);
 
   return (
     <>
@@ -101,6 +106,9 @@ function PopupTable() {
                     key={index}
                     openAddSection={() => SetAddSection(true)}
                     setSelectedHeading={setSelectedHeading}
+                    openEditSection={() => SetEditSection(true)}
+                    setSelectedSectionData={setSelectedSectionData}
+                    openDeleteSection={() => SetDeleteSection(true)}
                   />
                 );
               })}
@@ -113,15 +121,34 @@ function PopupTable() {
         openDialog={addSection}
         heading={selectedHeading}
       />
+      <EditSection
+        closeDialog={() => SetEditSection(false)}
+        openDialog={editSection}
+        selectedSectionData={selectedSectionData}
+      />
+      <DeleteSection
+        closeDialog={() => SetDeleteSection(false)}
+        openDialog={deleteSection}
+        selectedSectionData={selectedSectionData}
+      />
     </>
   );
 }
 
 export default PopupTable;
 
-function DataRow({ item, index, openAddSection, setSelectedHeading }) {
+function DataRow({
+  item,
+  index,
+  openAddSection,
+  openEditSection,
+  openDeleteSection,
+  setSelectedHeading,
+  setSelectedSectionData,
+}) {
   const [expand, setExpand] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { listOfDocuments, selectedDocument, procedureHeadingsList } =
     useSelector((state) => state.SuperAdmin);
@@ -136,11 +163,14 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
     );
   };
 
-  const onSubmitEditDocument = (procedure, header, formdata) => {
-    alert(procedure);
-    alert(header);
-    alert(formdata);
-    console.log(formdata);
+  const onSubmitEditDocument = (items) => {
+    navigate(
+      `/superadmin/documentGenerator/editsectiondocument/${items?.title}/${items?._id}`
+    );
+    // alert(procedure);
+    // alert(header);
+    // alert(formdata);
+    // console.log(formdata);
     // navigate("/superadmin/documentGenerator/editDocument");
   };
 
@@ -186,6 +216,7 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
                 variant="contained"
                 sx={{
                   textTransform: "none",
+                  mr: 3,
                 }}
                 fullWidth
                 onClick={(e) => {
@@ -197,9 +228,9 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
                 <Add fontSize="small" />
                 Add Section
               </Button>
-              <IconButton sx={{ ml: 1 }} onClick={(e) => e.stopPropagation()}>
+              {/* <IconButton sx={{ ml: 1 }} onClick={(e) => e.stopPropagation()}>
                 <Delete color="primary" />
-              </IconButton>
+              </IconButton> */}
               {/* <Typography sx={{ ml: 2 }}>
                 {expand ? <ExpandMoreIcon /> : <ExpandLessIcon />}
               </Typography> */}
@@ -274,27 +305,38 @@ function DataRow({ item, index, openAddSection, setSelectedHeading }) {
                         width: "22ch",
                       }}
                       fullWidth
-                      onClick={() =>
+                      onClick={() => {
+                        dispatch({
+                          type: "SET_SELECT_SUB_HEADING_DOCUMENT",
+                          payload: items,
+                        });
                         items?.formData
-                          ? onSubmitEditDocument(
-                              procedure,
-                              item.header,
-                              (items = item?.forms?.filter(
-                                (item) => item.title === items
-                              ))
-                            )
-                          : onSubmit(items.title, items._id)
-                      }
+                          ? onSubmitEditDocument(items)
+                          : onSubmit(items.title, items._id);
+                      }}
                     >
                       {items?.formData ? "Edit" : "Generate"} Document{" "}
                     </Button>
-                    <IconButton sx={{ ml: 1 }} onClick={() => {}}>
+                    <IconButton
+                      sx={{ ml: 1 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openDeleteSection();
+                        setSelectedSectionData(items);
+                      }}
+                    >
                       <Delete sx={{ color: "white" }} />
                     </IconButton>
                     {items?.formData ? (
                       ""
                     ) : (
-                      <IconButton onClick={() => {}}>
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openEditSection();
+                          setSelectedSectionData(items);
+                        }}
+                      >
                         <Edit sx={{ color: "white" }} />
                       </IconButton>
                     )}

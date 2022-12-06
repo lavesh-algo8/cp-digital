@@ -27,6 +27,7 @@ import {
 } from "../../../redux/superAdminReducer/superAdminAction";
 
 const EditAddDocument = (props) => {
+  console.log(props);
   const { categoryList } = useSelector((state) => state?.SuperAdmin);
 
   const head = props.selectedRowData?.document_headings?.documentHeadings;
@@ -41,8 +42,8 @@ const EditAddDocument = (props) => {
     props.selectedRowData?.document_headings?.documentHeadings.length
   );
   const [newDocumentData, setNewDocumentData] = useState({
-    law: props.selectedRowData?.category_name,
-    act: props.selectedRowData?.act_name,
+    law: props.selectedRowData?.law_name?.category,
+    act: props.selectedRowData?.act_name?.act,
     procedure: props.selectedRowData?.procedure,
     type: props.selectedRowData?.procedure_type,
   });
@@ -90,17 +91,15 @@ const EditAddDocument = (props) => {
     setNewDocumentData({ ...newDocumentData, [e.target.name]: e.target.value });
   };
 
-  const access = ["Procedures", "Calculators", "Content mangement"];
-
   useEffect(() => {
     if (props) {
       setNewDocumentData({
         ...newDocumentData,
-        law: props.selectedRowData?.category_name,
+        law: props.selectedRowData?.law_name?.category,
       });
       setNewDocumentData({
         ...newDocumentData,
-        act: props.selectedRowData?.act_name,
+        act: props.selectedRowData?.act_name?.act,
       });
       setNewDocumentData({
         ...newDocumentData,
@@ -146,8 +145,19 @@ const EditAddDocument = (props) => {
 
               <Box sx={{ display: "flex", mt: 3 }}>
                 <FormControl fullWidth size="small">
-                  <InputLabel id="demo-simple-select-label">Law</InputLabel>
-                  <Select
+                  <TextField
+                    size="small"
+                    id="law"
+                    label="Law"
+                    variant="outlined"
+                    fullWidth
+                    onChange={onChange}
+                    value={newDocumentData.law}
+                    required
+                    disabled
+                  />
+                  {/* <InputLabel id="demo-simple-select-label">Law</InputLabel> */}
+                  {/* <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     label="Law"
@@ -162,14 +172,24 @@ const EditAddDocument = (props) => {
                         {desig.category}
                       </MenuItem>
                     ))}
-                  </Select>
+                  </Select> */}
                 </FormControl>
               </Box>
 
               <Box sx={{ display: "flex", mt: 3 }}>
                 <FormControl fullWidth size="small">
-                  <InputLabel id="demo-simple-select-label">Act</InputLabel>
-                  <Select
+                  <TextField
+                    size="small"
+                    id="act"
+                    label="Act"
+                    variant="outlined"
+                    fullWidth
+                    onChange={onChange}
+                    value={newDocumentData.act}
+                    required
+                    disabled
+                  />
+                  {/* <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     label="Act"
@@ -180,13 +200,13 @@ const EditAddDocument = (props) => {
                     disabled
                   >
                     {categoryList
-                      ?.filter((cat) => cat.category === newDocumentData.law)[0]
+                      ?.filter((cat) => cat.act === newDocumentData.act)[0]
                       ?.acts?.map((desig, index) => (
                         <MenuItem key={desig.act} value={desig.act}>
                           {desig.act}
                         </MenuItem>
                       ))}
-                  </Select>
+                  </Select> */}
                 </FormControl>
               </Box>
 
@@ -201,6 +221,7 @@ const EditAddDocument = (props) => {
                   onChange={onChange}
                   value={newDocumentData.procedure}
                   required
+                  disabled
                 />
               </Box>
 
@@ -214,6 +235,7 @@ const EditAddDocument = (props) => {
                   name="type"
                   onChange={onChange}
                   value={newDocumentData.type}
+                  disabled
                 />
               </Box>
 

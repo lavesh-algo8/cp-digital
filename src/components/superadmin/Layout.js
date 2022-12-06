@@ -175,7 +175,7 @@ export default function Layout({ children }) {
           </ListItemIcon>
         </ListItem>
 
-        <ListItem
+        {/* <ListItem
           button
           sx={{
             mt: 3,
@@ -199,7 +199,7 @@ export default function Layout({ children }) {
               }}
             />
           </ListItemIcon>
-        </ListItem>
+        </ListItem> */}
 
         <ListItem
           button

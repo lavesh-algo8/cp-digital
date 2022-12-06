@@ -11,6 +11,7 @@ const initialStore = {
   dataTree: [],
   listOfDocuments: [],
   selectedDocument: {},
+  selectedSubHeadingDocument: {},
   categoryList: [],
   categoryAllList: [],
   actsByCategoryList: [],
@@ -92,6 +93,12 @@ const superAdminReducer = (state = initialStore, action) => {
       return {
         ...state,
         selectedDocument: action.payload,
+      };
+
+    case "SET_SELECT_SUB_HEADING_DOCUMENT":
+      return {
+        ...state,
+        selectedSubHeadingDocument: action.payload,
       };
 
     case "GET_CATEGORY":
