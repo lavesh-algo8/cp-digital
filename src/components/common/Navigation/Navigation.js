@@ -18,7 +18,7 @@ import GenerateDocumentTitles from "../../../pages/superadmin/DocumentGenerator/
 
 function Navigation() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<Login />} />
 
@@ -71,7 +71,7 @@ function Navigation() {
         </Route>
         {/* Private routes only logged in user can access */}
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
