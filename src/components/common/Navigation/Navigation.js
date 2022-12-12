@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, HashRouter, Route, Routes } from "react-router-dom";
 import Admins from "../../../pages/superadmin/Admins";
 import CalculatorPage from "../../../pages/superadmin/Calculator/CalculatorPage";
 import Dashboard from "../../../pages/superadmin/Dashboard";
@@ -18,7 +18,7 @@ import GenerateDocumentTitles from "../../../pages/superadmin/DocumentGenerator/
 
 function Navigation() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<Login />} />
 
@@ -71,7 +71,7 @@ function Navigation() {
         </Route>
         {/* Private routes only logged in user can access */}
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
