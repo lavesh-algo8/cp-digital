@@ -73,10 +73,10 @@ const SubSectionAddDialog = (props) => {
     // const sectionData = draftToHtml(convertToRaw(value.getCurrentContent()));
     const sectionData = value;
     const data = {
-      sub_section_name: subsection,
-      updatedAt: dateOfUpdate,
+      // sub_section_name: subsection,
+      upload_date: dateOfUpdate,
       updatedBy,
-      sub_regulation_no: subsectionNo,
+      sub_regulation_no: subsectionNo.toString(),
       details: sectionData,
       amendment_date: dateOfAmendment,
     };
