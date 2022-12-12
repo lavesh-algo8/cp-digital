@@ -347,7 +347,7 @@ export const fetchProcedureHeadings = (procedureId) => async (dispatch) => {
     };
     const data = await axios(config);
     console.log("Document Procedure Headings", data);
-    dispatch(openSnackBar(data?.data?.message, "success"));
+    // dispatch(openSnackBar(data?.data?.message, "success"));
     dispatch({
       type: "GET_PROCEDURE_HEADINGS",
       payload: data.data,
@@ -397,7 +397,7 @@ export const editSectionDocumentHeading =
       console.log(config);
       const resp = await axios(config);
       console.log(resp);
-      if (resp?.data.message === "titles edited successfully") {
+      if (resp?.data.message === "Section title updated successfully") {
         dispatch(openSnackBar(resp?.data.message, "success"));
         return true;
       } else {

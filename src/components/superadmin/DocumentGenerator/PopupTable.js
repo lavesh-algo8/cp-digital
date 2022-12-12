@@ -40,7 +40,7 @@ function PopupTable() {
 
   useEffect(() => {
     dispatch(fetchProcedureHeadings(params.procedureId));
-  }, [params, addSection, deleteSection, selectedSectionData]);
+  }, [params, addSection, deleteSection, selectedSectionData, editSection]);
 
   return (
     <>
