@@ -48,7 +48,7 @@ const AddNewsDialog = (props) => {
   const [subnews, setsubnews] = useState("");
   const [newsSource, setnewsSource] = useState("");
   const [dateOfNews, setdateOfNews] = useState(new Date());
-  const [dateOfAmendment, setdateOfAmendment] = useState(new Date());
+  const [dateOfAmendment, setdateOfAmendment] = useState(null);
   const [value, setValue] = useState(EditorState.createEmpty());
   const [treeData, settreeData] = useState([]);
   const [subsectionName, setsubsectionName] = React.useState([]);
@@ -178,7 +178,8 @@ const AddNewsDialog = (props) => {
     console.log(data);
     await dispatch(addNews(data));
     setsubnews("");
-    setdateOfNews("");
+    setdateOfNews(null);
+    setdateOfAmendment(null);
     setValue("");
     setnewsSource("");
     setsubsectionName([]);
@@ -275,7 +276,7 @@ const AddNewsDialog = (props) => {
                           {...params}
                           size="small"
                           variant="outlined"
-                          required
+                          // required
                           fullWidth
                           sx={{
                             mt: 1,

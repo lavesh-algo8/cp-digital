@@ -63,7 +63,7 @@ const EditNotificationDialog = (props) => {
   const [lawName, setlawName] = React.useState([]);
   const [treeData, settreeData] = useState([]);
 
-  const [dateOfAmendment, setdateOfAmendment] = useState(new Date());
+  const [dateOfAmendment, setdateOfAmendment] = useState(null);
 
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
@@ -220,8 +220,8 @@ const EditNotificationDialog = (props) => {
     await dispatch(editNotification(data, props.notificationsDetails._id));
     setnotificationNo("");
     setnotificationShortDescription("");
-    setdateOfNotification("");
-    setdateOfAmendment("");
+    setdateOfNotification(null);
+    setdateOfAmendment(null);
     setsubsectionName([]);
     setchapterName([]);
     setsectionName([]);

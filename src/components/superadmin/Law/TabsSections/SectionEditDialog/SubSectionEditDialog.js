@@ -34,9 +34,7 @@ const SubSectionEditDialog = (props) => {
   const [section, setsection] = useState(
     props.subsectionDetails.sub_section_name
   );
-  const [dateOfAmendment, setdateOfAmendment] = useState(
-    props.subsectionDetails.amendment_date
-  );
+  const [dateOfAmendment, setdateOfAmendment] = useState(null);
 
   const [regulationNo, setregulationNo] = useState(
     props.subsectionDetails?.sub_regulation_no
@@ -93,9 +91,9 @@ const SubSectionEditDialog = (props) => {
     };
     console.log(data);
     await dispatch(editSubSection(data, props.subsectionDetails._id));
-    setdateOfAmendment("");
+    setdateOfAmendment(null);
     setregulationNo("");
-    setdateOfUpdate("");
+    setdateOfUpdate(null);
     setupdatedBy("");
     setValue("");
     props.setOpenDialog(false);

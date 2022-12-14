@@ -53,7 +53,7 @@ const AddSubRuleDialog = (props) => {
   const [subrule, setsubrule] = useState("");
   const [dateOfRule, setdateOfRule] = useState(new Date());
   const [value, setValue] = useState("");
-  const [dateOfAmendment, setdateOfAmendment] = useState(new Date());
+  const [dateOfAmendment, setdateOfAmendment] = useState(null);
   const [treeData, settreeData] = useState([]);
   const [subsectionName, setsubsectionName] = React.useState([]);
   const [sectionName, setsectionName] = React.useState([]);
@@ -175,9 +175,9 @@ const AddSubRuleDialog = (props) => {
     console.log(data);
     await dispatch(addSubRule(data, props.ruleId));
     setrule("");
-    setdateOfRule("");
+    setdateOfRule(null);
     setValue("");
-    setdateOfAmendment("");
+    setdateOfAmendment(null);
     props.setOpenDialog(false);
   };
 
@@ -295,7 +295,7 @@ const AddSubRuleDialog = (props) => {
                       onChange={(e) => setsubrule(e.target.value)}
                       aria-describedby="outlined-weight-helper-text"
                       fullWidth
-                      required
+                      // required
                       size="small"
                       notched={false}
                       label="Law"
@@ -341,7 +341,7 @@ const AddSubRuleDialog = (props) => {
                           {...params}
                           size="small"
                           variant="outlined"
-                          required
+                          // required
                           fullWidth
                           sx={{
                             mt: 1,

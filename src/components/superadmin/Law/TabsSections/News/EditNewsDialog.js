@@ -210,7 +210,7 @@ const EditNewsDialog = (props) => {
     console.log(data);
     await dispatch(editNews(data, props?.newsDetails._id));
     setnews("");
-    setdateOfNews("");
+    setdateOfNews(null);
     setValue("");
     setnewsSource("");
     setsubsectionName([]);

@@ -211,9 +211,9 @@ const EditSubRuleDialog = (props) => {
     };
     console.log(data);
     await dispatch(editSubRule(data, props?.subruleDetails._id));
-    setdateOfRule("");
+    setdateOfRule(null);
     setValue("");
-    setdateOfAmendment("");
+    setdateOfAmendment(null);
     setsubsectionName([]);
     setsectionName([]);
     setchapterName([]);
@@ -367,7 +367,7 @@ const EditSubRuleDialog = (props) => {
                           {...params}
                           size="small"
                           variant="outlined"
-                          required
+                          // required
                           fullWidth
                           sx={{
                             mt: 1,
@@ -378,44 +378,6 @@ const EditSubRuleDialog = (props) => {
                       )}
                     />
                   </Box>
-
-                  <FormControl>
-                    <Typography sx={{ mt: 2, mb: 1 }}>
-                      Upload Rule File
-                    </Typography>
-                    <Box
-                      sx={{
-                        border: "1px solid #919191",
-                        borderRadius: "5px",
-                        px: 2,
-                      }}
-                    >
-                      <input
-                        accept=".pdf,.doc,.docx"
-                        style={{ display: "none" }}
-                        id="raised-button-file"
-                        multiple
-                        type="file"
-                        onChange={handleChange}
-                        // required
-                      />
-                      {/* preview of file */}
-
-                      <label htmlFor="raised-button-file">
-                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                          <Button
-                            variant="contained"
-                            component="span"
-                            sx={{ mt: 1, mr: 3 }}
-                            size="small"
-                          >
-                            Upload File
-                          </Button>
-                          {file && file.name}
-                        </Box>
-                      </label>
-                    </Box>
-                  </FormControl>
 
                   {/* <FormControl
                     className={{
@@ -697,7 +659,7 @@ const EditSubRuleDialog = (props) => {
                     // forceEnterMode: true,
                     enterMode: "p",
                     extraPlugins: ["amendments"],
-                    height: "320px",
+                    height: "210px",
                     resize_enabled: false,
                     removeButtons: false,
                   }}

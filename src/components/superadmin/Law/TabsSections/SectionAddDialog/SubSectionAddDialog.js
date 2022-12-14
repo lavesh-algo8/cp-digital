@@ -35,7 +35,7 @@ const SubSectionAddDialog = (props) => {
     parseFloat(props.sectionno + "." + parseInt(props.subSectionLength + 1))
   );
   const [dateOfUpdate, setdateOfUpdate] = useState(new Date());
-  const [dateOfAmendment, setdateOfAmendment] = useState(new Date());
+  const [dateOfAmendment, setdateOfAmendment] = useState(null);
   const [updatedBy, setupdatedBy] = useState("");
   const [value, setValue] = useState(EditorState.createEmpty());
 
@@ -82,7 +82,8 @@ const SubSectionAddDialog = (props) => {
     };
     await dispatch(addSubSection(data, props.sectionId));
     setsubsection("");
-    setdateOfUpdate("");
+    setdateOfUpdate(null);
+    setdateOfAmendment(null);
     setupdatedBy("");
     setValue("");
     props.setOpenDialog(false);
@@ -204,7 +205,7 @@ const SubSectionAddDialog = (props) => {
                         {...params}
                         size="small"
                         variant="outlined"
-                        required
+                        // required
                         sx={{
                           mt: 1,
                           "& legend": { display: "none" },

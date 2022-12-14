@@ -446,12 +446,13 @@ const Rules = () => {
         subruleId={subruleId}
       />
 
-      <EditRuleDialog
-        openDialog={openEditRuleDialog}
-        setOpenDialog={setopenEditRuleDialog}
-        rulesDetails={rulesDetails}
-      />
-
+      {openEditRuleDialog && (
+        <EditRuleDialog
+          openDialog={openEditRuleDialog}
+          setOpenDialog={setopenEditRuleDialog}
+          rulesDetails={rulesDetails}
+        />
+      )}
       <DeleteRuleDialog
         openDialog={openDeleteRuleDialog}
         setOpenDialog={setopenDeleteRuleDialog}

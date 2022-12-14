@@ -51,7 +51,8 @@ const searchItems = [
 ];
 
 export default function Layout({ children }) {
-  let currentLocation = window.location.pathname;
+  let currentLocation = window.location.hash.substring(1);
+  // alert(currentLocation);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [mobileOpen, setMobileOpen] = React.useState(false);

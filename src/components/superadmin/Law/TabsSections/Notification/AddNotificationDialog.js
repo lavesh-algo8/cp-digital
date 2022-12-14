@@ -61,7 +61,7 @@ const AddNotificationDialog = (props) => {
   const [chapterName, setchapterName] = React.useState([]);
   const [actName, setactName] = React.useState([]);
   const [lawName, setlawName] = React.useState([]);
-  const [dateOfAmendment, setdateOfAmendment] = useState(new Date());
+  const [dateOfAmendment, setdateOfAmendment] = useState(null);
   const [treeData, settreeData] = useState([]);
 
   const handleDialogClose = () => {
@@ -186,7 +186,8 @@ const AddNotificationDialog = (props) => {
     setnotificationName("");
     setnotificationNo("");
     setnotificationShortDescription("");
-    setdateOfNotification("");
+    setdateOfNotification(null);
+    setdateOfAmendment(null);
     // setsubsectionName([]);
     // setchapterName([]);
     // setsectionName([]);
@@ -294,7 +295,7 @@ const AddNotificationDialog = (props) => {
                         {...params}
                         size="small"
                         variant="outlined"
-                        required
+                        // required
                         sx={{
                           mt: 1,
                           "& legend": { display: "none" },

@@ -205,7 +205,7 @@ const EditPresentationDialog = (props) => {
     console.log(data);
     await dispatch(editPresentation(data, props?.presentationDetails._id));
     setpresentation("");
-    setdateOfPresentation("");
+    setdateOfPresentation(null);
     setpresentationAuthor("");
     setsubsectionName([]);
     setsectionName([]);

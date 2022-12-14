@@ -63,7 +63,7 @@ const AddCircularDialog = (props) => {
   const [subsectionName, setsubsectionName] = React.useState([]);
   const [sectionName, setsectionName] = React.useState([]);
   const [chapterName, setchapterName] = React.useState([]);
-  const [dateOfAmendment, setdateOfAmendment] = useState(new Date());
+  const [dateOfAmendment, setdateOfAmendment] = useState(null);
   const [actName, setactName] = React.useState([]);
   const [lawName, setlawName] = React.useState([]);
 
@@ -308,7 +308,7 @@ const AddCircularDialog = (props) => {
                         {...params}
                         size="small"
                         variant="outlined"
-                        required
+                        // required
                         sx={{
                           mt: 1,
                           "& legend": { display: "none" },

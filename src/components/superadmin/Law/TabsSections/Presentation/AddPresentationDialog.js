@@ -165,7 +165,7 @@ const AddSubPresentationDialog = (props) => {
     console.log(data);
     await dispatch(addPresentation(data));
     setpresentation("");
-    setdateOfPresentation("");
+    setdateOfPresentation(null);
     setpresentationAuthor("");
     setsubsectionName([]);
     setsectionName([]);
