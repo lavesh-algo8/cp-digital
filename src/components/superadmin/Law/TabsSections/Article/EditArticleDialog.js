@@ -42,10 +42,22 @@ import htmlToDraft from "html-to-draftjs";
 import { CKEditor } from "ckeditor4-react";
 import DropdownTreeSelect from "react-dropdown-tree-select";
 
+import CheckboxTree from "react-checkbox-tree";
+import "react-checkbox-tree/lib/react-checkbox-tree.css";
+
 const EditArticleDialog = (props) => {
   const [file, setFile] = useState(undefined);
 
   const copyData = props?.articleDetails;
+
+  console.log(copyData);
+  const checkedData = [
+    ...copyData.law,
+    ...copyData.act,
+    ...copyData.chapter,
+    ...copyData.section,
+    ...copyData.subsection,
+  ];
 
   const handleChange = (event) => {
     setFile(event.target.files[0]);
@@ -61,6 +73,20 @@ const EditArticleDialog = (props) => {
   const [actName, setactName] = React.useState([]);
   const [lawName, setlawName] = React.useState([]);
   const [treeData, settreeData] = useState([]);
+
+  // tree data implemented
+  const [checked, setchecked] = useState(checkedData);
+  const [expanded, setexpanded] = useState(checkedData);
+
+  const onCheck = (checked) => {
+    console.log(checked);
+
+    setchecked(checked);
+  };
+
+  const onExpand = (expanded) => {
+    setexpanded(expanded);
+  };
 
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
@@ -204,7 +230,7 @@ const EditArticleDialog = (props) => {
       date: dateOfArticle,
       description: articlesDetails,
       written_by: ArticleWrittenBy,
-      mapTo: treeData,
+      mapTo: checked,
 
       // law: lawName.toString(),
       // act: actName.toString(),
@@ -615,7 +641,19 @@ const EditArticleDialog = (props) => {
                     }}
                   >
                     <Typography sx={{ mb: 1 }}>Map To</Typography>
-                    {dataTree && DropDownTreeSelect}
+                    {dataTree && (
+                      <CheckboxTree
+                        showExpandAll
+                        noCascade
+                        nodes={dataTree}
+                        checkModel="all"
+                        checked={checked}
+                        expanded={expanded}
+                        iconsClass="fa5"
+                        onCheck={onCheck}
+                        onExpand={onExpand}
+                      />
+                    )}
                   </FormControl>
                 </Box>
               </Grid>
@@ -648,7 +686,7 @@ const EditArticleDialog = (props) => {
                     // forceEnterMode: true,
                     enterMode: "p",
                     extraPlugins: ["amendments"],
-                    height: "215px",
+                    height: "235px",
                     resize_enabled: false,
                     removeButtons: false,
                   }}

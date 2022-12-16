@@ -37,6 +37,9 @@ import {
 } from "../../../../../redux/superAdminReducer/superAdminAction";
 import DropdownTreeSelect from "react-dropdown-tree-select";
 
+import CheckboxTree from "react-checkbox-tree";
+import "react-checkbox-tree/lib/react-checkbox-tree.css";
+
 const AddSubPresentationDialog = (props) => {
   const [presentation, setpresentation] = useState("");
   const [presentationAuthor, setpresentationAuthor] = useState("");
@@ -47,6 +50,20 @@ const AddSubPresentationDialog = (props) => {
   const [chapterName, setchapterName] = React.useState([]);
   const [actName, setactName] = React.useState([]);
   const [lawName, setlawName] = React.useState([]);
+
+  // tree data implementation
+  const [checked, setchecked] = useState([]);
+  const [expanded, setexpanded] = useState([]);
+
+  const onCheck = (checked) => {
+    console.log(checked);
+
+    setchecked(checked);
+  };
+
+  const onExpand = (expanded) => {
+    setexpanded(expanded);
+  };
 
   const {
     dataTree,
@@ -155,7 +172,7 @@ const AddSubPresentationDialog = (props) => {
       title: presentation,
       date: dateOfPresentation,
       author: presentationAuthor,
-      mapTo: treeData,
+      mapTo: checked,
       // law: lawName.toString(),
       // act: actName.toString(),
       // chapter: chapterName.toString(),
@@ -548,7 +565,19 @@ const AddSubPresentationDialog = (props) => {
                 }}
               >
                 <Typography sx={{ mb: 1 }}>Map To</Typography>
-                {dataTree && DropDownTreeSelect}
+                {dataTree && (
+                  <CheckboxTree
+                    showExpandAll
+                    noCascade
+                    nodes={dataTree}
+                    checkModel="all"
+                    checked={checked}
+                    expanded={expanded}
+                    iconsClass="fa5"
+                    onCheck={onCheck}
+                    onExpand={onExpand}
+                  />
+                )}
               </FormControl>
             </Box>
 

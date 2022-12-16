@@ -40,10 +40,22 @@ import htmlToDraft from "html-to-draftjs";
 import { CKEditor } from "ckeditor4-react";
 import DropdownTreeSelect from "react-dropdown-tree-select";
 
+import CheckboxTree from "react-checkbox-tree";
+import "react-checkbox-tree/lib/react-checkbox-tree.css";
+
 const EditNotificationDialog = (props) => {
   const [file, setFile] = useState(undefined);
 
   const copyData = props?.notificationsDetails;
+
+  console.log(copyData);
+  const checkedData = [
+    ...copyData.law,
+    ...copyData.act,
+    ...copyData.chapter,
+    ...copyData.section,
+    ...copyData.subsection,
+  ];
 
   const handleChange = (event) => {
     setFile(event.target.files[0]);
@@ -64,6 +76,20 @@ const EditNotificationDialog = (props) => {
   const [treeData, settreeData] = useState([]);
 
   const [dateOfAmendment, setdateOfAmendment] = useState(null);
+
+  // tree data implemented
+  const [checked, setchecked] = useState(checkedData);
+  const [expanded, setexpanded] = useState(checkedData);
+
+  const onCheck = (checked) => {
+    console.log(checked);
+
+    setchecked(checked);
+  };
+
+  const onExpand = (expanded) => {
+    setexpanded(expanded);
+  };
 
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
@@ -207,7 +233,7 @@ const EditNotificationDialog = (props) => {
       short_desc: notificationShortDescription,
       notification_details: notificationDetails,
       amendment_date: dateOfAmendment,
-      mapTo: treeData,
+      mapTo: checked,
 
       // law: lawName.toString(),
       // act: actName.toString(),
@@ -392,7 +418,7 @@ const EditNotificationDialog = (props) => {
                         {...params}
                         size="small"
                         variant="outlined"
-                        required
+                        // required
                         sx={{
                           mt: 1,
                           "& legend": { display: "none" },
@@ -706,7 +732,19 @@ const EditNotificationDialog = (props) => {
                     }}
                   >
                     <Typography sx={{ mb: 1 }}>Map To</Typography>
-                    {dataTree && DropDownTreeSelect}
+                    {dataTree && (
+                      <CheckboxTree
+                        showExpandAll
+                        noCascade
+                        nodes={dataTree}
+                        checkModel="all"
+                        checked={checked}
+                        expanded={expanded}
+                        iconsClass="fa5"
+                        onCheck={onCheck}
+                        onExpand={onExpand}
+                      />
+                    )}
                   </FormControl>
                 </Box>
               </Grid>

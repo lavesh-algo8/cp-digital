@@ -231,6 +231,7 @@ const Rules = () => {
     {
       field: "rule_name",
       headerName: "Rules",
+      valueGetter: (params) => params?.row?.rule?.rule_name,
       flex: 1,
       renderCell: (params) => {
         return (

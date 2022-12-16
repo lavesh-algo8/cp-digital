@@ -247,6 +247,7 @@ const Section = () => {
     {
       field: "section.section_name",
       headerName: "Sections",
+      valueGetter: (params) => params?.row?.section?.section_name,
       flex: 1,
       renderCell: (params) => {
         return (

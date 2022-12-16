@@ -219,12 +219,13 @@ const Circular = () => {
     {
       field: "circular_heading",
       headerName: "Circulars",
+      valueGetter: (params) => params?.row?.circular_heading,
       flex: 1,
       renderCell: (params) => {
         return (
           <>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
-              <Typography>{params.row.circular_heading}</Typography>
+              <Typography>{params?.row?.circular_heading}</Typography>
             </Box>
           </>
         );

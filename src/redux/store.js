@@ -6,10 +6,12 @@ import thunk from "redux-thunk";
 import superAdminReducer from "./superAdminReducer/superAdminReducer";
 import utilityReducer from "./utilityReducer/UtilityReducer";
 import persistReducer from "redux-persist/es/persistReducer";
+import DataTreeReducer from "./dataTree/DataTreeReducer";
 
 const RootReducer = combineReducers({
   SuperAdmin: superAdminReducer,
   Util: utilityReducer,
+  Tree_Data: DataTreeReducer,
 });
 
 const persistConfig = {

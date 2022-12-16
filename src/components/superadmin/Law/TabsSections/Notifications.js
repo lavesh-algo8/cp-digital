@@ -205,6 +205,7 @@ const Notifications = () => {
     {
       field: "notification",
       headerName: "Notifications",
+      valueGetter: (params) => params?.row?.notification_heading,
       flex: 1,
       renderCell: (params) => {
         return (
@@ -213,7 +214,7 @@ const Notifications = () => {
               cursor: "pointer",
             }}
           >
-            {params.row.notification_heading}
+            {params?.row?.notification_heading}
           </Typography>
         );
       },

@@ -40,8 +40,20 @@ import {
 } from "../../../../../redux/superAdminReducer/superAdminAction";
 import DropdownTreeSelect from "react-dropdown-tree-select";
 
+import CheckboxTree from "react-checkbox-tree";
+import "react-checkbox-tree/lib/react-checkbox-tree.css";
+
 const EditPresentationDialog = (props) => {
   const copyData = props?.presentationDetails;
+
+  console.log(copyData);
+  const checkedData = [
+    ...copyData.law,
+    ...copyData.act,
+    ...copyData.chapter,
+    ...copyData.section,
+    ...copyData.subsection,
+  ];
 
   const [presentation, setpresentation] = useState("");
   const [presentationAuthor, setpresentationAuthor] = useState("");
@@ -52,6 +64,20 @@ const EditPresentationDialog = (props) => {
   const [actName, setactName] = React.useState([]);
   const [lawName, setlawName] = React.useState([]);
   const [treeData, settreeData] = useState([]);
+
+  // tree data implemented
+  const [checked, setchecked] = useState(checkedData);
+  const [expanded, setexpanded] = useState(checkedData);
+
+  const onCheck = (checked) => {
+    console.log(checked);
+
+    setchecked(checked);
+  };
+
+  const onExpand = (expanded) => {
+    setexpanded(expanded);
+  };
 
   const {
     dataTree,
@@ -195,7 +221,7 @@ const EditPresentationDialog = (props) => {
       title: presentation,
       date: dateOfPresentation,
       author: presentationAuthor,
-      mapTo: treeData,
+      mapTo: checked,
       // law: lawName.toString(),
       // act: actName.toString(),
       // chapter: chapterName.toString(),
@@ -617,7 +643,19 @@ const EditPresentationDialog = (props) => {
                 }}
               >
                 <Typography sx={{ mb: 1 }}>Map To</Typography>
-                {dataTree && DropDownTreeSelect}
+                {dataTree && (
+                  <CheckboxTree
+                    showExpandAll
+                    noCascade
+                    nodes={dataTree}
+                    checkModel="all"
+                    checked={checked}
+                    expanded={expanded}
+                    iconsClass="fa5"
+                    onCheck={onCheck}
+                    onExpand={onExpand}
+                  />
+                )}
               </FormControl>
             </Box>
 

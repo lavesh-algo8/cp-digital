@@ -214,6 +214,7 @@ const Article = () => {
     {
       field: "circular_heading",
       headerName: "Articles",
+      valueGetter: (params) => params.row.title,
       flex: 1,
       renderCell: (params) => {
         return (

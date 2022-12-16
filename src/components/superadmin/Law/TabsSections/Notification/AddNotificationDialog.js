@@ -41,6 +41,10 @@ import {
 } from "../../../../../redux/superAdminReducer/superAdminAction";
 import { CKEditor } from "ckeditor4-react";
 import DropdownTreeSelect from "react-dropdown-tree-select";
+import TreeData from "../../../../common/TreeData/TreeData";
+
+import CheckboxTree from "react-checkbox-tree";
+import "react-checkbox-tree/lib/react-checkbox-tree.css";
 
 const AddNotificationDialog = (props) => {
   const [file, setFile] = useState(undefined);
@@ -63,6 +67,20 @@ const AddNotificationDialog = (props) => {
   const [lawName, setlawName] = React.useState([]);
   const [dateOfAmendment, setdateOfAmendment] = useState(null);
   const [treeData, settreeData] = useState([]);
+
+  // tree data implementation
+  const [checked, setchecked] = useState([]);
+  const [expanded, setexpanded] = useState([]);
+
+  const onCheck = (checked) => {
+    console.log(checked);
+
+    setchecked(checked);
+  };
+
+  const onExpand = (expanded) => {
+    setexpanded(expanded);
+  };
 
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
@@ -173,7 +191,7 @@ const AddNotificationDialog = (props) => {
       short_desc: notificationShortDescription,
       notification_details: notificationDetails,
       amendment_date: dateOfAmendment,
-      mapTo: treeData,
+      mapTo: checked,
       // law: lawName.toString(),
       // act: actName.toString(),
       // chapter: chapterName.toString(),
@@ -609,7 +627,19 @@ const AddNotificationDialog = (props) => {
                     }}
                   >
                     <Typography sx={{ mb: 1 }}>Map To</Typography>
-                    {dataTree && DropDownTreeSelect}
+                    {dataTree && (
+                      <CheckboxTree
+                        showExpandAll
+                        noCascade
+                        nodes={dataTree}
+                        checkModel="all"
+                        checked={checked}
+                        expanded={expanded}
+                        iconsClass="fa5"
+                        onCheck={onCheck}
+                        onExpand={onExpand}
+                      />
+                    )}
                   </FormControl>
                 </Box>
               </Grid>

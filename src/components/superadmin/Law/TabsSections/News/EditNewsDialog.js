@@ -40,8 +40,20 @@ import {
 import { CKEditor } from "ckeditor4-react";
 import DropdownTreeSelect from "react-dropdown-tree-select";
 
+import CheckboxTree from "react-checkbox-tree";
+import "react-checkbox-tree/lib/react-checkbox-tree.css";
+
 const EditNewsDialog = (props) => {
   const copyData = props?.newsDetails;
+
+  console.log(copyData);
+  const checkedData = [
+    ...copyData.law,
+    ...copyData.act,
+    ...copyData.chapter,
+    ...copyData.section,
+    ...copyData.subsection,
+  ];
 
   const [news, setnews] = useState("");
   const [newsSource, setnewsSource] = useState("");
@@ -53,6 +65,20 @@ const EditNewsDialog = (props) => {
   const [chapterName, setchapterName] = React.useState([]);
   const [actName, setactName] = React.useState([]);
   const [lawName, setlawName] = React.useState([]);
+
+  // tree data implemented
+  const [checked, setchecked] = useState(checkedData);
+  const [expanded, setexpanded] = useState(checkedData);
+
+  const onCheck = (checked) => {
+    console.log(checked);
+
+    setchecked(checked);
+  };
+
+  const onExpand = (expanded) => {
+    setexpanded(expanded);
+  };
 
   const {
     dataTree,
@@ -200,7 +226,7 @@ const EditNewsDialog = (props) => {
       date: dateOfNews,
       description: newsData,
       source: newsSource,
-      mapTo: treeData,
+      mapTo: checked,
       // law: lawName.toString(),
       // act: actName.toString(),
       // chapter: chapterName.toString(),
@@ -648,7 +674,19 @@ const EditNewsDialog = (props) => {
                     }}
                   >
                     <Typography sx={{ mb: 1 }}>Map To</Typography>
-                    {dataTree && DropDownTreeSelect}
+                    {dataTree && (
+                      <CheckboxTree
+                        showExpandAll
+                        noCascade
+                        nodes={dataTree}
+                        checkModel="all"
+                        checked={checked}
+                        expanded={expanded}
+                        iconsClass="fa5"
+                        onCheck={onCheck}
+                        onExpand={onExpand}
+                      />
+                    )}
                   </FormControl>
                 </Box>
               </Grid>
@@ -681,7 +719,7 @@ const EditNewsDialog = (props) => {
                     // forceEnterMode: true,
                     enterMode: "p",
                     extraPlugins: ["amendments"],
-                    height: "320px",
+                    height: "350px",
                     resize_enabled: false,
                     removeButtons: false,
                   }}

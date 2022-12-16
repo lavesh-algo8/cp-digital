@@ -202,7 +202,7 @@ const Presentation = () => {
       },
     },
     {
-      field: "circular_heading",
+      field: "title",
       headerName: "Presentation",
       flex: 1,
       renderCell: (params) => {
@@ -323,11 +323,13 @@ const Presentation = () => {
         setOpenDialog={setopenDialog}
       />
 
-      <EditPresentationDialog
-        openDialog={openEditPresentationDialog}
-        setOpenDialog={setopenEditPresentationDialog}
-        presentationDetails={presentationDetails}
-      />
+      {openEditPresentationDialog && (
+        <EditPresentationDialog
+          openDialog={openEditPresentationDialog}
+          setOpenDialog={setopenEditPresentationDialog}
+          presentationDetails={presentationDetails}
+        />
+      )}
 
       <DeletePresentationDialog
         openDialog={openDeletePresentationDialog}

@@ -45,6 +45,9 @@ import {
 import { CKEditor } from "ckeditor4-react";
 import DropdownTreeSelect from "react-dropdown-tree-select";
 
+import CheckboxTree from "react-checkbox-tree";
+import "react-checkbox-tree/lib/react-checkbox-tree.css";
+
 const AddCircularDialog = (props) => {
   const [file, setFile] = useState(undefined);
 
@@ -66,6 +69,20 @@ const AddCircularDialog = (props) => {
   const [dateOfAmendment, setdateOfAmendment] = useState(null);
   const [actName, setactName] = React.useState([]);
   const [lawName, setlawName] = React.useState([]);
+
+  // tree data implementation
+  const [checked, setchecked] = useState([]);
+  const [expanded, setexpanded] = useState([]);
+
+  const onCheck = (checked) => {
+    console.log(checked);
+
+    setchecked(checked);
+  };
+
+  const onExpand = (expanded) => {
+    setexpanded(expanded);
+  };
 
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
@@ -185,7 +202,7 @@ const AddCircularDialog = (props) => {
       // chapter: chapterName.toString(),
       // section: sectionName.toString(),
       // sub_section_no: parseFloat(subsectionName.toString()),
-      mapTo: treeData,
+      mapTo: checked,
     };
     console.log(data);
     await dispatch(addCircular(data));
@@ -621,7 +638,19 @@ const AddCircularDialog = (props) => {
                     }}
                   >
                     <Typography sx={{ mb: 1 }}>Map To</Typography>
-                    {dataTree && DropDownTreeSelect}
+                    {dataTree && (
+                      <CheckboxTree
+                        showExpandAll
+                        noCascade
+                        nodes={dataTree}
+                        checkModel="all"
+                        checked={checked}
+                        expanded={expanded}
+                        iconsClass="fa5"
+                        onCheck={onCheck}
+                        onExpand={onExpand}
+                      />
+                    )}
                   </FormControl>
                 </Box>
               </Grid>

@@ -20,6 +20,7 @@ const utilityReducer = (state = initialStore, action) => {
         msg: "",
         type: "",
       };
+
     default:
       return state;
   }

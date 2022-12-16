@@ -41,10 +41,22 @@ import htmlToDraft from "html-to-draftjs";
 import { CKEditor } from "ckeditor4-react";
 import DropdownTreeSelect from "react-dropdown-tree-select";
 
+import CheckboxTree from "react-checkbox-tree";
+import "react-checkbox-tree/lib/react-checkbox-tree.css";
+
 const EditSubRuleDialog = (props) => {
   const [file, setFile] = useState(undefined);
 
   const copyData = props?.subruleDetails;
+
+  console.log(copyData);
+  const checkedData = [
+    ...copyData.law,
+    ...copyData.act,
+    ...copyData.chapter,
+    ...copyData.section,
+    ...copyData.subsection,
+  ];
 
   const handleChange = (event) => {
     setFile(event.target.files[0]);
@@ -61,6 +73,20 @@ const EditSubRuleDialog = (props) => {
   const [chapterName, setchapterName] = React.useState([]);
   const [actName, setactName] = React.useState([]);
   const [lawName, setlawName] = React.useState([]);
+
+  // tree data implemented
+  const [checked, setchecked] = useState(checkedData);
+  const [expanded, setexpanded] = useState(checkedData);
+
+  const onCheck = (checked) => {
+    console.log(checked);
+
+    setchecked(checked);
+  };
+
+  const onExpand = (expanded) => {
+    setexpanded(expanded);
+  };
 
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
@@ -202,7 +228,7 @@ const EditSubRuleDialog = (props) => {
       upload_date: dateOfRule,
       details: sectionData,
       amendment_date: dateOfAmendment,
-      mapTo: treeData,
+      mapTo: checked,
       // law: lawName.toString(),
       // act: actName.toString(),
       // chapter: chapterName.toString(),
@@ -626,7 +652,19 @@ const EditSubRuleDialog = (props) => {
                     }}
                   >
                     <Typography sx={{ mb: 1 }}>Map To</Typography>
-                    {dataTree && DropDownTreeSelect}
+                    {dataTree && (
+                      <CheckboxTree
+                        showExpandAll
+                        noCascade
+                        nodes={dataTree}
+                        checkModel="all"
+                        checked={checked}
+                        expanded={expanded}
+                        iconsClass="fa5"
+                        onCheck={onCheck}
+                        onExpand={onExpand}
+                      />
+                    )}
                   </FormControl>
                 </Box>
               </Grid>
