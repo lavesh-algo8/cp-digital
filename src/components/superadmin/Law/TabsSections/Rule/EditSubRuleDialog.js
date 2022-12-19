@@ -46,6 +46,15 @@ import "react-checkbox-tree/lib/react-checkbox-tree.css";
 
 const EditSubRuleDialog = (props) => {
   const [file, setFile] = useState(undefined);
+  const {
+    dataTree,
+    categoryAllList,
+    actsByCategoryList,
+    chapterList,
+    subsectionsList,
+    allChapterList,
+    sectionsbychapterList,
+  } = useSelector((state) => state?.SuperAdmin);
 
   const copyData = props?.subruleDetails;
 
@@ -57,6 +66,28 @@ const EditSubRuleDialog = (props) => {
     ...copyData.section,
     ...copyData.subsection,
   ];
+
+  function dfs(o, target) {
+    if (o.value === target) return [target];
+    if (!o.children) return false;
+    let path;
+    o.children.find((x) => (path = dfs(x, target)));
+    if (path) {
+      return [o.value].concat(path);
+    }
+  }
+  let path;
+  // dataTree.find((x) => (path = dfs(x, "63995983506bac3aee929016")));
+  // console.log(path);
+
+  const expandedDataArr = [];
+  checkedData.map((value) => {
+    dataTree.find((x) => (path = dfs(x, value)));
+    if (path?.length > 0) {
+      expandedDataArr.push(...path);
+    }
+  });
+  console.log(expandedDataArr);
 
   const handleChange = (event) => {
     setFile(event.target.files[0]);
@@ -76,7 +107,7 @@ const EditSubRuleDialog = (props) => {
 
   // tree data implemented
   const [checked, setchecked] = useState(checkedData);
-  const [expanded, setexpanded] = useState(checkedData);
+  const [expanded, setexpanded] = useState(expandedDataArr);
 
   const onCheck = (checked) => {
     console.log(checked);
@@ -91,15 +122,6 @@ const EditSubRuleDialog = (props) => {
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
   };
-  const {
-    dataTree,
-    categoryAllList,
-    actsByCategoryList,
-    chapterList,
-    subsectionsList,
-    allChapterList,
-    sectionsbychapterList,
-  } = useSelector((state) => state?.SuperAdmin);
 
   const dispatch = useDispatch();
 
