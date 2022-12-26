@@ -161,7 +161,7 @@ export default function Layout({ children }) {
               ? "4px solid #192a3a"
               : "",
           }}
-          onClick={() => navigate("/superadmin/calculator")}
+          onClick={() => navigate("/superadmin/calculator/calculateNetworth")}
         >
           <ListItemIcon sx={{ display: "flex", justifyContent: "center" }}>
             <CalculateIcon

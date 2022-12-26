@@ -12,7 +12,7 @@ function CalculatorPage() {
     rocFeesCalculator: <ROCFeeCalculator />,
   };
 
-  return <CalculatorLayout id={id}>{tabs[id]}</CalculatorLayout>;
+  return <CalculatorLayout ids={id}>{tabs[id]}</CalculatorLayout>;
 }
 
 export default CalculatorPage;

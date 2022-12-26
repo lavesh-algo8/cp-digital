@@ -4,6 +4,7 @@ import {
   Card,
   Collapse,
   Grid,
+  IconButton,
   List,
   ListItemButton,
   ListItemIcon,
@@ -12,7 +13,7 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import Layout from "../Layout";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import ExpandLess from "@mui/icons-material/ExpandLess";
@@ -20,17 +21,36 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import StarBorder from "@mui/icons-material/StarBorder";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import LawIdFetch from "../Law/Tabs";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { CalculateNetWorth } from "../../../pages/superadmin/Calculator/CalculateNetWorth";
+import { Delete } from "@mui/icons-material";
+import AddIcon from "@mui/icons-material/Add";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAddedCalculators,
+  fetchCategory,
+} from "../../../redux/superAdminReducer/superAdminAction";
+import AddCalculator from "./AddCalculator";
 
-const CalculatorLayout = ({ children, id }) => {
+const CalculatorLayout = ({ children, ids }) => {
+  const { addedCalculatorList } = useSelector((state) => state?.SuperAdmin);
+
+  const [openDialog, setopenDialog] = React.useState(false);
+  const { id } = useParams();
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  let currentLocation = window.location.hash.substring(1);
 
   const [open, setOpen] = React.useState(false);
   const [expanded, setExpanded] = React.useState("");
+  const [expanded2, setExpanded2] = React.useState("");
   const [currentTab, setCurrentTab] = React.useState("CalculateNetworth");
   const handleExpandClick = (index) => {
     expanded === index ? setExpanded("") : setExpanded(index);
+  };
+  const handleExpandClick2 = (index) => {
+    expanded2 === index ? setExpanded2("") : setExpanded2(index);
   };
   const handleClick = () => {
     setOpen(!open);
@@ -40,9 +60,31 @@ const CalculatorLayout = ({ children, id }) => {
     CalculateNetworth: <CalculateNetWorth />,
   };
 
+  useEffect(() => {
+    dispatch(fetchAddedCalculators());
+  }, [openDialog]);
+
+  useEffect(() => {
+    if (ids) {
+      setExpanded(0);
+    }
+    if (id) {
+      currentLocation.startsWith("/superadmin/calculator/addedcalculator")
+        ? setExpanded2(0)
+        : setExpanded2("");
+    }
+  }, []);
+
   return (
     <>
       <Layout>
+        {openDialog && (
+          <AddCalculator
+            openDialog={openDialog}
+            setOpenDialog={setopenDialog}
+          />
+        )}
+
         <Box sx={{ maxHeight: "100vh" }}>
           <Grid container>
             <Grid
@@ -72,15 +114,19 @@ const CalculatorLayout = ({ children, id }) => {
                 >
                   Calculator
                 </Typography>
-                <Box sx={{ overflow: "scroll", height: "85vh", mt: 2 }}>
-                  {[
-                    "Fees & Figures Calculator",
-                    "Eligibility & Date Check",
-                  ].map((value, index) => (
+                <Box
+                  sx={{
+                    overflowY: "scroll",
+                    overflowX: "hidden",
+                    height: "83vh",
+                    mt: 2,
+                  }}
+                >
+                  {["Others Calculators"].map((value, index) => (
                     <>
                       <ListItemButton onClick={() => handleExpandClick(index)}>
                         <ListItemText primary={value} />
-                        {open ? <ExpandLess /> : <ExpandMore />}
+                        {index === expanded ? <ExpandLess /> : <ExpandMore />}
                       </ListItemButton>
                       <Collapse
                         in={index === expanded}
@@ -89,18 +135,6 @@ const CalculatorLayout = ({ children, id }) => {
                       >
                         <List component="div" disablePadding>
                           {[
-                            {
-                              id: "penaltyCalculator",
-                              name: "Penalty Calculator",
-                            },
-                            {
-                              id: "calculateEffectiveCapital",
-                              name: "Calculate Effective Capital",
-                            },
-                            {
-                              id: "calculateNetProfits",
-                              name: "Calculate Net Profits",
-                            },
                             {
                               id: "calculateNetworth",
                               name: "Calculate Net worth",
@@ -113,15 +147,15 @@ const CalculatorLayout = ({ children, id }) => {
                             <ListItemButton
                               key={index}
                               sx={{ pl: 4 }}
-                              onClick={() =>
-                                navigate(`/superadmin/calculator/${value.id}`)
-                              }
+                              onClick={() => {
+                                navigate(`/superadmin/calculator/${value.id}`);
+                              }}
                             >
                               <Typography
                                 sx={{
                                   fontSize: "12px",
                                   fontWeight:
-                                    id === value?.id ? "bold" : "normal",
+                                    ids === value?.id ? "bold" : "normal",
                                 }}
                               >
                                 {value.name}
@@ -130,6 +164,93 @@ const CalculatorLayout = ({ children, id }) => {
                             </ListItemButton>
                           ))}
                         </List>
+                      </Collapse>
+                    </>
+                  ))}
+                  {/* </Box>
+                <Box
+                  sx={{
+                    overflowY: "scroll",
+                    overflowX: "hidden",
+                    height: "83vh",
+                    mt: 2,
+                  }}
+                > */}
+                  {["Added Calculators"]?.map((value, index) => (
+                    <>
+                      <ListItemButton
+                        key={index}
+                        // selected={params.category === value.category}
+                        onClick={() => handleExpandClick2(index)}
+                        sx={{
+                          "&.Mui-selected": {
+                            backgroundColor: "transparent",
+                            color: "#dbad95",
+                            borderLeft: "4px solid #dbad95",
+                            "&:hover": {
+                              // backgroundColor: "#2d4a66",
+                            },
+                          },
+                        }}
+                      >
+                        <ListItemText primary={value} />
+                        {index === expanded2 ? <ExpandLess /> : <ExpandMore />}
+                      </ListItemButton>
+                      <Collapse
+                        in={index === expanded2}
+                        timeout="auto"
+                        unmountOnExit
+                        sx={{
+                          backgroundColor: "#FBFBFB",
+                          color: "#ACACAC",
+                        }}
+                      >
+                        <List component="div" disablePadding>
+                          {addedCalculatorList?.map((item, index) => (
+                            <ListItemButton
+                              key={index}
+                              sx={{
+                                pl: 4,
+                                color: id === item._id ? "black" : "",
+                                fontWeight: id === item._id ? "bold" : "",
+                              }}
+                              onClick={() => {
+                                navigate(
+                                  `/superadmin/calculator/addedcalculator/${item._id}`
+                                );
+                                window.location.reload();
+                              }}
+                            >
+                              <ListItemText
+                                disableTypography
+                                primary={item.calculator_name}
+                              />
+                              <ChevronRightIcon />
+                            </ListItemButton>
+                          ))}
+                        </List>
+                        <Box
+                          sx={{
+                            pt: 1,
+                            px: 3,
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Typography sx={{ color: "black" }}>
+                            Add Calculator
+                          </Typography>
+                          <IconButton
+                            onClick={() => {
+                              setopenDialog(true);
+                              // setcategoryId(value._id);
+                              // setcategoryName(value.category);
+                            }}
+                          >
+                            <AddIcon sx={{ color: "black" }} fontSize="small" />
+                          </IconButton>
+                        </Box>
                       </Collapse>
                     </>
                   ))}
@@ -143,14 +264,11 @@ const CalculatorLayout = ({ children, id }) => {
                   mx: 3,
                   borderRadius: "10px",
                   p: 3,
-                  position: "relative",
-                  zIndex: "12",
-                  height: "80vh",
+                  height: "82vh",
                   overflowY: "scroll",
                 }}
               >
                 {children}
-                {/* {tabList[currentTab]} */}
               </Card>
             </Grid>
           </Grid>

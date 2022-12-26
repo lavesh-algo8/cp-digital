@@ -30,6 +30,8 @@ const initialStore = {
   newsList: [],
   presentationList: [],
   procedureHeadingsList: [],
+  addedCalculatorList: [],
+  addedCalculatorsById: [],
 };
 
 const superAdminReducer = (state = initialStore, action) => {
@@ -211,6 +213,19 @@ const superAdminReducer = (state = initialStore, action) => {
         ...state,
         procedureHeadingsList: action.payload,
       };
+
+    case "GET_ALL_CALCULATORS":
+      return {
+        ...state,
+        addedCalculatorList: action.payload,
+      };
+
+    case "GET_ALL_CALCULATORS_BY_ID":
+      return {
+        ...state,
+        addedCalculatorsById: action.payload,
+      };
+
     // case "UPDATE_DOCUMENT":
     //   let headingList = state?.listOfDocuments?.filter(
     //     (doc) => doc.id === action.payload.doc_id

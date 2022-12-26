@@ -15,6 +15,8 @@ import ChapterSpecificData from "../../../pages/superadmin/Category/ChapterSpeci
 import SubSectionSpecificData from "../../../pages/superadmin/Category/SubSectionSpecificData";
 import ProtectedRoute from "../../superadmin/ProtectedRoute/ProtectedRoute";
 import GenerateDocumentTitles from "../../../pages/superadmin/DocumentGenerator/GenerateDocumentTitles";
+import AddedCalculatorPage from "../../../pages/superadmin/Calculator/AddedCalculatorPage";
+import EditCalculator from "../../superadmin/Calculator/EditCalculator";
 
 function Navigation() {
   return (
@@ -65,6 +67,21 @@ function Navigation() {
           <Route path="/superadmin/calculator" element={<CalculatorPage />}>
             <Route path=":id" element={<CalculatorPage />} />
           </Route>
+
+          <Route
+            path="/superadmin/calculator/addedcalculator"
+            element={<AddedCalculatorPage />}
+          >
+            <Route path=":id" element={<AddedCalculatorPage />} />
+          </Route>
+
+          <Route
+            path="/superadmin/calculator/addedcalculator/editcalculator"
+            element={<EditCalculator />}
+          >
+            <Route path=":id" element={<EditCalculator />} />
+          </Route>
+
           <Route path="/superadmin/procedure" element={<ProcedurePage />}>
             <Route path=":id" element={<ProcedurePage />} />
           </Route>

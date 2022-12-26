@@ -1583,6 +1583,90 @@ export const fetchCircularsBySubSection =
 
 // Knowlege hub law, catergory
 
+// Calculators ..........
+
+export const fetchAddedCalculators = () => async (dispatch) => {
+  try {
+    let config = {
+      method: "get",
+      url: `${baseUrl}/calculators/fetchcalculators`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const data = await axios(config);
+    console.log("calculators : ", data.data.result);
+
+    dispatch({
+      type: "GET_ALL_CALCULATORS",
+      payload: data.data.result,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const fetchAddedCalculatorsById = (id) => async (dispatch) => {
+  try {
+    let config = {
+      method: "get",
+      url: `${baseUrl}/calculators/fetchcalculatorbyid/${id}`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const data = await axios(config);
+    console.log("calculator : ", data.data.result);
+
+    dispatch({
+      type: "GET_ALL_CALCULATORS_BY_ID",
+      payload: data.data.result,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const editAddedCalculatorsById =
+  (calculatorData, id) => async (dispatch) => {
+    try {
+      let config = {
+        method: "put",
+        url: `${baseUrl}/calculators/editcalculator/${id}`,
+        headers: {
+          "content-type": "application/json",
+        },
+        data: calculatorData,
+      };
+      console.log(calculatorData);
+      const data = await axios(config);
+      console.log("calculator edited : ", data.data.result);
+      return true;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+export const AddSimpleCalculator = (calculatorData) => async (dispatch) => {
+  try {
+    let config = {
+      method: "post",
+      url: `${baseUrl}/calculators/add`,
+      headers: {
+        "content-type": "application/json",
+      },
+      data: calculatorData,
+    };
+    console.log(calculatorData);
+    const data = await axios(config);
+    console.log("calculator Added : ", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+    return true;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 export const saveRocFeeCalculator = (formData) => async (dispatch) => {
   try {
     const resp = await callBackend("post", "calculators/roc", formData);
