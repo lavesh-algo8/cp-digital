@@ -79,7 +79,13 @@ export default function Layout({ children }) {
         alignItems="center"
       >
         <Grid item sx={{ mt: 2 }}>
-          <img src="/logo1.png" alt="logo" height={30} />
+          <img
+            src="/logo1.png"
+            alt="logo"
+            height={30}
+            onClick={() => navigate("/superadmin/dashboard")}
+            style={{ cursor: "pointer" }}
+          />
         </Grid>
       </Grid>
       <List sx={{ mt: 2 }}>
@@ -90,11 +96,22 @@ export default function Layout({ children }) {
             color: "#c9c7c7",
             display: "flex",
             flexDirection: "column",
+            borderLeft: currentLocation.startsWith("/superadmin/dashboard")
+              ? "4px solid #192a3a"
+              : "",
           }}
           onClick={() => navigate("/superadmin/dashboard")}
         >
           <ListItemIcon sx={{ display: "flex", justifyContent: "center" }}>
-            <DashboardIcon sx={{ fontSize: 30, border: 0 }} />
+            <DashboardIcon
+              sx={{
+                fontSize: 30,
+                border: 0,
+                color: currentLocation.startsWith("/superadmin/dashboard")
+                  ? "#192a3a"
+                  : "",
+              }}
+            />
           </ListItemIcon>
         </ListItem>
 
