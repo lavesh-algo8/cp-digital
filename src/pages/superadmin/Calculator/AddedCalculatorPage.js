@@ -27,7 +27,7 @@ const AddedCalculatorPage = () => {
 
   const handleTestRun = () => {
     console.log(value);
-    const formul = addedCalculatorsById.formula;
+    const formul = addedCalculatorsById?.formula;
 
     console.log(formul);
     const result = evaluate(formul, value);
@@ -61,7 +61,7 @@ const AddedCalculatorPage = () => {
           }}
         >
           <Typography variant="h6">
-            {addedCalculatorsById.calculator_name}
+            {addedCalculatorsById?.calculator_name}
           </Typography>
           <Button
             variant="contained"
