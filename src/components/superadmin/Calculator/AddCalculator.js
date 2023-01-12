@@ -18,22 +18,28 @@ import "formiojs/dist/formio.builder.min.css";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AddSimpleCalculator } from "../../../redux/superAdminReducer/superAdminAction";
+import AddFormula from "./AddFormula";
 
 const AddCalculator = (props) => {
+  const { formulaAdded } = useSelector((state) => state?.SuperAdmin);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [fields, setFields] = useState([]);
+
   const [title, setTitle] = useState("");
-  const [formula, setFormula] = useState("");
+  const [formula, setFormula] = useState(formulaAdded);
   const [myform, setmyform] = useState("");
   const schemaRef = useRef();
+  const [openDialog, setopenDialog] = React.useState(false);
 
   const onSubmitHandler = async () => {
     if (title === "") {
       alert("Please Enter Form Title");
       return;
     }
-    if (formula === "") {
+    if (formulaAdded === "") {
       alert("Please Enter Formula");
       return;
     }
@@ -41,7 +47,7 @@ const AddCalculator = (props) => {
     const formData = { ...schemaRef.current, title };
     const calculatorData = {
       calculator_name: title,
-      formula: formula,
+      formula: formulaAdded && formulaAdded.join(" "),
       formData: formData,
     };
     console.log(calculatorData);
@@ -55,9 +61,27 @@ const AddCalculator = (props) => {
     props.setOpenDialog(false); // Use the prop.
   };
 
+  const handleFormula = () => {
+    console.log(schemaRef.current.components);
+    let objArray = schemaRef.current.components;
+    var processed = objArray.map(({ label }) => ({ label }.label));
+    console.log(processed);
+    setFields(processed);
+  };
+
   return (
     <>
       {/* add admins dialog */}
+
+      {openDialog && (
+        <AddFormula
+          openDialog={openDialog}
+          setOpenDialog={setopenDialog}
+          fields={fields}
+          formulaEdit={formulaAdded && "Edit"}
+        />
+      )}
+
       <Dialog
         open={props.openDialog} // Use value directly here
         onClose={handleDialogClose}
@@ -129,7 +153,7 @@ const AddCalculator = (props) => {
                   </Grid>
                 </Grid>
                 <Grid container>
-                  <Grid item lg={5} xs={4}>
+                  <Grid item lg={8} xs={12}>
                     <Typography sx={{ mt: 2, pb: 1 }}>
                       <Typography sx={{ fontWeight: "bold" }}>
                         Formula :
@@ -137,24 +161,62 @@ const AddCalculator = (props) => {
                       (Add the formula with field names created below)
                     </Typography>
                     <TextField
+                      rows={3}
+                      multiline
                       fullWidth
                       size="small"
                       required
                       id="outlined-required"
                       // label="Document Title"
-                      value={formula}
+                      value={(formulaAdded && formulaAdded.join(" ")) || ""}
                       onChange={(e) => setFormula(e.target.value)}
-                      // disabled
+                      disabled
                     />
                   </Grid>
                 </Grid>
               </Container>
+              <Container>
+                <Button
+                  sx={{ mt: 2 }}
+                  variant="outlined"
+                  color={formulaAdded ? "info" : "error"}
+                  onClick={() => {
+                    setopenDialog(true);
+                    handleFormula();
+                    console.log(
+                      schemaRef.current.components?.filter(
+                        (item) => item.label !== "Submit"
+                      ).length === 0
+                    );
+                  }}
+                >
+                  {formulaAdded ? "Edit Formula" : "Add Formula"}
+                </Button>
+              </Container>
+
               <Container maxWidth={false} sx={{ mt: 3, mb: 5 }}>
-                <Typography sx={{ mb: 1 }}>
+                {/* <Typography sx={{ mb: 1 }}>
                   Note : The API key and the field name should be same
-                </Typography>
+                </Typography> */}
                 <FormBuilder
                   form={myform}
+                  options={{
+                    builder: {
+                      layout: false,
+                      premium: false,
+                      advanced: false,
+                      data: false,
+                      basic: {
+                        default: true,
+                        components: {
+                          password: false,
+                          radio: false,
+                          button: false,
+                          checkbox: false,
+                        },
+                      },
+                    },
+                  }}
                   onChange={(schema) => {
                     console.log(JSON.stringify(schema));
                     schemaRef.current = schema;

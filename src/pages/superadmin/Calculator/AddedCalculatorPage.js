@@ -23,7 +23,9 @@ const AddedCalculatorPage = () => {
   const [value, setvalue] = useState([]);
   const [result, setresult] = useState("");
 
-  const { addedCalculatorsById } = useSelector((state) => state?.SuperAdmin);
+  const { addedCalculatorsById = [] } = useSelector(
+    (state) => state?.SuperAdmin
+  );
 
   const handleTestRun = () => {
     console.log(value);
@@ -45,7 +47,7 @@ const AddedCalculatorPage = () => {
   };
 
   useEffect(() => {
-    setvalue([]);
+    setvalue("");
     setresult("");
     dispatch(fetchAddedCalculatorsById(id));
   }, [id]);
@@ -84,7 +86,7 @@ const AddedCalculatorPage = () => {
                 variant="outlined"
                 size="small"
                 sx={{ pt: 1 }}
-                placeholder={item1?.placeholder}
+                placeholder={item1?.placeholder || "Enter " + item1.label}
                 // label={item1?.label}
                 name={item1?.label}
                 fullWidth
@@ -96,7 +98,7 @@ const AddedCalculatorPage = () => {
                     : item1?.type
                 }
                 onChange={updateState(index1)}
-                value={value[item1?.label]}
+                value={value && value[item1?.label]}
               />
             </Grid>
           ))}

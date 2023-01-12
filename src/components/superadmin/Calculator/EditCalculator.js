@@ -12,17 +12,23 @@ import {
   editProcedureDocument,
   fetchAddedCalculatorsById,
 } from "../../../redux/superAdminReducer/superAdminAction";
+import AddFormula from "./AddFormula";
+import EditFormula from "./EditFormula";
 
 const EditCalculator = () => {
   const { id } = useParams();
   const { addedCalculatorsById } = useSelector((state) => state.SuperAdmin);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [openDialog, setopenDialog] = React.useState(false);
 
   const [title, setTitle] = useState(addedCalculatorsById.calculator_name);
   const [formula, setFormula] = useState(addedCalculatorsById.formula);
   const [myform, setmyform] = useState(addedCalculatorsById.formData);
   const schemaRef = useRef();
+
+  const [fields, setFields] = useState([]);
+  const { formulaAdded } = useSelector((state) => state?.SuperAdmin);
 
   const onSubmitHandler = async () => {
     if (title === "") {
@@ -37,7 +43,7 @@ const EditCalculator = () => {
     const formData = { ...schemaRef.current, title };
     const calculatorData = {
       calculator_name: title,
-      formula: formula,
+      formula: (formulaAdded && formulaAdded.join(" ")) || formula,
       formData: formData,
     };
     console.log(calculatorData);
@@ -53,9 +59,26 @@ const EditCalculator = () => {
     dispatch(fetchAddedCalculatorsById(id));
   }, [id]);
 
+  const handleFormula = () => {
+    console.log(schemaRef.current.components);
+    let objArray = schemaRef.current.components;
+    var processed = objArray.map(({ label }) => ({ label }.label));
+    console.log(processed);
+    setFields(processed);
+  };
+
   return (
     <>
       <Layout>
+        {openDialog && (
+          <EditFormula
+            openDialog={openDialog}
+            setOpenDialog={setopenDialog}
+            fields={fields}
+            formula={addedCalculatorsById.formula}
+          />
+        )}
+
         <Grid
           container
           spacing={3}
@@ -112,32 +135,64 @@ const EditCalculator = () => {
                 </Grid>
               </Grid>
               <Grid container>
-                <Grid item lg={5} xs={4}>
+                <Grid item lg={8} xs={12}>
                   <Typography sx={{ mt: 2, pb: 1 }}>
                     <Typography sx={{ fontWeight: "bold" }}>
                       Formula :
                     </Typography>{" "}
-                    (Edit the formula with field names created below)
+                    (Add the formula with field names created below)
                   </Typography>
                   <TextField
+                    rows={3}
+                    multiline
                     fullWidth
                     size="small"
                     required
                     id="outlined-required"
                     // label="Document Title"
-                    value={formula}
+                    value={(formulaAdded && formulaAdded.join(" ")) || formula}
                     onChange={(e) => setFormula(e.target.value)}
-                    // disabled
+                    disabled
                   />
                 </Grid>
               </Grid>
             </Container>
+            <Container>
+              <Button
+                sx={{ mt: 2 }}
+                variant="outlined"
+                color={"info"}
+                onClick={() => {
+                  setopenDialog(true);
+                  handleFormula();
+                }}
+              >
+                Edit Formula
+              </Button>
+            </Container>
             <Container maxWidth={false} sx={{ mt: 3, mb: 5 }}>
-              <Typography sx={{ mb: 1 }}>
+              {/* <Typography sx={{ mb: 1 }}>
                 Note : The API key and the field name should be same
-              </Typography>
+              </Typography> */}
               <FormBuilder
                 form={myform}
+                options={{
+                  builder: {
+                    layout: false,
+                    premium: false,
+                    advanced: false,
+                    data: false,
+                    basic: {
+                      default: true,
+                      components: {
+                        password: false,
+                        radio: false,
+                        button: false,
+                        checkbox: false,
+                      },
+                    },
+                  },
+                }}
                 onChange={(schema) => {
                   console.log(JSON.stringify(schema));
                   schemaRef.current = schema;

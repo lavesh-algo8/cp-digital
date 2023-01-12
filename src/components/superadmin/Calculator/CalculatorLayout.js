@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import {
   Box,
+  Button,
   Card,
   Collapse,
   Grid,
@@ -62,6 +63,10 @@ const CalculatorLayout = ({ children, ids }) => {
 
   useEffect(() => {
     dispatch(fetchAddedCalculators());
+    dispatch({
+      type: "ADD_FORMULA",
+      payload: { formulaText: "" },
+    });
   }, [openDialog]);
 
   useEffect(() => {
@@ -109,11 +114,31 @@ const CalculatorLayout = ({ children, ids }) => {
                   minHeight: "100vh",
                 }}
               >
-                <Typography
-                  sx={{ py: 4, px: 2, fontWeight: "bold", fontSize: "20px" }}
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    pr: 3,
+                  }}
                 >
-                  Calculator
-                </Typography>
+                  <Typography
+                    sx={{ py: 4, px: 2, fontWeight: "bold", fontSize: "20px" }}
+                  >
+                    Calculator
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    sx={{
+                      maxWidth: "30px",
+                      minWidth: "30px",
+                    }}
+                    onClick={() => setopenDialog(true)}
+                  >
+                    <AddIcon fontSize="small" />
+                  </Button>
+                </Box>
                 <Box
                   sx={{
                     overflowY: "scroll",
@@ -122,6 +147,15 @@ const CalculatorLayout = ({ children, ids }) => {
                     mt: 2,
                   }}
                 >
+                  {/* </Box>
+                <Box
+                  sx={{
+                    overflowY: "scroll",
+                    overflowX: "hidden",
+                    height: "83vh",
+                    mt: 2,
+                  }}
+                > */}
                   {["Others Calculators"].map((value, index) => (
                     <>
                       <ListItemButton onClick={() => handleExpandClick(index)}>
@@ -167,15 +201,7 @@ const CalculatorLayout = ({ children, ids }) => {
                       </Collapse>
                     </>
                   ))}
-                  {/* </Box>
-                <Box
-                  sx={{
-                    overflowY: "scroll",
-                    overflowX: "hidden",
-                    height: "83vh",
-                    mt: 2,
-                  }}
-                > */}
+
                   {["Added Calculators"]?.map((value, index) => (
                     <>
                       <ListItemButton
@@ -218,7 +244,7 @@ const CalculatorLayout = ({ children, ids }) => {
                                 navigate(
                                   `/superadmin/calculator/addedcalculator/${item._id}`
                                 );
-                                window.location.reload();
+                                // window.location.reload();
                               }}
                             >
                               <ListItemText
@@ -244,8 +270,6 @@ const CalculatorLayout = ({ children, ids }) => {
                           <IconButton
                             onClick={() => {
                               setopenDialog(true);
-                              // setcategoryId(value._id);
-                              // setcategoryName(value.category);
                             }}
                           >
                             <AddIcon sx={{ color: "black" }} fontSize="small" />

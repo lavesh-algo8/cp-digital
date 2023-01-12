@@ -32,6 +32,7 @@ const initialStore = {
   procedureHeadingsList: [],
   addedCalculatorList: [],
   addedCalculatorsById: [],
+  formulaAdded: "",
 };
 
 const superAdminReducer = (state = initialStore, action) => {
@@ -224,6 +225,12 @@ const superAdminReducer = (state = initialStore, action) => {
       return {
         ...state,
         addedCalculatorsById: action.payload,
+      };
+
+    case "ADD_FORMULA":
+      return {
+        ...state,
+        formulaAdded: action.payload.formulaText,
       };
 
     // case "UPDATE_DOCUMENT":
