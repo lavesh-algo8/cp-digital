@@ -1647,6 +1647,24 @@ export const editAddedCalculatorsById =
     }
   };
 
+export const deleteAddedCalculatorsById = (id) => async (dispatch) => {
+  try {
+    let config = {
+      method: "delete",
+      url: `${baseUrl}/calculators/delete/${id}`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const data = await axios(config);
+    console.log("calculator deleted : ", data.data.result);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+    return true;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 export const AddSimpleCalculator = (calculatorData) => async (dispatch) => {
   try {
     let config = {

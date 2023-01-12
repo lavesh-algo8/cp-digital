@@ -34,6 +34,7 @@ const EditFormula = (props) => {
   const [formulaText, setformulaText] = useState(
     formulaAdded || props.formula.split(" ")
   );
+  const [formulaError, setformulaError] = useState(false);
 
   const onSubmitHandler = async () => {
     if (title === "") {
@@ -60,6 +61,45 @@ const EditFormula = (props) => {
 
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
+  };
+
+  const check_start_and_end = (str) => {
+    if (
+      str.startsWith("+") ||
+      str.endsWith("+") ||
+      str.startsWith("-") ||
+      str.endsWith("-") ||
+      str.startsWith("*") ||
+      str.endsWith("*") ||
+      str.startsWith("/") ||
+      str.endsWith("/") ||
+      str.startsWith("%") ||
+      str.endsWith("%")
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const adjacent_operator = (str) => {
+    var operators = ["+", "-", "/", "*", "%"];
+
+    var adjacent = [];
+
+    for (let i = 0; i < str.length - 1; i++) {
+      if (
+        operators.includes(str[i]) === true &&
+        operators.includes(str[i + 1]) === true
+      ) {
+        adjacent.push(true);
+      } else {
+        adjacent.push(false);
+      }
+    }
+
+    if (adjacent.includes(true)) return true;
+    else return false;
   };
 
   return (
@@ -104,11 +144,11 @@ const EditFormula = (props) => {
                   </Typography>
                   <Divider />
 
-                  <Box sx={{ pl: 1 }}>
+                  <Box>
                     {props.fields
                       .filter((item) => item !== "Submit")
                       .map((item, index) => (
-                        <Box sx={{ py: 1, cursor: "pointer" }}>
+                        <Box sx={{ cursor: "pointer" }}>
                           <Typography
                             onClick={() => {
                               setformulaText((prevState) => [
@@ -117,10 +157,18 @@ const EditFormula = (props) => {
                               ]);
                               console.log(formulaText);
                             }}
+                            sx={{
+                              py: 1,
+                              px: 2,
+                              "&:hover": {
+                                background: "#5F7F9C",
+                                color: "white",
+                              },
+                            }}
                           >
                             {item}
                           </Typography>
-                          <Divider sx={{ py: 1 }} />
+                          <Divider />
                         </Box>
                       ))}
                   </Box>
@@ -158,7 +206,7 @@ const EditFormula = (props) => {
                   </Box>
 
                   <TextField
-                    // disabled
+                    error={formulaError}
                     multiline
                     value={formulaText && formulaText.join("   ")}
                     variant="outlined"
@@ -240,6 +288,7 @@ const EditFormula = (props) => {
                       "8",
                       "9",
                       "0",
+                      "DEL",
                     ].map((item, index) => (
                       <Grid item xs={12} sm={3}>
                         <Button
@@ -275,6 +324,22 @@ const EditFormula = (props) => {
                                 ...prevState,
                                 item,
                               ]);
+                            } else if (item === "DEL") {
+                              let text = "";
+                              text = formulaText.slice(0, -1);
+
+                              console.log(formulaText);
+                              if (!isNaN(formulaText.at(-1))) {
+                                let x = formulaText.at(-1);
+                                let number = x.slice(0, -1);
+                                if (number === "") {
+                                  setformulaText(text);
+                                } else {
+                                  setformulaText([...text, number]);
+                                }
+                              } else {
+                                setformulaText(text);
+                              }
                             } else {
                               let lastnumber = formulaText.at(-1);
                               let text = "";
@@ -291,7 +356,7 @@ const EditFormula = (props) => {
                             console.log(formulaText);
                           }}
                         >
-                          {item}
+                          <Typography>{item}</Typography>
                         </Button>
                       </Grid>
                     ))}
@@ -304,12 +369,20 @@ const EditFormula = (props) => {
             <Button
               variant="contained"
               onClick={async () => {
-                const res = await dispatch({
-                  type: "ADD_FORMULA",
-                  payload: { formulaText },
-                });
-                if (res) {
-                  handleDialogClose();
+                const check1 = check_start_and_end(formulaText.join(" "));
+                const check2 = adjacent_operator(formulaText.join(" "));
+                console.log(check1, check2);
+                if (!check1 || check2) {
+                  setformulaError(false);
+                  const res = await dispatch({
+                    type: "ADD_FORMULA",
+                    payload: { formulaText },
+                  });
+                  if (res) {
+                    handleDialogClose();
+                  }
+                } else {
+                  setformulaError(true);
                 }
               }}
             >

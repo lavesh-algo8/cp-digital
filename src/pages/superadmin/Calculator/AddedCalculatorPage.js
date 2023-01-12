@@ -1,4 +1,4 @@
-import { Edit } from "@mui/icons-material";
+import { Delete, Edit } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -13,12 +13,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import CalculatorLayout from "../../../components/superadmin/Calculator/CalculatorLayout";
 import { fetchAddedCalculatorsById } from "../../../redux/superAdminReducer/superAdminAction";
 import { evaluate } from "mathjs";
+import DeleteCalculator from "../../../components/superadmin/Calculator/DeleteCalculator";
 
 const AddedCalculatorPage = () => {
   const { id } = useParams();
   const currentid = id;
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [openDialog, setopenDialog] = React.useState(false);
 
   const [value, setvalue] = useState([]);
   const [result, setresult] = useState("");
@@ -50,11 +52,18 @@ const AddedCalculatorPage = () => {
     setvalue("");
     setresult("");
     dispatch(fetchAddedCalculatorsById(id));
-  }, [id]);
+  }, [id, openDialog]);
 
   return (
     <>
       <CalculatorLayout>
+        {openDialog && (
+          <DeleteCalculator
+            openDialog={openDialog}
+            setOpenDialog={setopenDialog}
+            id={currentid}
+          />
+        )}
         <Box
           sx={{
             display: "flex",
@@ -65,18 +74,29 @@ const AddedCalculatorPage = () => {
           <Typography variant="h6">
             {addedCalculatorsById?.calculator_name}
           </Typography>
-          <Button
-            variant="contained"
-            sx={{ ml: 2, textTransform: "none" }}
-            startIcon={<Edit />}
-            onClick={() =>
-              navigate(
-                `/superadmin/calculator/addedcalculator/editcalculator/${id}`
-              )
-            }
-          >
-            Edit
-          </Button>
+          <Box>
+            <Button
+              variant="contained"
+              sx={{ ml: 2, textTransform: "none" }}
+              startIcon={<Edit />}
+              onClick={() =>
+                navigate(
+                  `/superadmin/calculator/addedcalculator/editcalculator/${id}`
+                )
+              }
+            >
+              Edit
+            </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              sx={{ ml: 2, textTransform: "none" }}
+              startIcon={<Delete />}
+              onClick={() => setopenDialog(true)}
+            >
+              Delete
+            </Button>
+          </Box>
         </Box>
         <Grid container spacing={3} sx={{ mt: 2 }}>
           {addedCalculatorsById?.formData?.components?.map((item1, index1) => (
