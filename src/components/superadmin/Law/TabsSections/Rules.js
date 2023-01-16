@@ -302,7 +302,7 @@ const Rules = () => {
                     setopenAddSubRuleDialog(true);
                   }}
                 >
-                  <Add fontSize="small" />
+                  <Add sx={{ fontSize: "18px" }} />
                 </Typography>
               </Tooltip>
               <Tooltip title="Edit rule">
@@ -314,7 +314,7 @@ const Rules = () => {
                   }}
                   sx={{ pl: 1, cursor: "pointer" }}
                 >
-                  <Edit fontSize="small" />
+                  <Edit sx={{ fontSize: "18px" }} />
                 </Typography>
               </Tooltip>
               <Tooltip title="Delete rule">
@@ -326,7 +326,7 @@ const Rules = () => {
                     setopenDeleteRuleDialog(true);
                   }}
                 >
-                  <Delete fontSize="small" />
+                  <Delete sx={{ fontSize: "18px" }} />
                 </Typography>
               </Tooltip>
               <div>
@@ -339,7 +339,7 @@ const Rules = () => {
                   onClick={handleClick}
                   sx={{ pl: 1 }}
                 >
-                  <MoreVertIcon fontSize="small" />
+                  <MoreVertIcon sx={{ fontSize: "18px" }} />
                 </Typography>
                 <Menu
                   id="long-menu"
@@ -384,7 +384,7 @@ const Rules = () => {
                           setopenDeleteSubRuleDialog(true);
                         }}
                       >
-                        <Delete fontSize="small" />
+                        <Delete sx={{ fontSize: "17px" }} />
                       </Typography>
                     </Tooltip>
                     <Tooltip title="Edit sub-rule">
@@ -396,7 +396,7 @@ const Rules = () => {
                           setopenEditSubRuleDialog(true);
                         }}
                       >
-                        <Edit fontSize="small" />
+                        <Edit sx={{ fontSize: "17px" }} />
                       </Typography>
                     </Tooltip>
                   </Box>

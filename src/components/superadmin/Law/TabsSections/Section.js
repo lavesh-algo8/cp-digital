@@ -233,10 +233,10 @@ const Section = () => {
                 sx={{ pt: 1 }}
               >
                 {params?.row?.sub_sections?.map((item, index) => (
-                  <Box>
+                  <Typography>
                     {item.updatedAt?.toString().substring(0, 10) ||
                       new Date().toISOString().split("T")[0]}
-                  </Box>
+                  </Typography>
                 ))}
               </Collapse>
             </Box>
@@ -279,7 +279,9 @@ const Section = () => {
                         cursor: "pointer",
                       }}
                     >
-                      {item.sub_regulation_no || <Typography>.....</Typography>}
+                      {<Typography>{item.sub_regulation_no}</Typography> || (
+                        <Typography>.....</Typography>
+                      )}
                     </Box>
                   </>
                 ))}
@@ -321,7 +323,7 @@ const Section = () => {
                     setsectionDetails(params?.row?.section);
                   }}
                 >
-                  <Add fontSize="small" />
+                  <Add sx={{ fontSize: "18px" }} />
                 </Typography>
               </Tooltip>
               <Tooltip title="Edit section">
@@ -333,7 +335,7 @@ const Section = () => {
                   }}
                   sx={{ pl: 1, cursor: "pointer" }}
                 >
-                  <Edit fontSize="small" />
+                  <Edit sx={{ fontSize: "18px" }} />
                 </Typography>
               </Tooltip>
               <Tooltip title="Delete Section">
@@ -345,7 +347,7 @@ const Section = () => {
                     setsectionDeleteDialog(true);
                   }}
                 >
-                  <Delete fontSize="small" />
+                  <Delete sx={{ fontSize: "18px" }} />
                 </Typography>
               </Tooltip>
               <div>
@@ -358,7 +360,7 @@ const Section = () => {
                   onClick={handleClick}
                   sx={{ pl: 1 }}
                 >
-                  <MoreVertIcon fontSize="small" />
+                  <MoreVertIcon sx={{ fontSize: "18px" }} />
                 </Typography>
                 <Menu
                   id="long-menu"
@@ -395,6 +397,8 @@ const Section = () => {
               {params?.row?.sub_sections?.map((item, index) => (
                 <>
                   <Box sx={{ display: "flex" }}>
+                    {/* <Box>&#9998;</Box>
+                    <Box>&#9249;</Box> */}
                     <Tooltip title="Delete sub-section">
                       <Typography
                         color="primary"
@@ -404,7 +408,7 @@ const Section = () => {
                           setsubsectionDeleteDialog(true);
                         }}
                       >
-                        <Delete fontSize="small" />
+                        <Delete sx={{ fontSize: "17px" }} />
                       </Typography>
                     </Tooltip>
                     <Tooltip title="Edit sub-section">
@@ -416,7 +420,7 @@ const Section = () => {
                           setsubsectionEditDialog(true);
                         }}
                       >
-                        <Edit fontSize="small" />
+                        <Edit sx={{ fontSize: "17px" }} />
                       </Typography>
                     </Tooltip>
                   </Box>
@@ -494,7 +498,11 @@ const Section = () => {
           pageSize={pageSize}
           rowsPerPageOptions={[5]}
           getRowId={(row) => row?.section?._id}
-          rows={sectionsList || []}
+          rows={
+            sectionsList
+              .slice()
+              .sort((a, b) => a.section.section_no - b.section.section_no) || []
+          }
           columns={columns}
           disableSelectionOnClick
           sx={{
