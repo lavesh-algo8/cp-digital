@@ -28,6 +28,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import parse from "html-react-parser";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+  DuplicateProcedure,
   fetchProcedureHeadings,
   getDocuments,
 } from "../../../redux/superAdminReducer/superAdminAction";
@@ -35,6 +36,7 @@ import { Form } from "@formio/react";
 import EditDocument from "../../../pages/superadmin/DocumentGenerator/EditDocument";
 import EditAddDocument from "./EditAddDocument";
 import DeleteProcedureDocument from "./DeleteProcedureDocument";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 const disable = true;
 
@@ -61,6 +63,7 @@ const DocumentTables = () => {
   const [openDialogEdit, setOpenDialogEdit] = useState(false);
   const [openDialogDelete, setOpenDialogDelete] = useState(false);
   const [procedureDetails, setprocedureDetails] = useState("");
+  // const [duplicate, setduplicate] = useState(false);
 
   React.useEffect(() => {
     dispatch(getDocuments());
@@ -96,7 +99,10 @@ const DocumentTables = () => {
     {
       field: "act_name",
       headerName: "Act",
-      valueGetter: (params) => params?.row?.act_name?.act,
+      valueGetter: (params) =>
+        params?.row?.act_name?.act?.length > 40
+          ? params?.row?.act_name?.act?.slice(0, 40) + "...."
+          : params?.row?.act_name?.act?.slice(0, 40),
       flex: 0.4,
     },
 
@@ -181,6 +187,21 @@ const DocumentTables = () => {
             setprocedureDetails(params?.row);
             setOpenDialogDelete(true);
           }}
+        />,
+        <GridActionsCellItem
+          icon={<ContentCopyIcon />}
+          onClick={async () => {
+            const res = await dispatch(
+              DuplicateProcedure(params?.row?.procedure_id)
+            );
+            // setduplicate(!duplicate);
+            console.log(res);
+            if (res) {
+              await dispatch(getDocuments());
+            }
+          }}
+          label="Duplicate"
+          showInMenu
         />,
         <GridActionsCellItem
           icon={<UploadIcon />}

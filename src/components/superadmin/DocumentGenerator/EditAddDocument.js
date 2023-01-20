@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addDocument,
   editDocument,
+  editDocumentProcedureDetails,
   fetchCategory,
   getDocuments,
 } from "../../../redux/superAdminReducer/superAdminAction";
@@ -55,6 +56,10 @@ const EditAddDocument = (props) => {
     categoryList?.filter((cat) => cat.category === newDocumentData.law)[0]?.acts
   );
 
+  const ActList = categoryList?.filter(
+    (cat) => cat.category === newDocumentData.law
+  )[0]?.acts;
+
   const onSubmit = async (e) => {
     e.preventDefault();
     console.log({
@@ -82,7 +87,13 @@ const EditAddDocument = (props) => {
       docHeadings,
     };
     console.log(finalData);
-    await dispatch(editDocument(finalData, props.selectedRowData.procedure_id));
+    // await dispatch(editDocument(finalData, props.selectedRowData.procedure_id));
+    await dispatch(
+      editDocumentProcedureDetails(
+        finalData,
+        props.selectedRowData.procedure_id
+      )
+    );
     await dispatch(getDocuments());
     handleDialogClose();
   };
@@ -145,7 +156,7 @@ const EditAddDocument = (props) => {
 
               <Box sx={{ display: "flex", mt: 3 }}>
                 <FormControl fullWidth size="small">
-                  <TextField
+                  {/* <TextField
                     size="small"
                     id="law"
                     label="Law"
@@ -155,9 +166,9 @@ const EditAddDocument = (props) => {
                     value={newDocumentData.law}
                     required
                     disabled
-                  />
-                  {/* <InputLabel id="demo-simple-select-label">Law</InputLabel> */}
-                  {/* <Select
+                  /> */}
+                  <InputLabel id="demo-simple-select-label">Law</InputLabel>
+                  <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     label="Law"
@@ -165,20 +176,20 @@ const EditAddDocument = (props) => {
                     onChange={onChange}
                     value={newDocumentData.law}
                     required
-                    disabled
+                    // disabled
                   >
                     {categoryList.map((desig, index) => (
                       <MenuItem key={desig.category} value={desig.category}>
                         {desig.category}
                       </MenuItem>
                     ))}
-                  </Select> */}
+                  </Select>
                 </FormControl>
               </Box>
 
               <Box sx={{ display: "flex", mt: 3 }}>
                 <FormControl fullWidth size="small">
-                  <TextField
+                  {/* <TextField
                     size="small"
                     id="act"
                     label="Act"
@@ -188,8 +199,10 @@ const EditAddDocument = (props) => {
                     value={newDocumentData.act}
                     required
                     disabled
-                  />
-                  {/* <Select
+                  /> */}
+                  <InputLabel id="demo-simple-select-label">Act</InputLabel>
+
+                  <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     label="Act"
@@ -197,16 +210,21 @@ const EditAddDocument = (props) => {
                     onChange={onChange}
                     value={newDocumentData.act}
                     required
-                    disabled
+                    // disabled
                   >
-                    {categoryList
+                    {/* {categoryList
                       ?.filter((cat) => cat.act === newDocumentData.act)[0]
                       ?.acts?.map((desig, index) => (
                         <MenuItem key={desig.act} value={desig.act}>
                           {desig.act}
                         </MenuItem>
-                      ))}
-                  </Select> */}
+                      ))} */}
+                    {ActList.map((item, index) => (
+                      <MenuItem key={item.act} value={item.act}>
+                        {item.act}
+                      </MenuItem>
+                    ))}
+                  </Select>
                 </FormControl>
               </Box>
 
@@ -221,7 +239,7 @@ const EditAddDocument = (props) => {
                   onChange={onChange}
                   value={newDocumentData.procedure}
                   required
-                  disabled
+                  // disabled
                 />
               </Box>
 
@@ -235,7 +253,7 @@ const EditAddDocument = (props) => {
                   name="type"
                   onChange={onChange}
                   value={newDocumentData.type}
-                  disabled
+                  // disabled
                 />
               </Box>
 

@@ -192,12 +192,32 @@ export const deleteSubAdmin = (id) => async (dispatch) => {
 // };
 
 export const getDocuments = () => async (dispatch) => {
+  // try {
+  //   const resp = await callBackend("get", `procedures/fetchall`);
+  //   console.log(resp.result);
+  //   dispatch({
+  //     type: "GET_DOCUMENTS",
+  //     payload: resp.result,
+  //   });
+  // } catch (e) {
+  //   console.log(e);
+  // }
+
   try {
-    const resp = await callBackend("get", `procedures/fetchall`);
-    console.log(resp.result);
-    dispatch({
+    let config = {
+      method: "get",
+      url: `${baseUrl}/procedures/fetchall`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const data = await axios(config);
+    console.log(data);
+    console.log("Procedure : ", data.data.result);
+
+    await dispatch({
       type: "GET_DOCUMENTS",
-      payload: resp.result,
+      payload: data.data.result,
     });
   } catch (e) {
     console.log(e);
@@ -293,6 +313,37 @@ export const editDocument = (formData, procedureId) => async (dispatch) => {
     console.log(e);
   }
 };
+
+export const editDocumentProcedureDetails =
+  (formData, procedureId) => async (dispatch) => {
+    try {
+      let config = {
+        method: "put",
+        url: `${baseUrl}/procedures/editprocedure/${procedureId}`,
+        headers: {
+          "content-type": "application/json",
+        },
+        data: formData,
+      };
+
+      console.log(config);
+
+      const resp = await axios(config);
+      console.log(resp);
+      if (resp) {
+        await dispatch(editDocument(formData, procedureId));
+      }
+      if (resp?.data.message === "Procedure updated successfully") {
+        dispatch(openSnackBar("Procedure updated successfully", "success"));
+        return true;
+      } else {
+        dispatch(openSnackBar(resp?.data.message, "error"));
+        return false;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
 export const saveProcedureDocument =
   (formData, procedureId) => async (dispatch) => {
@@ -1665,20 +1716,19 @@ export const deleteAddedCalculatorsById = (id) => async (dispatch) => {
   }
 };
 
-export const AddSimpleCalculator = (calculatorData) => async (dispatch) => {
+export const DuplicateProcedure = (procedureId) => async (dispatch) => {
   try {
     let config = {
       method: "post",
-      url: `${baseUrl}/calculators/add`,
+      url: `${baseUrl}/docgen/duplicateprocedure/${procedureId}`,
       headers: {
         "content-type": "application/json",
       },
-      data: calculatorData,
     };
-    console.log(calculatorData);
+    console.log(procedureId);
     const data = await axios(config);
-    console.log("calculator Added : ", data);
-    dispatch(openSnackBar(data?.data?.message, "success"));
+    console.log("procedure duplicated : ", data);
+    await dispatch(openSnackBar(data?.data?.message, "success"));
     return true;
   } catch (e) {
     console.log(e);
@@ -1699,6 +1749,26 @@ export const saveNetWorthCalculator = (formData) => async (dispatch) => {
   try {
     const resp = await callBackend("post", "calculators/networth", formData);
     return resp;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const AddSimpleCalculator = (calculatorData) => async (dispatch) => {
+  try {
+    let config = {
+      method: "post",
+      url: `${baseUrl}/calculators/add`,
+      headers: {
+        "content-type": "application/json",
+      },
+      data: calculatorData,
+    };
+    console.log(calculatorData);
+    const data = await axios(config);
+    console.log("calculator Added : ", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+    return true;
   } catch (e) {
     console.log(e);
   }
