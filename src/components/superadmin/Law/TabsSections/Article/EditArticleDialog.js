@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Checkbox,
+  Collapse,
   Dialog,
   DialogActions,
   DialogContent,
@@ -11,6 +12,7 @@ import {
   Grid,
   IconButton,
   InputLabel,
+  ListItem,
   ListItemText,
   MenuItem,
   OutlinedInput,
@@ -44,8 +46,41 @@ import DropdownTreeSelect from "react-dropdown-tree-select";
 
 import CheckboxTree from "react-checkbox-tree";
 import "react-checkbox-tree/lib/react-checkbox-tree.css";
+import parse from "html-react-parser";
+// import { ExpandMore } from "@mui/icons-material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { styled } from "@mui/material/styles";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+
+const ExpandMore = styled((props) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
+  marginLeft: "auto",
+  transition: theme.transitions.create("transform", {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
 
 const EditArticleDialog = (props) => {
+  const [descriptionVersion, setdescriptionVersion] = useState([]);
+  const [expandedhistory, setExpandedHistory] = React.useState(true);
+  const [expandedhistoryversion, setExpandedHistoryVersion] =
+    React.useState("");
+
+  const handleExpandClick = () => {
+    setExpandedHistory(!expandedhistory);
+  };
+
+  const handleExpandVersionClick = () => {
+    setExpandedHistoryVersion(!expandedhistoryversion);
+  };
+
+  const handleClick = (index) => {
+    setExpandedHistoryVersion((prev) => (prev === index ? "" : index));
+  };
+
   const [file, setFile] = useState(undefined);
 
   const {
@@ -125,6 +160,14 @@ const EditArticleDialog = (props) => {
   };
 
   const dispatch = useDispatch();
+
+  const versionhistory = (item) => {
+    return (
+      <Box sx={{ border: "1px solid black", p: 1 }}>
+        <Typography variant="body2">{parse(item)}</Typography>
+      </Box>
+    );
+  };
 
   const DropDownTreeSelect = useMemo(() => {
     return (
@@ -247,6 +290,16 @@ const EditArticleDialog = (props) => {
     // const articlesDetails = draftToHtml(
     //   convertToRaw(value.getCurrentContent())
     // );
+    const checkedDescriptionversionData = descriptionVersion.reduce(
+      (values, value) => {
+        console.log(value);
+        if (value) values.push({ id: value._id, publish: value.checked });
+        return values;
+      },
+      []
+    );
+    console.log(checkedDescriptionversionData);
+
     const articlesDetails = value;
     const data = {
       sub_title: articleName,
@@ -254,7 +307,7 @@ const EditArticleDialog = (props) => {
       description: articlesDetails,
       written_by: ArticleWrittenBy,
       mapTo: checked,
-
+      isChecked: checkedDescriptionversionData,
       // law: lawName.toString(),
       // act: actName.toString(),
       // chapter: chapterName.toString(),
@@ -306,6 +359,7 @@ const EditArticleDialog = (props) => {
 
   useEffect(() => {
     if (props) {
+      setdescriptionVersion(props?.articleDetails?.history.reverse());
       setarticleName(props.articleDetails.title);
       setArticleWrittenBy(props.articleDetails.written_by);
       setdateOfArticle(props.articleDetails.date);
@@ -332,6 +386,15 @@ const EditArticleDialog = (props) => {
       }
     }
   }, [copyData]);
+
+  const onCheckedHandler = (index) => {
+    setdescriptionVersion((prev) => [
+      ...prev?.map(({ checked, ...rest }, idx) =>
+        idx === index ? { ...rest, checked: !checked } : { ...rest, checked }
+      ),
+    ]);
+    console.log(descriptionVersion);
+  };
 
   return (
     <>
@@ -781,6 +844,103 @@ const EditArticleDialog = (props) => {
                     }
                   }}
                 />
+                <Box sx={{ mt: 3 }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      cursor: "pointer",
+                    }}
+                    onClick={handleExpandClick}
+                  >
+                    <Typography sx={{ mb: 2 }}>
+                      <strong>Description History</strong>
+                    </Typography>
+                    <ExpandMore
+                      expand={expandedhistory}
+                      onClick={handleExpandClick}
+                      aria-expanded={expandedhistory}
+                      aria-label="show more"
+                    >
+                      <ExpandMoreIcon />
+                    </ExpandMore>
+                  </Box>
+
+                  <Collapse in={expandedhistory} timeout="auto" unmountOnExit>
+                    {descriptionVersion.map((item, index) => (
+                      <Box
+                        sx={{
+                          background:
+                            expandedhistoryversion === index ? "#f9f9f9" : "",
+                          borderRadius: "5px",
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: "flex",
+                            background:
+                              expandedhistoryversion === index ? "#e8e8e8" : "",
+                            borderRadius: "5px",
+                            ":hover": {
+                              background: "#e8e8e8",
+                            },
+                          }}
+                        >
+                          {/* <input
+                              type="checkbox"
+                              checked={item.checked}
+                              onChange={(event) => onCheckedHandler(index)}
+                            /> */}
+                          <Checkbox
+                            checked={item.checked}
+                            onChange={(event) => onCheckedHandler(index)}
+                            inputProps={{ "aria-label": "controlled" }}
+                          />
+                          <Typography
+                            sx={{ ml: 2, mt: 1, cursor: "pointer" }}
+                            onClick={() => handleClick(index)}
+                          >
+                            Version : {descriptionVersion.length - index}
+                          </Typography>
+                          <Box sx={{ flexGrow: 1 }} />
+                          <IconButton onClick={() => handleClick(index)}>
+                            {expandedhistoryversion === index ? (
+                              <ExpandLessIcon />
+                            ) : (
+                              <ExpandMoreIcon />
+                            )}
+                          </IconButton>
+                        </Box>
+
+                        <Collapse
+                          in={expandedhistoryversion === index}
+                          timeout="auto"
+                          unmountOnExit
+                        >
+                          <Box
+                            sx={{
+                              border: "1px solid black",
+                              p: 3,
+                              mt: 2,
+                              mb: 2,
+                              ml: 2,
+                              mr: 2,
+                              borderRadius: "10px",
+                            }}
+                          >
+                            <Typography variant="body2">
+                              <strong>Description:</strong>{" "}
+                              {parse(item.description)}
+                            </Typography>
+                            <Typography variant="body2" sx={{ mt: 1 }}>
+                              <strong>Date:</strong> {item.date}
+                            </Typography>
+                          </Box>
+                        </Collapse>
+                      </Box>
+                    ))}
+                  </Collapse>
+                </Box>
               </Grid>
             </Grid>
 

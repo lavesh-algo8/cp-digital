@@ -500,8 +500,9 @@ const Section = () => {
           getRowId={(row) => row?.section?._id}
           rows={
             sectionsList
-              .slice()
-              .sort((a, b) => a.section.section_no - b.section.section_no) || []
+              ?.slice()
+              ?.sort((a, b) => a.section.section_no - b.section.section_no) ||
+            []
           }
           columns={columns}
           disableSelectionOnClick

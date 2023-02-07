@@ -17,6 +17,7 @@ import ProtectedRoute from "../../superadmin/ProtectedRoute/ProtectedRoute";
 import GenerateDocumentTitles from "../../../pages/superadmin/DocumentGenerator/GenerateDocumentTitles";
 import AddedCalculatorPage from "../../../pages/superadmin/Calculator/AddedCalculatorPage";
 import EditCalculator from "../../superadmin/Calculator/EditCalculator";
+import Check from "../Check";
 
 function Navigation() {
   return (
@@ -26,6 +27,7 @@ function Navigation() {
 
         {/* Private routes only logged in user can access */}
         <Route element={<ProtectedRoute />}>
+          <Route path="/checked" element={<Check />} />
           <Route path="/superadmin/admins" element={<Admins />} />
           <Route path="/superadmin/dashboard" element={<Dashboard />} />
           <Route
