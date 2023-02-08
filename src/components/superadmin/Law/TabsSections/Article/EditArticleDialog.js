@@ -51,6 +51,9 @@ import parse from "html-react-parser";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { styled } from "@mui/material/styles";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import AddIcon from "@mui/icons-material/Add";
+const diff = require("diff");
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -359,7 +362,8 @@ const EditArticleDialog = (props) => {
 
   useEffect(() => {
     if (props) {
-      setdescriptionVersion(props?.articleDetails?.history.reverse());
+      // setdescriptionVersion(props?.articleDetails?.history.slice().reverse());
+      setdescriptionVersion(props?.articleDetails?.history.slice().reverse());
       setarticleName(props.articleDetails.title);
       setArticleWrittenBy(props.articleDetails.written_by);
       setdateOfArticle(props.articleDetails.date);
@@ -394,6 +398,72 @@ const EditArticleDialog = (props) => {
       ),
     ]);
     console.log(descriptionVersion);
+  };
+
+  const CheckStringChanges = (item, descversn, index) => {
+    if (!descversn[index + 1]?.description) {
+      return;
+    }
+    let change = "";
+    let remove = "";
+    let diffs = diff.diffLines(
+      descversn[index + 1]?.description,
+      item?.description
+    );
+    console.log(diffs);
+    let changes = [];
+    diffs.forEach(function (part) {
+      let value = part.value;
+      let added = part.added;
+      let removed = part.removed;
+
+      if (added) {
+        changes.push(`+ ${value}`);
+        console.log(`+ ${value}`);
+        change = change.concat(" " + value);
+      } else if (removed) {
+        changes.push(`- ${value}`);
+        console.log(`- ${value}`);
+        remove = remove.concat(" " + value);
+      } else {
+        changes.push(` ${value}`);
+        console.log(`  ${value}`);
+      }
+    });
+    console.log(change);
+    return (
+      <Box sx={{ background: "#f2f2f2", p: 2, borderRadius: "8px" }}>
+        <Typography variant="body2" color="error">
+          {" "}
+          - {parse(remove)}
+        </Typography>
+        <Typography variant="body2" sx={{ mb: 1, ml: 10 }}>
+          {" "}
+          <ArrowDownwardIcon />
+        </Typography>
+        <Typography variant="body2" color="green">
+          {" "}
+          + {parse(change)}
+        </Typography>
+      </Box>
+    );
+    // return changes.map((value) => {
+    //   return (
+    //     <>
+    //       <Typography
+    //         color={
+    //           value.charAt(0) === "-"
+    //             ? "red"
+    //             : value.charAt(0) === "+"
+    //             ? "green"
+    //             : ""
+    //         }
+    //       >
+    //         {value}
+    //       </Typography>
+    //     </>
+    //   );
+    // });
   };
 
   return (
@@ -933,7 +1003,26 @@ const EditArticleDialog = (props) => {
                               {parse(item.description)}
                             </Typography>
                             <Typography variant="body2" sx={{ mt: 1 }}>
-                              <strong>Date:</strong> {item.date}
+                              <strong>Date:</strong>{" "}
+                              {`${("0" + new Date(item?.date)?.getDate()).slice(
+                                -2
+                              )}-${(
+                                "0" +
+                                (new Date(item?.date)?.getMonth() + 1)
+                              ).slice(-2)}-${new Date(item?.date)
+                                ?.getFullYear()
+                                .toString()
+                                .slice(-2)}`}
+                            </Typography>
+                            <Typography sx={{ mt: 1, mb: 1 }}>
+                              <strong>Changes: --</strong>
+                            </Typography>
+                            <Typography>
+                              {CheckStringChanges(
+                                item,
+                                descriptionVersion,
+                                index
+                              )}
                             </Typography>
                           </Box>
                         </Collapse>
