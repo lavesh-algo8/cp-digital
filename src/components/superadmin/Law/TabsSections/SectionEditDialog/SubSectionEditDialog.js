@@ -75,11 +75,10 @@ const SubSectionEditDialog = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isNaN(regulationNo)) {
-      alert("Sub-Section number should be number");
-      return false;
-    }
-    console.log("hey");
+    // if (isNaN(regulationNo)) {
+    //   alert("Sub-Section number should be number");
+    //   return false;
+    // }
     // const sectionData = draftToHtml(convertToRaw(value.getCurrentContent()));
     const sectionData = value;
     const data = {
@@ -204,7 +203,7 @@ const SubSectionEditDialog = (props) => {
                           size="small"
                           variant="outlined"
                           fullWidth
-                          required
+                          // required
                           sx={{
                             mt: 1,
                             "& legend": { display: "none" },

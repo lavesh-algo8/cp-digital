@@ -65,11 +65,10 @@ const SubSectionAddDialog = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isNaN(subsectionNo)) {
-      alert("Sub-Section number should be number");
-      return false;
-    }
-    console.log("hey");
+    // if (isNaN(subsectionNo)) {
+    //   alert("Sub-Section number should be number");
+    //   return false;
+    // }
     // const sectionData = draftToHtml(convertToRaw(value.getCurrentContent()));
     const sectionData = value;
     const data = {

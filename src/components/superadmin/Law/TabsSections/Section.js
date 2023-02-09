@@ -140,6 +140,7 @@ const Section = () => {
   const [clickedIndex, setClickedIndex] = React.useState(-1);
 
   const params = useParams();
+  // console.log(params);
 
   // menu action
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -244,6 +245,7 @@ const Section = () => {
         );
       },
     },
+
     {
       field: "section.section_name",
       headerName: "Sections",
@@ -267,24 +269,31 @@ const Section = () => {
                 in={params?.row?.section?._id === clickedIndex}
                 sx={{ pt: 1 }}
               >
-                {params?.row?.sub_sections?.map((item, index) => (
-                  <>
-                    <Box
-                      // onClick={() =>
-                      //   navigate(
-                      //     `${pathname}/${item.sub_regulation_no}/${item._id}`
-                      //   )
-                      // }
-                      sx={{
-                        cursor: "pointer",
-                      }}
-                    >
-                      {<Typography>{item.sub_regulation_no}</Typography> || (
-                        <Typography>.....</Typography>
-                      )}
-                    </Box>
-                  </>
-                ))}
+                {params?.row?.sub_sections
+                  ?.slice()
+                  ?.sort((a, b) =>
+                    a.sub_regulation_no
+                      .toString()
+                      .localeCompare(b.sub_regulation_no.toString())
+                  )
+                  ?.map((item, index) => (
+                    <>
+                      <Box
+                        // onClick={() =>
+                        //   navigate(
+                        //     `${pathname}/${item.sub_regulation_no}/${item._id}`
+                        //   )
+                        // }
+                        sx={{
+                          cursor: "pointer",
+                        }}
+                      >
+                        {<Typography>{item.sub_regulation_no}</Typography> || (
+                          <Typography>.....</Typography>
+                        )}
+                      </Box>
+                    </>
+                  ))}
               </Collapse>
             </Box>
           </>
@@ -394,38 +403,45 @@ const Section = () => {
               in={params?.row?.section?._id === clickedIndex}
               sx={{ pt: 1 }}
             >
-              {params?.row?.sub_sections?.map((item, index) => (
-                <>
-                  <Box sx={{ display: "flex" }}>
-                    {/* <Box>&#9998;</Box>
+              {params?.row?.sub_sections
+                ?.slice()
+                ?.sort((a, b) =>
+                  a.sub_regulation_no
+                    .toString()
+                    .localeCompare(b.sub_regulation_no.toString())
+                )
+                ?.map((item, index) => (
+                  <>
+                    <Box sx={{ display: "flex" }}>
+                      {/* <Box>&#9998;</Box>
                     <Box>&#9249;</Box> */}
-                    <Tooltip title="Delete sub-section">
-                      <Typography
-                        color="primary"
-                        sx={{ pl: 1, cursor: "pointer" }}
-                        onClick={() => {
-                          setsubsectionId(item._id);
-                          setsubsectionDeleteDialog(true);
-                        }}
-                      >
-                        <Delete sx={{ fontSize: "17px" }} />
-                      </Typography>
-                    </Tooltip>
-                    <Tooltip title="Edit sub-section">
-                      <Typography
-                        color="primary"
-                        sx={{ pl: 1, cursor: "pointer" }}
-                        onClick={() => {
-                          setsubsectionDetails(item);
-                          setsubsectionEditDialog(true);
-                        }}
-                      >
-                        <Edit sx={{ fontSize: "17px" }} />
-                      </Typography>
-                    </Tooltip>
-                  </Box>
-                </>
-              ))}
+                      <Tooltip title="Delete sub-section">
+                        <Typography
+                          color="primary"
+                          sx={{ pl: 1, cursor: "pointer" }}
+                          onClick={() => {
+                            setsubsectionId(item._id);
+                            setsubsectionDeleteDialog(true);
+                          }}
+                        >
+                          <Delete sx={{ fontSize: "17px" }} />
+                        </Typography>
+                      </Tooltip>
+                      <Tooltip title="Edit sub-section">
+                        <Typography
+                          color="primary"
+                          sx={{ pl: 1, cursor: "pointer" }}
+                          onClick={() => {
+                            setsubsectionDetails(item);
+                            setsubsectionEditDialog(true);
+                          }}
+                        >
+                          <Edit sx={{ fontSize: "17px" }} />
+                        </Typography>
+                      </Tooltip>
+                    </Box>
+                  </>
+                ))}
             </Collapse>
           </Box>
         );
@@ -471,7 +487,14 @@ const Section = () => {
           subsectionDetails={subsectionDetails}
         />
       )}
-      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography sx={{ ml: 1 }}>{params?.chapter?.slice(0, 80)}</Typography>
         <Button
           variant="contained"
           size="small"
