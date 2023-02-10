@@ -53,6 +53,8 @@ import { styled } from "@mui/material/styles";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import AddIcon from "@mui/icons-material/Add";
+import { convert } from "html-to-text";
+import { all } from "mathjs";
 const diff = require("diff");
 
 const ExpandMore = styled((props) => {
@@ -106,6 +108,7 @@ const EditArticleDialog = (props) => {
     ...copyData.section,
     ...copyData.subsection,
   ];
+  console.log(checkedData);
 
   function dfs(o, target) {
     if (o.value === target) return [target];
@@ -117,8 +120,28 @@ const EditArticleDialog = (props) => {
     }
   }
   let path;
-  // dataTree.find((x) => (path = dfs(x, "63995983506bac3aee929016")));
+  // dataTree.find((x) => (path = dfs(x, checkedData[0])));
   // console.log(path);
+  console.log(dataTree);
+
+  function checkrootNode(o, target) {
+    if (o.value === target) return [target];
+    if (!o.children) return false;
+    let rootpath;
+    o.children.find((x) => (rootpath = checkrootNode(x, target)));
+    if (rootpath) {
+      return [o.label].concat(rootpath);
+    }
+  }
+  let rootpath;
+  dataTree.find(
+    (x) =>
+      (rootpath = checkrootNode(
+        x,
+        copyData?.subsection[0] || copyData?.section[0]
+      ))
+  );
+  console.log(rootpath);
 
   const expandedDataArr = [];
   checkedData.map((value) => {
@@ -400,16 +423,91 @@ const EditArticleDialog = (props) => {
     console.log(descriptionVersion);
   };
 
+  const checkRootNodeLabel = (node) => {
+    console.log(node);
+    if (!node) {
+      return " ";
+    } else {
+      return node[1];
+    }
+  };
+
+  const lineCheck = (ch, re) => {
+    var a = ch.join("😁");
+    var b = re.join("😁");
+
+    const string1 = convert(b, {
+      wordwrap: 130,
+    });
+    const string2 = convert(a, {
+      wordwrap: 130,
+    });
+    let allchange = "";
+    var changes = diff.diffWordsWithSpace(string1, string2);
+    console.log(changes);
+    changes.forEach(function (part) {
+      let value = part.value;
+      let added = part.added;
+      let removed = part.removed;
+      var color = part.added ? "green" : part.removed ? "red" : "grey";
+      console.log(part.value[color]);
+      console.log(part.value);
+      if (added) {
+        console.log(value);
+        allchange = allchange.concat(` <ins>${value}</ins`);
+      } else if (removed) {
+        console.log(value);
+        allchange = allchange.concat(` <del>${value}</del>`);
+      } else {
+        console.log(value);
+        allchange = allchange.concat(` ${value}`);
+      }
+    });
+    console.log(allchange);
+    const myArray = allchange.split("😁");
+    return myArray;
+  };
+
   const CheckStringChanges = (item, descversn, index) => {
     if (!descversn[index + 1]?.description) {
       return;
     }
-    let change = "";
-    let remove = "";
-    let diffs = diff.diffLines(
+    let changed = [];
+    let removed = [];
+    let difference = diff.diffLines(
       descversn[index + 1]?.description,
       item?.description
     );
+    console.log(difference);
+    let final = [];
+    difference.forEach(function (part) {
+      let value = part.value;
+      let added = part.added;
+      let removeds = part.removed;
+
+      if (added) {
+        final.push(`+ ${value}`);
+        console.log(`+ ${value}`);
+        changed.push(value);
+      } else if (removeds) {
+        final.push(`- ${value}`);
+        console.log(`- ${value}`);
+        removed.push(value);
+      } else {
+        final.push(` ${value}`);
+        console.log(`  ${value}`);
+      }
+    });
+
+    let change = "";
+    let remove = "";
+    const string1 = convert(descversn[index + 1]?.description, {
+      wordwrap: 130,
+    });
+    const string2 = convert(item?.description, {
+      wordwrap: 130,
+    });
+    let diffs = diff.diffWords(string1, string2);
     console.log(diffs);
     let changes = [];
     diffs.forEach(function (part) {
@@ -426,14 +524,45 @@ const EditArticleDialog = (props) => {
         console.log(`- ${value}`);
         remove = remove.concat(" " + value);
       } else {
-        changes.push(` ${value}`);
+        // changes.push(` ${value}`);
         console.log(`  ${value}`);
       }
     });
-    console.log(change);
+    console.log(changes);
     return (
       <Box sx={{ background: "#f2f2f2", p: 2, borderRadius: "8px" }}>
-        <Typography variant="body2" color="error">
+        <Typography variant="body2" sx={{ mb: 1 }}>
+          {articleName}{" "}
+          {changed.map((change) => {
+            return convert(change).slice(0, 3) + " ";
+          })}{" "}
+          of the {checkRootNodeLabel(rootpath)} Dated :{" "}
+          {`${("0" + new Date(item?.date)?.getDate()).slice(-2)}-${(
+            "0" +
+            (new Date(item?.date)?.getMonth() + 1)
+          ).slice(-2)}-${new Date(item?.date)
+            ?.getFullYear()
+            .toString()
+            .slice(-2)}`}{" "}
+          w.e.f{" "}
+          {`${("0" + new Date(item?.date)?.getDate()).slice(-2)}-${(
+            "0" +
+            (new Date(item?.date)?.getMonth() + 1)
+          ).slice(-2)}-${new Date(item?.date)
+            ?.getFullYear()
+            .toString()
+            .slice(-2)}`}{" "}
+          changes are :
+        </Typography>
+        <Typography>
+          {/* {changes.map((change) => (
+            <Typography>{change}</Typography>
+          ))} */}
+          {lineCheck(changed, removed).map((line) => (
+            <Typography>{parse(line)}</Typography>
+          ))}
+        </Typography>
+        {/* <Typography variant="body2" color="error">
           {" "}
           - {parse(remove)}
         </Typography>
@@ -444,26 +573,9 @@ const EditArticleDialog = (props) => {
         <Typography variant="body2" color="green">
           {" "}
           + {parse(change)}
-        </Typography>
+        </Typography> */}
       </Box>
     );
-    // return changes.map((value) => {
-    //   return (
-    //     <>
-    //       <Typography
-    //         color={
-    //           value.charAt(0) === "-"
-    //             ? "red"
-    //             : value.charAt(0) === "+"
-    //             ? "green"
-    //             : ""
-    //         }
-    //       >
-    //         {value}
-    //       </Typography>
-    //     </>
-    //   );
-    // });
   };
 
   return (
