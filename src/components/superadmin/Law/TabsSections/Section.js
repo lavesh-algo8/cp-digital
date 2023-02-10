@@ -271,11 +271,21 @@ const Section = () => {
               >
                 {params?.row?.sub_sections
                   ?.slice()
-                  ?.sort((a, b) =>
-                    a.sub_regulation_no
-                      .toString()
-                      .localeCompare(b.sub_regulation_no.toString())
-                  )
+                  ?.sort((a, b) => {
+                    let numericA = parseFloat(
+                      a.sub_regulation_no.toString().replace(/\D/g, "")
+                    );
+                    let numericB = parseFloat(
+                      b.sub_regulation_no.toString().replace(/\D/g, "")
+                    );
+                    if (numericA !== numericB) {
+                      return numericA - numericB;
+                    } else {
+                      return a.sub_regulation_no
+                        .toString()
+                        .localeCompare(b.sub_regulation_no.toString());
+                    }
+                  })
                   ?.map((item, index) => (
                     <>
                       <Box
@@ -405,11 +415,21 @@ const Section = () => {
             >
               {params?.row?.sub_sections
                 ?.slice()
-                ?.sort((a, b) =>
-                  a.sub_regulation_no
-                    .toString()
-                    .localeCompare(b.sub_regulation_no.toString())
-                )
+                ?.sort((a, b) => {
+                  let numericA = parseFloat(
+                    a.sub_regulation_no.toString().replace(/\D/g, "")
+                  );
+                  let numericB = parseFloat(
+                    b.sub_regulation_no.toString().replace(/\D/g, "")
+                  );
+                  if (numericA !== numericB) {
+                    return numericA - numericB;
+                  } else {
+                    return a.sub_regulation_no
+                      .toString()
+                      .localeCompare(b.sub_regulation_no.toString());
+                  }
+                })
                 ?.map((item, index) => (
                   <>
                     <Box sx={{ display: "flex" }}>
