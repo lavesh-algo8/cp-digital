@@ -32,7 +32,7 @@ const initialStore = {
   procedureHeadingsList: [],
   addedCalculatorList: [],
   addedCalculatorsById: [],
-  formulaAdded: "",
+  formulaAdded: {},
 };
 
 const superAdminReducer = (state = initialStore, action) => {
@@ -228,9 +228,20 @@ const superAdminReducer = (state = initialStore, action) => {
       };
 
     case "ADD_FORMULA":
+      console.log(action.payload);
       return {
         ...state,
-        formulaAdded: action.payload.formulaText,
+        formulaAdded: {
+          ...state.formulaAdded,
+          [action.payload.forumlaName]: action.payload.formulaText,
+        },
+      };
+
+    case "REMOVE_FORMULA":
+      console.log(action.payload);
+      return {
+        ...state,
+        formulaAdded: {},
       };
 
     // case "UPDATE_DOCUMENT":

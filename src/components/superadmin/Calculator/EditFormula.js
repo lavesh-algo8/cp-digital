@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AddSimpleCalculator } from "../../../redux/superAdminReducer/superAdminAction";
 
 const EditFormula = (props) => {
+  console.log(props);
   const { formulaAdded } = useSelector((state) => state?.SuperAdmin);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,9 +32,7 @@ const EditFormula = (props) => {
   const [myform, setmyform] = useState("");
   const schemaRef = useRef();
 
-  const [formulaText, setformulaText] = useState(
-    formulaAdded || props.formula.split(" ")
-  );
+  const [formulaText, setformulaText] = useState(props.formula.split(" "));
   const [formulaError, setformulaError] = useState(false);
 
   const onSubmitHandler = async () => {
@@ -289,6 +288,11 @@ const EditFormula = (props) => {
                       "9",
                       "0",
                       "DEL",
+                      "=",
+                      ">",
+                      ">=",
+                      "<",
+                      "<=",
                     ].map((item, index) => (
                       <Grid item xs={12} sm={3}>
                         <Button
@@ -320,6 +324,31 @@ const EditFormula = (props) => {
                                 item,
                               ]);
                             } else if (item === "/") {
+                              setformulaText((prevState) => [
+                                ...prevState,
+                                item,
+                              ]);
+                            } else if (item === "=") {
+                              setformulaText((prevState) => [
+                                ...prevState,
+                                item,
+                              ]);
+                            } else if (item === ">") {
+                              setformulaText((prevState) => [
+                                ...prevState,
+                                item,
+                              ]);
+                            } else if (item === "<") {
+                              setformulaText((prevState) => [
+                                ...prevState,
+                                item,
+                              ]);
+                            } else if (item === ">=") {
+                              setformulaText((prevState) => [
+                                ...prevState,
+                                item,
+                              ]);
+                            } else if (item === "<=") {
                               setformulaText((prevState) => [
                                 ...prevState,
                                 item,

@@ -109,6 +109,7 @@ const AddedCalculatorPage = () => {
                 placeholder={item1?.placeholder || "Enter " + item1.label}
                 // label={item1?.label}
                 name={item1?.label}
+                id={item1?.id}
                 fullWidth
                 type={
                   item1?.label?.split(" ")[0] === "Date"

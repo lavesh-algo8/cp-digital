@@ -19,8 +19,12 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AddSimpleCalculator } from "../../../redux/superAdminReducer/superAdminAction";
 import AddFormula from "./AddFormula";
+import AddIcon from "@mui/icons-material/Add";
 
 const AddCalculator = (props) => {
+  const [numOfDocs, setNumOfDocs] = useState(1);
+  const [fieldKey, setfieldKey] = useState("");
+
   const { formulaAdded } = useSelector((state) => state?.SuperAdmin);
 
   const dispatch = useDispatch();
@@ -47,7 +51,7 @@ const AddCalculator = (props) => {
     const formData = { ...schemaRef.current, title };
     const calculatorData = {
       calculator_name: title,
-      formula: formulaAdded && formulaAdded.join(" "),
+      formula: formulaAdded && formulaAdded["Formula 1"].join(" "),
       formData: formData,
     };
     console.log(calculatorData);
@@ -69,6 +73,16 @@ const AddCalculator = (props) => {
     setFields(processed);
   };
 
+  useEffect(() => {
+    removeFormula();
+  }, []);
+
+  const removeFormula = async () => {
+    await dispatch({
+      type: "REMOVE_FORMULA",
+    });
+  };
+
   return (
     <>
       {/* add admins dialog */}
@@ -79,6 +93,7 @@ const AddCalculator = (props) => {
           setOpenDialog={setopenDialog}
           fields={fields}
           formulaEdit={formulaAdded && "Edit"}
+          fieldKey={fieldKey}
         />
       )}
 
@@ -152,46 +167,109 @@ const AddCalculator = (props) => {
                     </Button>
                   </Grid>
                 </Grid>
-                <Grid container>
-                  <Grid item lg={8} xs={12}>
-                    <Typography sx={{ mt: 2, pb: 1 }}>
-                      <Typography sx={{ fontWeight: "bold" }}>
-                        Formula :
-                      </Typography>{" "}
-                      (Add the formula with field names created below)
-                    </Typography>
-                    <TextField
-                      rows={3}
-                      multiline
-                      fullWidth
-                      size="small"
-                      required
-                      id="outlined-required"
-                      // label="Document Title"
-                      value={(formulaAdded && formulaAdded.join(" ")) || ""}
-                      onChange={(e) => setFormula(e.target.value)}
-                      disabled
-                    />
+                <Typography sx={{ mt: 2, pb: 1 }}>
+                  <Typography sx={{ fontWeight: "bold" }}>Formula :</Typography>{" "}
+                  (Add the formula with field names created below)
+                </Typography>
+                {Array.from({ length: numOfDocs }, (_, key) => (
+                  <Grid container spacing={3} sx={{ mt: key === 0 ? "" : 2 }}>
+                    <Grid item lg={7} xs={12}>
+                      <TextField
+                        rows={3}
+                        multiline
+                        fullWidth
+                        size="small"
+                        required
+                        id="outlined-required"
+                        label={`Formula ${key + 1}`}
+                        value={
+                          (formulaAdded[`Formula ${key + 1}`] &&
+                            formulaAdded[`Formula ${key + 1}`].join(" ")) ||
+                          ""
+                        }
+                        onChange={(e) => setFormula(e.target.value)}
+                        disabled
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      lg={2}
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Button
+                        variant="outlined"
+                        color={
+                          formulaAdded[`Formula ${key + 1}`] ? "info" : "error"
+                        }
+                        onClick={() => {
+                          setfieldKey(key + 1);
+                          setopenDialog(true);
+                          handleFormula();
+                          console.log(
+                            schemaRef.current.components?.filter(
+                              (item) => item.label !== "Submit"
+                            ).length === 0
+                          );
+                        }}
+                      >
+                        {formulaAdded[`Formula ${key + 1}`]
+                          ? "Edit Formula"
+                          : "Add Formula"}
+                      </Button>
+                    </Grid>
+                    <Grid
+                      item
+                      lg={3}
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      {key + 1 === numOfDocs && (
+                        <>
+                          <Grid
+                            container
+                            item
+                            lg={4}
+                            style={{ padding: "0 8px" }}
+                          >
+                            <Button
+                              size="large"
+                              color="primary"
+                              variant="contained"
+                              onClick={() => setNumOfDocs(numOfDocs + 1)}
+                              disabled={numOfDocs === 4}
+                            >
+                              <AddIcon />
+                            </Button>
+                          </Grid>
+                          <Grid
+                            container
+                            item
+                            lg={6}
+                            style={{ padding: "0 8px" }}
+                          >
+                            <Button
+                              size="large"
+                              color="primary"
+                              variant="contained"
+                              onClick={async () => {
+                                setNumOfDocs(numOfDocs - 1);
+                                const res = await dispatch({
+                                  type: "ADD_FORMULA",
+                                  payload: {
+                                    forumlaName: `Formula ${key + 1}`,
+                                    formulaText: "",
+                                  },
+                                });
+                              }}
+                              disabled={numOfDocs === 1}
+                            >
+                              <CloseIcon />
+                            </Button>
+                          </Grid>
+                        </>
+                      )}
+                    </Grid>
                   </Grid>
-                </Grid>
-              </Container>
-              <Container>
-                <Button
-                  sx={{ mt: 2 }}
-                  variant="outlined"
-                  color={formulaAdded ? "info" : "error"}
-                  onClick={() => {
-                    setopenDialog(true);
-                    handleFormula();
-                    console.log(
-                      schemaRef.current.components?.filter(
-                        (item) => item.label !== "Submit"
-                      ).length === 0
-                    );
-                  }}
-                >
-                  {formulaAdded ? "Edit Formula" : "Add Formula"}
-                </Button>
+                ))}
               </Container>
 
               <Container maxWidth={false} sx={{ mt: 3, mb: 5 }}>

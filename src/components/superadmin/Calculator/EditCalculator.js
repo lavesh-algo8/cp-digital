@@ -43,7 +43,7 @@ const EditCalculator = () => {
     const formData = { ...schemaRef.current, title };
     const calculatorData = {
       calculator_name: title,
-      formula: (formulaAdded && formulaAdded.join(" ")) || formula,
+      // formula: (formulaAdded && formulaAdded.join(" ")) || formula,
       formData: formData,
     };
     console.log(calculatorData);
@@ -150,7 +150,7 @@ const EditCalculator = () => {
                     required
                     id="outlined-required"
                     // label="Document Title"
-                    value={(formulaAdded && formulaAdded.join(" ")) || formula}
+                    value={formula}
                     onChange={(e) => setFormula(e.target.value)}
                     disabled
                   />

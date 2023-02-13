@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AddSimpleCalculator } from "../../../redux/superAdminReducer/superAdminAction";
 
 const AddFormula = (props) => {
+  console.log(props);
   const { formulaAdded } = useSelector((state) => state?.SuperAdmin);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,7 +32,9 @@ const AddFormula = (props) => {
   const [myform, setmyform] = useState("");
   const schemaRef = useRef();
 
-  const [formulaText, setformulaText] = useState(formulaAdded || []);
+  const [formulaText, setformulaText] = useState(
+    formulaAdded[`Formula ${props.fieldKey}`] || []
+  );
   const [formulaError, setformulaError] = useState(false);
 
   const onSubmitHandler = async () => {
@@ -264,7 +267,6 @@ const AddFormula = (props) => {
                         }
                       }
                     }}
-                    // onChange={(e) => setformulaText(e.target.value)}
                   />
                 </Box>
               </Grid>
@@ -298,6 +300,11 @@ const AddFormula = (props) => {
                       "9",
                       "0",
                       "DEL",
+                      "=",
+                      ">",
+                      ">=",
+                      "<",
+                      "<=",
                     ].map((item, index) => (
                       <Grid item xs={12} sm={3}>
                         <Button
@@ -329,6 +336,31 @@ const AddFormula = (props) => {
                                 item,
                               ]);
                             } else if (item === "/") {
+                              setformulaText((prevState) => [
+                                ...prevState,
+                                item,
+                              ]);
+                            } else if (item === "=") {
+                              setformulaText((prevState) => [
+                                ...prevState,
+                                item,
+                              ]);
+                            } else if (item === ">") {
+                              setformulaText((prevState) => [
+                                ...prevState,
+                                item,
+                              ]);
+                            } else if (item === "<") {
+                              setformulaText((prevState) => [
+                                ...prevState,
+                                item,
+                              ]);
+                            } else if (item === ">=") {
+                              setformulaText((prevState) => [
+                                ...prevState,
+                                item,
+                              ]);
+                            } else if (item === "<=") {
                               setformulaText((prevState) => [
                                 ...prevState,
                                 item,
@@ -385,7 +417,10 @@ const AddFormula = (props) => {
                   setformulaError(false);
                   const res = await dispatch({
                     type: "ADD_FORMULA",
-                    payload: { formulaText },
+                    payload: {
+                      forumlaName: `Formula ${props.fieldKey}`,
+                      formulaText: formulaText,
+                    },
                   });
                   if (res) {
                     handleDialogClose();
