@@ -33,6 +33,7 @@ const initialStore = {
   addedCalculatorList: [],
   addedCalculatorsById: [],
   formulaAdded: {},
+  textAnalysisType: "",
 };
 
 const superAdminReducer = (state = initialStore, action) => {
@@ -242,6 +243,13 @@ const superAdminReducer = (state = initialStore, action) => {
       return {
         ...state,
         formulaAdded: {},
+      };
+
+    case "GET_TEXT_ANALYSIS_TYPE":
+      console.log(action.payload);
+      return {
+        ...state,
+        textAnalysisType: action.payload,
       };
 
     // case "UPDATE_DOCUMENT":

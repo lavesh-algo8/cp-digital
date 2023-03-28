@@ -20,7 +20,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { Editor } from "react-draft-wysiwyg";
@@ -73,6 +73,47 @@ const EditArticleDialog = (props) => {
   const [expandedhistory, setExpandedHistory] = React.useState(true);
   const [expandedhistoryversion, setExpandedHistoryVersion] =
     React.useState("");
+
+  const editorRef = useRef();
+
+  const [markedWords, setMarkedWords] = useState([]);
+
+  const extractMarkedWords = (html) => {
+    const parser = new DOMParser();
+    console.log(html);
+    const doc = parser.parseFromString(html, "text/html");
+    const elements = doc.querySelectorAll(".marker"); // replace with the class name you used to mark the words
+    let markedWords = [];
+    for (let i = 0; i < elements.length; i++) {
+      // markedWords += elements[i].textContent + " ";
+      markedWords.push(elements[i].textContent);
+    }
+    setMarkedWords(markedWords);
+    console.log(markedWords);
+  };
+
+  const handleKeyDown = (event) => {
+    console.log(event);
+    console.log(editorRef);
+    const editor = editorRef.current.editor;
+    const keyCode = event.data.keyCode;
+
+    if (keyCode === 219) {
+      editor.insertHtml("<span style='color: #983301;'>");
+    }
+
+    if (keyCode === 221) {
+      editor.insertHtml("<span style='color: #000000;'>");
+    }
+
+    if (keyCode === 2228240) {
+      editor.insertHtml("<span style='color: #27e55c;'>");
+    }
+
+    if (keyCode === 2228445) {
+      editor.insertHtml("<span style='color: #000000;'>");
+    }
+  };
 
   const handleExpandClick = () => {
     setExpandedHistory(!expandedhistory);
@@ -949,24 +990,34 @@ const EditArticleDialog = (props) => {
                 /> */}
 
                 <CKEditor
+                  ref={editorRef}
+                  onKey={handleKeyDown}
+                  // name="editor"
                   config={{
                     allowedContent: true,
-                    // forceEnterMode: true,
+                    forceEnterMode: true,
                     enterMode: "p",
-                    extraPlugins: ["amendments"],
+                    // extraPlugins: ["amendments", "substitution"],
+                    extraPlugins: ["substitution", "colorbutton"],
                     height: "235px",
                     resize_enabled: false,
                     removeButtons: false,
                   }}
                   initData={value}
-                  onInstanceReady={() => {
+                  onInstanceReady={(event) => {
                     //   alert("Editor is ready!");
+                    editorRef.current = event;
                   }}
                   onChange={(e) => {
                     setValue(e.editor.getData());
+                    extractMarkedWords(e.editor.getData());
                     console.log(e.editor.getData());
                   }}
                   onBeforeLoad={(CKEDITOR) => {
+                    CKEDITOR.dtd.$removeEmpty["span"] = false;
+                    CKEDITOR.dtd.$removeEmpty["i"] = false;
+                    CKEDITOR.dtd.$removeEmpty["b"] = false;
+                    CKEDITOR.dtd.$removeEmpty["u"] = false;
                     if (!CKEDITOR.plugins.registered["timestamp"]) {
                       CKEDITOR.plugins.add("timestamp", {
                         init: function (editor) {
@@ -991,35 +1042,68 @@ const EditArticleDialog = (props) => {
                       });
                     }
 
-                    if (!CKEDITOR.plugins.registered["amendments"]) {
-                      CKEDITOR.plugins.add("amendments", {
+                    // if (!CKEDITOR.plugins.registered["amendments"]) {
+                    //   CKEDITOR.plugins.add("amendments", {
+                    //     init: function (editor) {
+                    //       editor.addCommand("addAmendments", {
+                    //         exec: function (editor) {
+                    //           if (editor.getSelection().getSelectedText()) {
+                    //             // alert(editor.getSelection().getSelectedText());
+                    //             // handleClickOpen();
+                    //             const amentmentText = window.prompt(
+                    //               "Type Amendment text here...",
+                    //               ""
+                    //             );
+                    //             // amentmentText + editor.getSelection().getSelectedText()
+                    //             editor.insertHtml(
+                    //               // "<p>This is a new paragraph.</p>"
+                    //               " <span class=tooltip>" +
+                    //                 amentmentText +
+                    //                 " <span class=tooltiptext>" +
+                    //                 editor.getSelection().getSelectedText() +
+                    //                 "</span> </span>"
+                    //             );
+                    //           }
+                    //         },
+                    //       });
+                    //       editor.ui.addButton("Amendments", {
+                    //         label: "Add Amendments",
+                    //         command: "addAmendments",
+                    //         toolbar: "insert",
+                    //         icon: "https://cdn-icons-png.flaticon.com/512/6846/6846310.png",
+                    //       });
+                    //     },
+                    //   });
+                    // }
+
+                    if (!CKEDITOR.plugins.registered["substitution"]) {
+                      CKEDITOR.plugins.add("substitution", {
                         init: function (editor) {
-                          editor.addCommand("addAmendments", {
+                          console.log(editor);
+                          editor.addCommand("addSubstitution", {
                             exec: function (editor) {
+                              console.log(editor);
                               if (editor.getSelection().getSelectedText()) {
-                                // alert(editor.getSelection().getSelectedText());
-                                // handleClickOpen();
-                                const amentmentText = window.prompt(
-                                  "Type Amendment text here...",
-                                  ""
+                                console.log(
+                                  editor.getSelection().getSelectedText()
                                 );
-                                // amentmentText + editor.getSelection().getSelectedText()
                                 editor.insertHtml(
-                                  // "<p>This is a new paragraph.</p>"
-                                  " <span class=tooltip>" +
-                                    amentmentText +
-                                    " <span class=tooltiptext>" +
+                                  "<span style='color: #983301;'>" +
                                     editor.getSelection().getSelectedText() +
-                                    "</span> </span>"
+                                    "</span> <br/>"
+
+                                  // "<font color='#983301'>" +
+                                  //   editor.getSelection().getSelectedText() +
+                                  //   "</font>"
                                 );
                               }
                             },
                           });
-                          editor.ui.addButton("Amendments", {
-                            label: "Add Amendments",
-                            command: "addAmendments",
+                          editor.ui.addButton("Substitutions", {
+                            label: "Add Substitutions",
+                            command: "addSubstitution",
                             toolbar: "insert",
-                            icon: "https://cdn-icons-png.flaticon.com/512/6846/6846310.png",
+                            icon: "https://cdn-icons-png.flaticon.com/512/3047/3047335.png",
                           });
                         },
                       });

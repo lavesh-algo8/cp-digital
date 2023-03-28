@@ -264,38 +264,38 @@ const SubSectionAddDialog = (props) => {
                     resize_enabled: false,
                     removeButtons: false,
                   }}
-                  initData="
-                  <style type='text/css'>
-                    span .tooltip {
-                        display: inline-block;
-                        text-indent:0em;
-                    }
-                    .tooltip{
-                        text-decoration: underline;
-                    }
+                  //   initData="
+                  //   <style type='text/css'>
+                  //     span .tooltip {
+                  //         display: inline-block;
+                  //         text-indent:0em;
+                  //     }
+                  //     .tooltip{
+                  //         text-decoration: underline;
+                  //     }
 
-                    .tooltip .tooltiptext {
-                        visibility: hidden;
-                        width: calc(100vw - 35px);
-                        background: #121D28;
-                        color:#fff;
-                        border-radius: 6px;
-                        padding: 5px 5px;
-                        left: 10px;
-                        border: 2px solid black;
-                        line-height: normal;
-                        text-decoration: none;
-                        position: absolute;
-                        z-index: 1;
-                    }
+                  //     .tooltip .tooltiptext {
+                  //         visibility: hidden;
+                  //         width: calc(100vw - 35px);
+                  //         background: #121D28;
+                  //         color:#fff;
+                  //         border-radius: 6px;
+                  //         padding: 5px 5px;
+                  //         left: 10px;
+                  //         border: 2px solid black;
+                  //         line-height: normal;
+                  //         text-decoration: none;
+                  //         position: absolute;
+                  //         z-index: 1;
+                  //     }
 
-                    .tooltip:hover .tooltiptext {
-                        visibility: visible;
-                        left: 2%;
-                    }
-                </style>
-                    <div>Welcome to CKEditor 4!</div>
-                  "
+                  //     .tooltip:hover .tooltiptext {
+                  //         visibility: visible;
+                  //         left: 2%;
+                  //     }
+                  // </style>
+                  //     <div>Welcome to CKEditor 4!</div>
+                  //   "
                   onInstanceReady={() => {
                     //   alert("Editor is ready!");
                   }}

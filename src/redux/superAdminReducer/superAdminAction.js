@@ -1773,3 +1773,35 @@ export const AddSimpleCalculator = (calculatorData) => async (dispatch) => {
     console.log(e);
   }
 };
+
+export const getTextAnalysis = (id) => async (dispatch) => {
+  try {
+    let config = {
+      method: "get",
+      url: `${baseUrl}/knowledgecentre/fetchtextanalysis/${id}`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const data = await axios(config);
+    console.log("TextAnalysis : ", data);
+
+    if (data?.data?.result) {
+      let last = data?.data?.result[data?.data?.result.length - 1];
+      console.log(last);
+      console.log(last.type);
+      await dispatch({
+        type: "GET_TEXT_ANALYSIS_TYPE",
+        payload: last.type,
+      });
+    } else {
+      await dispatch({
+        type: "GET_TEXT_ANALYSIS_TYPE",
+        payload: "",
+      });
+    }
+    return data;
+  } catch (e) {
+    console.log(e);
+  }
+};
