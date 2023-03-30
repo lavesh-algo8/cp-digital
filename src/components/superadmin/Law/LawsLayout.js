@@ -24,6 +24,7 @@ import LawIdFetch from "./Tabs";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import AddCategoryDialog from "./AddCategoryDialog/AddCategoryDialog";
+import AddContentTypeDialog from "./AddContentTypeDialog/AddContentTypeDialog";
 import AddActDialog from "./AddActDialog/AddActDialog";
 import CompanyAct from "./CompanyAct";
 import { useDispatch, useSelector } from "react-redux";
@@ -45,6 +46,7 @@ const LawsLayout = ({ children }) => {
     expanded === index ? setExpanded("") : setExpanded(index);
   };
   const [openDialogAddCategory, setOpenDialogAddCategory] = useState(false);
+  const [openDialogAddContentType, setOpenDialogAddContentType] = useState(false);
   const [openDialogAddAct, setOpenDialogAddAct] = useState(false);
   const [openDialogDeleteAct, setOpenDialogDeleteAct] = useState(false);
 
@@ -64,6 +66,8 @@ const LawsLayout = ({ children }) => {
           openDialog={openDialogAddCategory}
           setOpenDialog={setOpenDialogAddCategory}
         />
+      
+
         {/* add Category dialog box */}
 
         {/* delete Category dialog box */}
@@ -93,7 +97,7 @@ const LawsLayout = ({ children }) => {
               sx={{ display: { xs: "none", sm: "none", md: "block" } }}
             >
               <Card square={true} sx={{ minHeight: "100vh" }}>
-                <Box
+              <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -117,7 +121,11 @@ const LawsLayout = ({ children }) => {
                   >
                     <AddIcon fontSize="small" />
                   </Button>
+
+                  
                 </Box>
+                
+                
                 <Box
                   sx={{
                     overflowY: "scroll",
@@ -246,6 +254,7 @@ const LawsLayout = ({ children }) => {
                 {children}
               </Card>
             </Grid>
+            
           </Grid>
         </Box>
       </Layout>

@@ -82,8 +82,7 @@ const Laws = () => {
                 "Circulars",
                 "Articles",
                 "News",
-                "Presentations",
-                // "Forms",
+                "Presentations"
                 // "Secretarial Standards",
                 // "Accounting Standards",
                 // "Case Laws",
