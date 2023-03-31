@@ -8,6 +8,7 @@ import EditDocument from "../../../pages/superadmin/DocumentGenerator/EditDocume
 import EditDocumentTitles from "../../../pages/superadmin/DocumentGenerator/EditDocumentTitles";
 import GenerateNewDocument from "../../../pages/superadmin/DocumentGenerator/GenerateNewDocument";
 import Laws from "../../../pages/superadmin/Category/Laws";
+import ContentType from "../../../pages/superadmin/ContentType/ContentType";
 import Login from "../../../pages/superadmin/Login";
 import ProcedurePage from "../../../pages/superadmin/Procedure/ProcedurePage";
 import PopupTable from "../../superadmin/DocumentGenerator/PopupTable";
@@ -56,6 +57,9 @@ function Navigation() {
           />
           <Route path="/superadmin/laws" element={<Laws />}>
             <Route path=":category/:act/:actid" element={<Laws />} />
+          </Route>
+          <Route path="/superadmin/contenttype" element={<ContentType />}>
+            <Route path=":contenttype" element={<ContentType />} />
           </Route>
 
           <Route

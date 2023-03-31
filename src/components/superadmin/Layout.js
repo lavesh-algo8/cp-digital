@@ -174,6 +174,32 @@ export default function Layout({ children }) {
             color: "#c9c7c7",
             display: "flex",
             flexDirection: "column",
+            borderLeft: currentLocation.startsWith("/superadmin/contenttype")
+              ? "4px solid #192a3a"
+              : "",
+          }}
+          onClick={() => navigate("/superadmin/contenttype")}
+        >
+          <ListItemIcon sx={{ display: "flex", justifyContent: "center" }}>
+            <AccountBalanceIcon
+              sx={{
+                fontSize: 30,
+                border: 0,
+                color: currentLocation.startsWith("/superadmin/laws")
+                  ? "#192a3a"
+                  : "",
+              }}
+            />
+          </ListItemIcon>
+        </ListItem>
+
+        <ListItem
+          button
+          sx={{
+            mt: 3,
+            color: "#c9c7c7",
+            display: "flex",
+            flexDirection: "column",
             borderLeft: currentLocation.startsWith("/superadmin/calculator")
               ? "4px solid #192a3a"
               : "",

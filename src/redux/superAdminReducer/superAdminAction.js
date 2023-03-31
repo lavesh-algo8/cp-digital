@@ -581,6 +581,47 @@ export const deleteCategory = (categoryid) => async (dispatch) => {
   }
 };
 
+export const addContentType = (formData) => async (dispatch) => {
+  try {
+    let config = {
+      method: "post",
+     // url: `${baseUrl}/knowledgecentre/addcategory`, //Change this api to addDynamicCollectionTab
+     url: `${baseUrl}/contenttype/addDynamicCollectionTab`,
+      headers: {
+        "content-type": "application/json",
+      },
+      data: { collection_name: formData },
+    };
+    console.log(formData);
+    const data = await axios(config);
+    console.log("ContentType", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const fetchContentType = () => async (dispatch) => {
+  try {
+    let config = {
+      method: "get",
+      url: `${baseUrl}/contenttype/fetchDynamicCollectionTab`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const data = await axios(config);
+    console.log("ContentTypes : ", data.data.result);
+    dispatch({
+      type: "GET_ALLCONTENTTYPE",
+      payload: data.data.result,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+
 export const addAct = (formData, categoryId) => async (dispatch) => {
   try {
     let config = {
