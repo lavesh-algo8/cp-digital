@@ -20,6 +20,7 @@ import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import CalculateIcon from "@mui/icons-material/Calculate";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import DifferenceIcon from "@mui/icons-material/Difference";
+import StorageIcon from "@mui/icons-material/Storage";
 
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -167,7 +168,7 @@ export default function Layout({ children }) {
           </ListItemIcon>
         </ListItem>
 
-        <ListItem
+        {/* <ListItem
           button
           sx={{
             mt: 3,
@@ -181,17 +182,17 @@ export default function Layout({ children }) {
           onClick={() => navigate("/superadmin/contenttype")}
         >
           <ListItemIcon sx={{ display: "flex", justifyContent: "center" }}>
-            <AccountBalanceIcon
+            <StorageIcon
               sx={{
                 fontSize: 30,
                 border: 0,
-                color: currentLocation.startsWith("/superadmin/laws")
+                color: currentLocation.startsWith("/superadmin/contenttype")
                   ? "#192a3a"
                   : "",
               }}
             />
           </ListItemIcon>
-        </ListItem>
+        </ListItem> */}
 
         <ListItem
           button

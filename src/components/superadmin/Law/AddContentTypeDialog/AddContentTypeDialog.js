@@ -31,6 +31,7 @@ const AddContentTypeDialog = (props) => {
   const SubmitHandler = async (e) => {
     e.preventDefault();
     await dispatch(addContentType(contentType));
+    await dispatch(fetchContentType());
     setContentType("");
     props.setOpenDialog(false);
   };
@@ -48,7 +49,9 @@ const AddContentTypeDialog = (props) => {
         }}
         maxWidth="lg"
       >
-        <DialogTitle fontWeight={600}>Add New ContentType {props?.id}</DialogTitle>
+        <DialogTitle fontWeight={600}>
+          Add New ContentType {props?.id}
+        </DialogTitle>
         <Box position="absolute" top={5} right={10}>
           <IconButton onClick={handleDialogClose}>
             <CloseIcon />

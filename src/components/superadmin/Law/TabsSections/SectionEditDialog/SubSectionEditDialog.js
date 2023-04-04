@@ -152,6 +152,7 @@ const SubSectionEditDialog = (props) => {
     if (props?.subsectionDetails) {
       setValue(props?.subsectionDetails?.sub_regulation_details);
     }
+    dispatch(getTextAnalysis(props.subsectionDetails._id));
   }, []);
 
   const handleExpandClick = () => {
@@ -229,6 +230,9 @@ const SubSectionEditDialog = (props) => {
   // };
 
   const changesDescription = () => {
+    if (!textAnalysisType) {
+      return "";
+    }
     console.log(textAnalysisType);
     if (textAnalysisType === "modification") {
       console.log(
@@ -612,7 +616,7 @@ const SubSectionEditDialog = (props) => {
                                 <Typography sx={{ mt: 3 }}>
                                   <strong>Changes:</strong>
                                 </Typography>
-                                <Typography>
+                                <Typography variant="body2">
                                   ( with respect to current description )
                                 </Typography>
                                 {parse(changesDescription())}

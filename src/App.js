@@ -24,6 +24,9 @@ function App() {
       greycol: {
         main: "#F1F1F1",
       },
+      redcol: {
+        main: "#c41d1d",
+      },
     },
     typography: {
       fontFamily: ["Open Sans"].join(","),

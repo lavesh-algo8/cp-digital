@@ -14,6 +14,10 @@ import AmendmentsActs from "./TabsSections/AmendmentsActs";
 import Article from "./TabsSections/Article";
 import News from "./TabsSections/News";
 import Presentation from "./TabsSections/Presentation";
+import { useDispatch, useSelector } from "react-redux";
+import DynamicContent from "../DynamicTabs/DynamicContent";
+import { Button } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -50,6 +54,11 @@ function a11yProps(index) {
 
 export default function BasicTabs() {
   const [value, setValue] = React.useState(0);
+  const { contenttypeList = [] } = useSelector((state) => state?.SuperAdmin);
+  const dynamicTabsName = contenttypeList.map((value) => value.contenttype);
+  const [openDialogAddContentType, setOpenDialogAddContentType] =
+    React.useState(false);
+  const dispatch = useDispatch();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -57,7 +66,16 @@ export default function BasicTabs() {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Box
+        sx={{
+          borderBottom: 1,
+          borderColor: "divider",
+          display: "flex",
+          alignItems: "center",
+          // justifyContent: "space-between",
+          background: "#eaeaea",
+        }}
+      >
         <Tabs
           value={value}
           onChange={handleChange}
@@ -82,6 +100,7 @@ export default function BasicTabs() {
             "Articles",
             "News",
             "Presentations",
+            ...dynamicTabsName,
             // "Forms",
             // "Secretarial Standards",
             // "Accounting Standards",
@@ -102,6 +121,19 @@ export default function BasicTabs() {
             />
           ))}
         </Tabs>
+        <Box sx={{ mx: 2 }}>
+          <Button
+            variant="contained"
+            size="small"
+            sx={{
+              maxWidth: "30px",
+              minWidth: "30px",
+            }}
+            onClick={() => setOpenDialogAddContentType(true)}
+          >
+            <AddIcon fontSize="small" />
+          </Button>
+        </Box>
       </Box>
       <TabPanel value={value} index={0}>
         <Section />
@@ -124,6 +156,16 @@ export default function BasicTabs() {
       <TabPanel value={value} index={6}>
         <Presentation />
       </TabPanel>
+      {contenttypeList.map((item, index) => (
+        <TabPanel value={value} index={index + 7} key={index + 5}>
+          <DynamicContent
+            contenttype={item.contenttype}
+            height={`calc(100vh - ${265}px)`}
+            value={value}
+            setValue={setValue}
+          />
+        </TabPanel>
+      ))}
       {/* <TabPanel value={value} index={7}>
         <Forms />
       </TabPanel>

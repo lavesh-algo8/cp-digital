@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../../../components/superadmin/Layout";
 import {
   Box,
@@ -17,23 +17,31 @@ import {
 import PropTypes from "prop-types";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
-import AdminsTable from "../../../components/superadmin/AdminsTable";
-import AddAdminDialog from "../../../components/superadmin/AddAdminDialog";
 
 import AddContentTypeDialog from "../../../components/superadmin/Law/AddContentTypeDialog/AddContentTypeDialog";
-
-
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAllCategory,
+  fetchContentType,
+  getDataTree,
+} from "../../../redux/superAdminReducer/superAdminAction";
+import DynamicContent from "../../../components/superadmin/DynamicTabs/DynamicContent";
 
 const ContentType = () => {
+  const { contenttypeList = [] } = useSelector((state) => state?.SuperAdmin);
+  const dispatch = useDispatch();
+  const [selectedTab, setSelectedTab] = useState(0);
+
   const [value, setValue] = React.useState(0);
-  const [openDialog, setOpenDialog] = React.useState(false);
-  const [openDialogAddContentType, setOpenDialogAddContentType] = React.useState(false);
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
-  };
+  const [openDialogAddContentType, setOpenDialogAddContentType] =
+    React.useState(false);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  const handleTabChange = (event, value) => {
+    setSelectedTab(value);
   };
 
   function TabPanel(props) {
@@ -65,13 +73,31 @@ const ContentType = () => {
     };
   }
 
+  function TabPanelContent(props) {
+    const { children, value, index } = props;
+
+    return (
+      <div hidden={value !== index}>
+        {value === index && <Typography>{children}</Typography>}
+      </div>
+    );
+  }
+
+  useEffect(() => {
+    dispatch(fetchContentType());
+    dispatch(fetchAllCategory());
+    dispatch(getDataTree());
+  }, []);
+
   return (
     <>
       <Layout>
-      <AddContentTypeDialog
-          openDialog={openDialogAddContentType}
-          setOpenDialog={setOpenDialogAddContentType}
-        />
+        {openDialogAddContentType && (
+          <AddContentTypeDialog
+            openDialog={openDialogAddContentType}
+            setOpenDialog={setOpenDialogAddContentType}
+          />
+        )}
 
         <Box sx={{ maxHeight: "100vh" }}>
           <Grid container>
@@ -83,7 +109,6 @@ const ContentType = () => {
               sx={{ display: { xs: "none", sm: "none", md: "block" } }}
             >
               <Card square={true} sx={{ minHeight: "100vh" }}>
-
                 <Box
                   sx={{
                     display: "flex",
@@ -108,8 +133,6 @@ const ContentType = () => {
                   >
                     <AddIcon fontSize="small" />
                   </Button>
-
-                  
                 </Box>
                 <Box
                   sx={{
@@ -149,7 +172,6 @@ const ContentType = () => {
                         color: "#acafb7",
                       }}
                     />
-                    
                   </Tabs>
                 </Box>
               </Card>
@@ -165,111 +187,27 @@ const ContentType = () => {
               >
                 <TabPanel value={value} index={0}>
                   <Grid container>
-                    <Grid item lg={2}>
+                    <Grid item>
                       <Typography variant="h6" fontWeight={600}>
                         ContentTypes
                       </Typography>
                     </Grid>
-                    <Grid
-                      item
-                      lg={10}
-                      sx={{ display: "flex", justifyContent: "flex-end" }}
-                    >
-                      <Box
-                        sx={{
-                          display: {
-                            xs: "none",
-                            md: "block",
-                            lg: "block",
-                            xl: "block",
-                          },
-                          mr: 3,
-                        }}
-                      >
-                        <OutlinedInput
-                          id="outlined-adornment-weight"
-                          startAdornment={
-                            <InputAdornment position="start">
-                              <SearchIcon color="maincolor" />
-                            </InputAdornment>
-                          }
-                          aria-describedby="outlined-weight-helper-text"
-                          inputProps={{
-                            "aria-label": "weight",
-                          }}
-                          notched={false}
-                          label="search"
-                          size="small"
-                          sx={{
-                            background: "white",
-                            width: "25ch",
-                            height: "35px",
-                          }}
-                          placeholder="Search...."
-                        />
-                      </Box>
-                      <Box>
-                        <Button
-                          variant="contained"
-                          sx={{
-                            height: "35px",
-                            textTransform: "none",
-                          }}
-                          onClick={handleOpenDialog}
-                        >
-                          <AddIcon fontSize="12px" />
-                          Add ContentType Items
-                        </Button>
-                        <AddAdminDialog
-                          openDialog={openDialog}
-                          setOpenDialog={setOpenDialog}
-                        />
-                      </Box>
-                      <Box
-                        sx={{
-                          ml: 3,
-                        }}
-                      >
-                        <Card
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            backgroundColor: "#192A3A",
-                            color: "white",
-                            height: "35px",
-                          }}
-                        >
-                          <Typography sx={{ pl: 2, fontSize: "15px" }}>
-                            Sort by
-                          </Typography>
-                          <FormControl sx={{ minWidth: 60 }}>
-                            <Select
-                              size="small"
-                              color="whitecol"
-                              defaultValue="All"
-                              sx={{
-                                "& .MuiOutlinedInput-notchedOutline": {
-                                  border: "none",
-                                },
-                                color: "white",
-                                fontSize: "15px",
-                                "& .MuiSvgIcon-root": {
-                                  color: "white",
-                                },
-                              }}
-                            >
-                              <MenuItem value="All">All</MenuItem>
-                              <MenuItem value="By Date Enrolled">
-                                Today
-                              </MenuItem>
-                            </Select>
-                          </FormControl>
-                        </Card>
-                      </Box>
-                    </Grid>
                   </Grid>
-                  <Box sx={{ width: "100%", overflow: "hidden", mt: 4 }}>
-                    <AdminsTable />
+                  <Box sx={{ width: "100%", overflow: "hidden", mt: 2 }}>
+                    <Tabs value={selectedTab} onChange={handleTabChange}>
+                      {contenttypeList.map((item) => (
+                        <Tab key={item._id} label={item.contenttype} />
+                      ))}
+                    </Tabs>
+                    {contenttypeList.map((item, index) => (
+                      <TabPanelContent
+                        value={selectedTab}
+                        index={index}
+                        key={index}
+                      >
+                        <DynamicContent contenttype={item.contenttype} />
+                      </TabPanelContent>
+                    ))}
                   </Box>
                 </TabPanel>
               </Card>

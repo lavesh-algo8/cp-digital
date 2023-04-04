@@ -14,6 +14,7 @@ const initialStore = {
   selectedSubHeadingDocument: {},
   categoryList: [],
   contenttypeList: [],
+  contenttypeItemList: [],
   categoryAllList: [],
   actsByCategoryList: [],
   chapterList: [],
@@ -117,11 +118,17 @@ const superAdminReducer = (state = initialStore, action) => {
         ...state,
         categoryAllList: action.payload,
       };
-      case "GET_ALLCONTENTTYPE":
-        return {
-          ...state,
-          contenttypeList: action.payload,
-        };  
+    case "GET_ALLCONTENTTYPE":
+      return {
+        ...state,
+        contenttypeList: action.payload,
+      };
+
+    case "GET_CONTENTTYPEITEM_BY_CONTENTTYPE":
+      return {
+        ...state,
+        contenttypeItemList: action.payload,
+      };
 
     case "GET_ACTS_BY_CATEGORY":
       return {

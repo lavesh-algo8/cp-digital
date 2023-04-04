@@ -58,9 +58,9 @@ function Navigation() {
           <Route path="/superadmin/laws" element={<Laws />}>
             <Route path=":category/:act/:actid" element={<Laws />} />
           </Route>
-          <Route path="/superadmin/contenttype" element={<ContentType />}>
+          {/* <Route path="/superadmin/contenttype" element={<ContentType />}>
             <Route path=":contenttype" element={<ContentType />} />
-          </Route>
+          </Route> */}
 
           <Route
             path="/superadmin/laws/:category/:act/:actid/:chapter/:chapterid"

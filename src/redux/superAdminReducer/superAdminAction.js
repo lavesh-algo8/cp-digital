@@ -585,19 +585,49 @@ export const addContentType = (formData) => async (dispatch) => {
   try {
     let config = {
       method: "post",
-     // url: `${baseUrl}/knowledgecentre/addcategory`, //Change this api to addDynamicCollectionTab
-     url: `${baseUrl}/contenttype/addDynamicCollectionTab`,
+      // url: `${baseUrl}/knowledgecentre/addcategory`, //Change this api to addDynamicCollectionTab
+      url: `${baseUrl}/contenttype/addContentType`,
       headers: {
         "content-type": "application/json",
       },
-      data: { collection_name: formData },
+      data: { contenttype_name: formData },
     };
     console.log(formData);
     const data = await axios(config);
     console.log("ContentType", data);
     dispatch(openSnackBar(data?.data?.message, "success"));
+    return data;
   } catch (e) {
     console.log(e);
+    dispatch(
+      openSnackBar(e?.response?.data?.message || "somthing went wrong", "error")
+    );
+  }
+};
+
+export const deleteContentType = (formData) => async (dispatch) => {
+  try {
+    let config = {
+      method: "post",
+      url: `${baseUrl}/contenttype/deleteContentType`,
+      headers: {
+        "content-type": "application/json",
+      },
+      data: formData,
+    };
+    console.log(formData);
+    const data = await axios(config);
+    console.log("ContentType Deleted", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+    return data;
+  } catch (e) {
+    console.log(e);
+    dispatch(
+      openSnackBar(
+        e?.response?.data?.NativeError || "somthing went wrong",
+        "error"
+      )
+    );
   }
 };
 
@@ -605,7 +635,7 @@ export const fetchContentType = () => async (dispatch) => {
   try {
     let config = {
       method: "get",
-      url: `${baseUrl}/contenttype/fetchDynamicCollectionTab`,
+      url: `${baseUrl}/contenttype/fetchContentTypes`,
       headers: {
         "content-type": "application/json",
       },
@@ -621,6 +651,87 @@ export const fetchContentType = () => async (dispatch) => {
   }
 };
 
+export const addContentTypeItem = (formData) => async (dispatch) => {
+  try {
+    let config = {
+      method: "post",
+      url: `${baseUrl}/contenttype/addContentTypeItem`,
+      headers: {
+        "content-type": "application/json",
+      },
+      data: formData,
+    };
+    console.log(formData);
+    const data = await axios(config);
+    console.log("Dynamic Added", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const fetchContentTypeItem = (formData) => async (dispatch) => {
+  try {
+    let config = {
+      method: "get",
+      url: `${baseUrl}/contenttype/fetchContentTypeItems`,
+      headers: {
+        "content-type": "application/json",
+      },
+      params: { contenttype_name: formData },
+    };
+    console.log({ contenttype_name: formData });
+    const data = await axios(config);
+    console.log(data);
+    return data;
+
+    // if (data) {
+    //   await dispatch({
+    //     type: "GET_CONTENTTYPEITEM_BY_CONTENTTYPE",
+    //     payload: data.data.result,
+    //   });
+    // }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const deleteContentTypeItem = (formData) => async (dispatch) => {
+  try {
+    let config = {
+      method: "post",
+      url: `${baseUrl}/contenttype/deleteContentTypeItem`,
+      headers: {
+        "content-type": "application/json",
+      },
+      data: formData,
+    };
+    const data = await axios(config);
+    console.log("Deleted", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const updateContentTypeItem = (formData) => async (dispatch) => {
+  try {
+    let config = {
+      method: "post",
+      url: `${baseUrl}/contenttype/updateContentTypeItemById`,
+      headers: {
+        "content-type": "application/json",
+      },
+      data: formData,
+    };
+    console.log(formData);
+    const data = await axios(config);
+    console.log("Updated item", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+  } catch (e) {
+    console.log(e);
+  }
+};
 
 export const addAct = (formData, categoryId) => async (dispatch) => {
   try {

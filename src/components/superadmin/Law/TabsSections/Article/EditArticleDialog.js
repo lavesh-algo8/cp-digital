@@ -1110,7 +1110,7 @@ const EditArticleDialog = (props) => {
                     }
                   }}
                 />
-                <Box sx={{ mt: 3 }}>
+                {/* <Box sx={{ mt: 3 }}>
                   <Box
                     sx={{
                       display: "flex",
@@ -1152,11 +1152,6 @@ const EditArticleDialog = (props) => {
                             },
                           }}
                         >
-                          {/* <input
-                              type="checkbox"
-                              checked={item.checked}
-                              onChange={(event) => onCheckedHandler(index)}
-                            /> */}
                           <Checkbox
                             checked={item.checked}
                             onChange={(event) => onCheckedHandler(index)}
@@ -1225,7 +1220,7 @@ const EditArticleDialog = (props) => {
                       </Box>
                     ))}
                   </Collapse>
-                </Box>
+                </Box> */}
               </Grid>
             </Grid>
 
