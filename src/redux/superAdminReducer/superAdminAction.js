@@ -1910,7 +1910,7 @@ export const AddSimpleCalculator = (calculatorData) => async (dispatch) => {
   try {
     let config = {
       method: "post",
-      url: `${baseUrl}/calculators/add`,
+      url: `${baseUrl}/calculators/addmultiformulacalc`,
       headers: {
         "content-type": "application/json",
       },

@@ -20,9 +20,13 @@ import "formiojs/dist/formio.builder.min.css";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AddSimpleCalculator } from "../../../redux/superAdminReducer/superAdminAction";
+import ConditionalDialog from "./TestingCal/ConditionalDialog";
 
 const AddFormula = (props) => {
   console.log(props);
+  const [conditionalFormulaDialog, setconditionalFormulaDialog] =
+    useState(false);
+
   const { formulaAdded } = useSelector((state) => state?.SuperAdmin);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -36,6 +40,7 @@ const AddFormula = (props) => {
     formulaAdded[`Formula ${props.fieldKey}`] || []
   );
   const [formulaError, setformulaError] = useState(false);
+  const [ifconditional, setifconditional] = useState(false);
 
   const onSubmitHandler = async () => {
     if (title === "") {
@@ -103,8 +108,22 @@ const AddFormula = (props) => {
     else return false;
   };
 
+  const handleFieldClick = (item) => {
+    setformulaText((prevState) => [...prevState, item]);
+    console.log(formulaText);
+  };
+
   return (
     <>
+      {/* conditional dialog */}
+      <ConditionalDialog
+        openDialog={conditionalFormulaDialog}
+        setOpenDialog={setconditionalFormulaDialog}
+        fields={props.fields}
+        setformulaText={setformulaText}
+        setifconditional={setifconditional}
+      />
+
       {/* add admins dialog */}
       <Dialog
         BackdropProps={{
@@ -158,15 +177,21 @@ const AddFormula = (props) => {
                     {props.fields
                       .filter((item) => item !== "Submit")
                       .map((item, index) => (
-                        <Box sx={{ cursor: "pointer" }}>
+                        <Box
+                          sx={{
+                            cursor: "pointer",
+                            pointerEvents: ifconditional ? "none" : "auto",
+                            color: ifconditional ? "#E0E0E0" : "auto",
+                          }}
+                        >
                           <Typography
-                            onClick={() => {
-                              setformulaText((prevState) => [
-                                ...prevState,
-                                item,
-                              ]);
-                              console.log(formulaText);
-                            }}
+                            onClick={
+                              ifconditional
+                                ? undefined
+                                : () => {
+                                    handleFieldClick(item);
+                                  }
+                            }
                             sx={{
                               py: 1,
                               px: 2,
@@ -210,7 +235,10 @@ const AddFormula = (props) => {
                         textTransform: "none",
                       }}
                       color="info"
-                      onClick={() => setformulaText([])}
+                      onClick={() => {
+                        setformulaText([]);
+                        setifconditional(false);
+                      }}
                     >
                       Clear
                     </Button>
@@ -299,15 +327,16 @@ const AddFormula = (props) => {
                       "8",
                       "9",
                       "0",
-                      "DEL",
                       "=",
-                      ">",
-                      ">=",
-                      "<",
-                      "<=",
+                      "DEL",
+                      // ">",
+                      // ">=",
+                      // "<",
+                      // "<=",
                     ].map((item, index) => (
                       <Grid item xs={12} sm={3}>
                         <Button
+                          disabled={ifconditional}
                           variant="outlined"
                           onClick={(e) => {
                             if (item === "+") {
@@ -402,6 +431,15 @@ const AddFormula = (props) => {
                       </Grid>
                     ))}
                   </Grid>
+
+                  <Box sx={{ mt: 5, px: 2 }}>
+                    <Button
+                      variant="contained"
+                      onClick={() => setconditionalFormulaDialog(true)}
+                    >
+                      Add Conditional Formula
+                    </Button>
+                  </Box>
                 </Box>
               </Grid>
             </Grid>

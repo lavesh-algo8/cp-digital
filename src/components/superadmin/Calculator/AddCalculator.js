@@ -49,9 +49,21 @@ const AddCalculator = (props) => {
     }
     console.log(schemaRef);
     const formData = { ...schemaRef.current, title };
+
+    const formulaList = [];
+    Object.entries(formulaAdded).map((formula, index) => {
+      // formulaList.push(formula{index}.join(" "))
+      console.log(formula[1].join(" "));
+      formulaList.push({
+        formulaName: `formula${index}`,
+        formula: formula[1].join(" "),
+      });
+    });
+
     const calculatorData = {
       calculator_name: title,
-      formula: formulaAdded && formulaAdded["Formula 1"].join(" "),
+      // formula: formulaAdded && formulaAdded["Formula 1"].join(" "),
+      formulaList: formulaList,
       formData: formData,
     };
     console.log(calculatorData);
@@ -61,6 +73,8 @@ const AddCalculator = (props) => {
     }
   };
 
+  console.log(formulaAdded);
+
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
   };
@@ -68,7 +82,7 @@ const AddCalculator = (props) => {
   const handleFormula = () => {
     console.log(schemaRef.current.components);
     let objArray = schemaRef.current.components;
-    var processed = objArray.map(({ label }) => ({ label }.label));
+    var processed = objArray.map(({ key }) => ({ key }.key));
     console.log(processed);
     setFields(processed);
   };
@@ -92,7 +106,7 @@ const AddCalculator = (props) => {
           openDialog={openDialog}
           setOpenDialog={setopenDialog}
           fields={fields}
-          formulaEdit={formulaAdded && "Edit"}
+          formulaEdit={Object.keys(formulaAdded).length > 0 ? "Edit" : ""}
           fieldKey={fieldKey}
         />
       )}

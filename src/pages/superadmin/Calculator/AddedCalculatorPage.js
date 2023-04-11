@@ -12,8 +12,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import CalculatorLayout from "../../../components/superadmin/Calculator/CalculatorLayout";
 import { fetchAddedCalculatorsById } from "../../../redux/superAdminReducer/superAdminAction";
-import { evaluate } from "mathjs";
+import { evaluate, log } from "mathjs";
 import DeleteCalculator from "../../../components/superadmin/Calculator/DeleteCalculator";
+import ReplayIcon from "@mui/icons-material/Replay";
 
 const AddedCalculatorPage = () => {
   const { id } = useParams();
@@ -24,6 +25,7 @@ const AddedCalculatorPage = () => {
 
   const [value, setvalue] = useState([]);
   const [result, setresult] = useState("");
+  const [alldisable, setalldisable] = useState(null);
 
   const { addedCalculatorsById = [] } = useSelector(
     (state) => state?.SuperAdmin
@@ -31,12 +33,28 @@ const AddedCalculatorPage = () => {
 
   const handleTestRun = () => {
     console.log(value);
-    const formul = addedCalculatorsById?.formula;
-
+    const formul = addedCalculatorsById?.formulaList;
     console.log(formul);
-    const result = evaluate(formul, value);
-    // alert(result);
-    setresult(result);
+
+    formul.map((formla) => {
+      evaluate(formla.formula, value);
+    });
+    console.log(value);
+    setalldisable(true);
+    setresult(40);
+    // evaluate(formul[0].formula, value);
+
+    // console.log(formul);
+    // const result = evaluate(formul, value);
+    // console.log(value.num3);
+    // if (value.num3 === undefined) {
+    // } else {
+    //   const result2 = evaluate("total2=num3+num4", value);
+    //   const result3 = evaluate("Result=total1>total2?true:false", value);
+    // }
+    // setresult(result);
+    // console.log(value);
+    // console.log(result);
   };
 
   const updateState = (index) => (e) => {
@@ -46,6 +64,9 @@ const AddedCalculatorPage = () => {
       [name]: e.target.value,
     }));
     console.log(value);
+    addedCalculatorsById?.formulaList?.map((formla) => {
+      evaluate(formla.formula, value);
+    });
   };
 
   useEffect(() => {
@@ -108,8 +129,9 @@ const AddedCalculatorPage = () => {
                 sx={{ pt: 1 }}
                 placeholder={item1?.placeholder || "Enter " + item1.label}
                 // label={item1?.label}
-                name={item1?.label}
+                name={item1?.key}
                 id={item1?.id}
+                disabled={alldisable || item1?.disabled}
                 fullWidth
                 type={
                   item1?.label?.split(" ")[0] === "Date"
@@ -119,7 +141,13 @@ const AddedCalculatorPage = () => {
                     : item1?.type
                 }
                 onChange={updateState(index1)}
-                value={value && value[item1?.label]}
+                value={value && value[item1?.key]}
+                InputProps={{
+                  style: {
+                    backgroundColor:
+                      alldisable || item1?.disabled ? "#F5F5F5" : "",
+                  },
+                }}
               />
             </Grid>
           ))}
@@ -132,30 +160,37 @@ const AddedCalculatorPage = () => {
             sx={{ px: 2 }}
             onClick={handleTestRun}
           >
-            Test Run{" "}
-            {/* {isLoading && (
-              <CircularProgress sx={{ ml: 2 }} color="inherit" size={20} />
-            )} */}
+            Test Run
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{ ml: 2, px: 2 }}
+            onClick={() => setalldisable(null)}
+          >
+            <ReplayIcon />
           </Button>
         </Box>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            mt: 4,
-          }}
-        >
-          <Typography sx={{ mr: 3 }} variant="body2">
-            Result
-          </Typography>
-          <TextField
-            size="small"
-            id="results"
-            variant="outlined"
-            value={result}
-            disabled
-          />
+        <Box sx={{ display: "none" }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              mt: 4,
+            }}
+          >
+            <Typography sx={{ mr: 3 }} variant="body2">
+              Result
+            </Typography>
+            <TextField
+              size="small"
+              id="results"
+              variant="outlined"
+              value={result}
+              disabled
+            />
+          </Box>
         </Box>
       </CalculatorLayout>
     </>
