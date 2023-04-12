@@ -14,6 +14,8 @@ import {
 } from "../../../redux/superAdminReducer/superAdminAction";
 import AddFormula from "./AddFormula";
 import EditFormula from "./EditFormula";
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
 
 const EditCalculator = () => {
   const { id } = useParams();
@@ -30,6 +32,11 @@ const EditCalculator = () => {
   const [fields, setFields] = useState([]);
   const { formulaAdded } = useSelector((state) => state?.SuperAdmin);
 
+  const [numOfDocs, setNumOfDocs] = useState(
+    addedCalculatorsById?.formulaList?.length
+  );
+  const [fieldKey, setfieldKey] = useState("");
+
   const onSubmitHandler = async () => {
     if (title === "") {
       alert("Please Enter Form Title");
@@ -41,9 +48,31 @@ const EditCalculator = () => {
     }
     console.log(schemaRef);
     const formData = { ...schemaRef.current, title };
+
+    const formulaList = [];
+
+    const propNames = Object.keys(formulaAdded);
+    // Filter out the "undefined" property
+    const filteredPropNames = propNames.filter((prop) => prop !== "undefined");
+    // Create a new object with the remaining properties
+    const filteredFoml = {};
+    filteredPropNames.forEach((prop) => {
+      filteredFoml[prop] = formulaAdded[prop];
+    });
+
+    Object.entries(filteredFoml).map((formula, index) => {
+      // formulaList.push(formula{index}.join(" "))
+      console.log(formula[1].join(" "));
+      formulaList.push({
+        formulaName: `formula${index}`,
+        formula: formula[1].join(" "),
+      });
+    });
+
     const calculatorData = {
       calculator_name: title,
       // formula: (formulaAdded && formulaAdded.join(" ")) || formula,
+      formulaList: formulaList,
       formData: formData,
     };
     console.log(calculatorData);
@@ -51,18 +80,69 @@ const EditCalculator = () => {
       editAddedCalculatorsById(calculatorData, id)
     );
     if (success) {
+      const res = await dispatch({
+        type: "REMOVE_FORMULA",
+        payload: {},
+      });
       navigate(-1);
     }
+    // const res = await dispatch({
+    //   type: "REMOVE_FORMULA",
+    //   payload: {},
+    // });
   };
 
   useEffect(() => {
     dispatch(fetchAddedCalculatorsById(id));
   }, [id]);
 
+  useEffect(() => {
+    getFormulaAndSet();
+  }, [addedCalculatorsById]);
+
+  const getFormulaAndSet = async () => {
+    addedCalculatorsById?.formulaList?.map(async (formula, index) => {
+      let result = [];
+      let tempStr = "";
+
+      for (let i = 0; i < formula?.formula.length; i++) {
+        const char = formula?.formula.charAt(i);
+        if (
+          char === "+" ||
+          char === "-" ||
+          char === "*" ||
+          char === "/" ||
+          char === "%" ||
+          char === "="
+        ) {
+          if (tempStr !== "") {
+            result.push(tempStr);
+            tempStr = "";
+          }
+          result.push(char);
+        } else {
+          tempStr += char;
+        }
+      }
+
+      if (tempStr !== "") {
+        result.push(tempStr);
+      }
+
+      const res = await dispatch({
+        type: "ADD_FORMULA",
+        payload: {
+          forumlaName: `Formula ${index + 1}`,
+          formulaText: result,
+        },
+      });
+    });
+  };
+
   const handleFormula = () => {
     console.log(schemaRef.current.components);
     let objArray = schemaRef.current.components;
-    var processed = objArray.map(({ label }) => ({ label }.label));
+    var processed = objArray.map(({ key }) => ({ key }.key));
     console.log(processed);
     setFields(processed);
   };
@@ -71,11 +151,13 @@ const EditCalculator = () => {
     <>
       <Layout>
         {openDialog && (
-          <EditFormula
+          <AddFormula
             openDialog={openDialog}
             setOpenDialog={setopenDialog}
             fields={fields}
+            formulaEdit={Object.keys(formulaAdded).length > 0 ? "Edit" : ""}
             formula={addedCalculatorsById.formula}
+            fieldKey={fieldKey}
           />
         )}
 
@@ -135,29 +217,118 @@ const EditCalculator = () => {
                 </Grid>
               </Grid>
               <Grid container>
-                <Grid item lg={8} xs={12}>
+                <Grid item lg={12} xs={12}>
                   <Typography sx={{ mt: 2, pb: 1 }}>
                     <Typography sx={{ fontWeight: "bold" }}>
                       Formula :
                     </Typography>{" "}
                     (Add the formula with field names created below)
                   </Typography>
-                  <TextField
-                    rows={3}
-                    multiline
-                    fullWidth
-                    size="small"
-                    required
-                    id="outlined-required"
-                    // label="Document Title"
-                    value={formula}
-                    onChange={(e) => setFormula(e.target.value)}
-                    disabled
-                  />
+                  {Array.from({ length: numOfDocs }, (_, key) => (
+                    <Grid container spacing={3} sx={{ mt: key === 0 ? "" : 2 }}>
+                      <Grid item lg={7} xs={12}>
+                        <TextField
+                          rows={3}
+                          multiline
+                          fullWidth
+                          size="small"
+                          required
+                          id="outlined-required"
+                          label={`Formula ${key + 1}`}
+                          value={
+                            (formulaAdded[`Formula ${key + 1}`] &&
+                              formulaAdded[`Formula ${key + 1}`].join(" ")) ||
+                            ""
+                          }
+                          onChange={(e) => setFormula(e.target.value)}
+                          disabled
+                        />
+                      </Grid>
+                      <Grid
+                        item
+                        lg={2}
+                        sx={{ display: "flex", alignItems: "center" }}
+                      >
+                        <Button
+                          variant="outlined"
+                          color={
+                            formulaAdded[`Formula ${key + 1}`]
+                              ? "info"
+                              : "error"
+                          }
+                          onClick={() => {
+                            setfieldKey(key + 1);
+                            setopenDialog(true);
+                            handleFormula();
+                            console.log(
+                              schemaRef.current.components?.filter(
+                                (item) => item.label !== "Submit"
+                              ).length === 0
+                            );
+                          }}
+                        >
+                          {formulaAdded[`Formula ${key + 1}`]
+                            ? "Edit Formula"
+                            : "Add Formula"}
+                        </Button>
+                      </Grid>
+                      <Grid
+                        item
+                        lg={3}
+                        sx={{ display: "flex", alignItems: "center" }}
+                      >
+                        {key + 1 === numOfDocs && (
+                          <>
+                            <Grid
+                              container
+                              item
+                              lg={4}
+                              style={{ padding: "0 8px" }}
+                            >
+                              <Button
+                                size="large"
+                                color="primary"
+                                variant="contained"
+                                onClick={() => setNumOfDocs(numOfDocs + 1)}
+                                disabled={numOfDocs === 4}
+                              >
+                                <AddIcon />
+                              </Button>
+                            </Grid>
+                            <Grid
+                              container
+                              item
+                              lg={6}
+                              style={{ padding: "0 8px" }}
+                            >
+                              <Button
+                                size="large"
+                                color="primary"
+                                variant="contained"
+                                onClick={async () => {
+                                  setNumOfDocs(numOfDocs - 1);
+                                  const res = await dispatch({
+                                    type: "ADD_FORMULA",
+                                    payload: {
+                                      forumlaName: `Formula ${key + 1}`,
+                                      formulaText: "",
+                                    },
+                                  });
+                                }}
+                                disabled={numOfDocs === 1}
+                              >
+                                <CloseIcon />
+                              </Button>
+                            </Grid>
+                          </>
+                        )}
+                      </Grid>
+                    </Grid>
+                  ))}
                 </Grid>
               </Grid>
             </Container>
-            <Container>
+            {/* <Container>
               <Button
                 sx={{ mt: 2 }}
                 variant="outlined"
@@ -169,7 +340,7 @@ const EditCalculator = () => {
               >
                 Edit Formula
               </Button>
-            </Container>
+            </Container> */}
             <Container maxWidth={false} sx={{ mt: 3, mb: 5 }}>
               {/* <Typography sx={{ mb: 1 }}>
                 Note : The API key and the field name should be same

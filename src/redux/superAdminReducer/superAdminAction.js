@@ -1835,7 +1835,7 @@ export const editAddedCalculatorsById =
     try {
       let config = {
         method: "put",
-        url: `${baseUrl}/calculators/editcalculator/${id}`,
+        url: `${baseUrl}/calculators/editmultiformulacalc/${id}`,
         headers: {
           "content-type": "application/json",
         },

@@ -69,6 +69,10 @@ const AddCalculator = (props) => {
     console.log(calculatorData);
     const success = await dispatch(AddSimpleCalculator(calculatorData));
     if (success) {
+      const res = await dispatch({
+        type: "REMOVE_FORMULA",
+        payload: {},
+      });
       handleDialogClose();
     }
   };

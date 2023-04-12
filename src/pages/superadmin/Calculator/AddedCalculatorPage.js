@@ -73,6 +73,10 @@ const AddedCalculatorPage = () => {
     setvalue("");
     setresult("");
     dispatch(fetchAddedCalculatorsById(id));
+    dispatch({
+      type: "REMOVE_FORMULA",
+      payload: {},
+    });
   }, [id, openDialog]);
 
   return (
