@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import FormWithSelectAndTextField from "./FormWithSelectAndTextField";
 
 const operators = [">", "<", "<=", ">="];
 
@@ -28,6 +29,9 @@ const ConditionalDialog = (props) => {
   const [conditionalop2, setconditionalop2] = useState(":");
   const [resulttrue, setresulttrue] = useState("");
   const [resultfalse, setresultfalse] = useState("");
+
+  // new added
+  const [numOfDocs, setNumOfDocs] = useState(1);
 
   const handleClick = async () => {
     props.setformulaText([
@@ -54,7 +58,8 @@ const ConditionalDialog = (props) => {
         {"Add Conditional Formula"}
       </DialogTitle>
       <DialogContent>
-        <Box sx={{ display: "flex" }}>
+        <FormWithSelectAndTextField props={props} />
+        {/* <Box sx={{ display: "flex" }}>
           <Box sx={{ width: "100%" }}>
             <Typography sx={{ mt: 2, pb: 1 }}>Select Result Field :</Typography>
             <Select
@@ -192,9 +197,9 @@ const ConditionalDialog = (props) => {
               onChange={(e) => setresultfalse(e.target.value)}
             />
           </Grid>
-        </Grid>
+        </Grid> */}
       </DialogContent>
-      <DialogActions sx={{ p: 2 }}>
+      {/* <DialogActions sx={{ p: 2 }}>
         <Button
           onClick={handleDialogClose}
           color="redcol"
@@ -213,7 +218,7 @@ const ConditionalDialog = (props) => {
         >
           Ok
         </Button>
-      </DialogActions>
+      </DialogActions> */}
     </Dialog>
   );
 };

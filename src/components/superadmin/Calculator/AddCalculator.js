@@ -88,7 +88,11 @@ const AddCalculator = (props) => {
     let objArray = schemaRef.current.components;
     var processed = objArray.map(({ key }) => ({ key }.key));
     console.log(processed);
-    setFields(processed);
+    setFields(
+      processed.filter(function (item) {
+        return item !== "submit";
+      })
+    );
   };
 
   useEffect(() => {
