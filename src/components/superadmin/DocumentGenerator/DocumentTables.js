@@ -123,7 +123,7 @@ const DocumentTables = () => {
                 }}
                 onClick={() =>
                   navigate(
-                    `/superadmin/documentGenerator/generatenewdocument/${params?.row?.procedure}/${params?.row?.procedure_id}`
+                    `/superadmin/generator/documentGenerator/generatenewdocument/${params?.row?.procedure}/${params?.row?.procedure_id}`
                   )
                 }
               >
@@ -143,7 +143,7 @@ const DocumentTables = () => {
                     payload: params?.row,
                   });
                   navigate(
-                    `/superadmin/documentGenerator/editdocument/${params?.row?.procedure}/${params?.row?.procedure_id}`
+                    `/superadmin/generator/documentGenerator/editdocument/${params?.row?.procedure}/${params?.row?.procedure_id}`
                   );
                 }}
               >
@@ -313,7 +313,7 @@ const DocumentTables = () => {
               payload: e.row,
             });
             navigate(
-              `/superadmin/documentGenerator/viewProcedure/${e.row.procedure_id}`
+              `/superadmin/generator/documentGenerator/viewProcedure/${e.row.procedure_id}`
             );
           }}
           sx={{

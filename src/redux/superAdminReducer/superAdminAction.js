@@ -1957,3 +1957,65 @@ export const getTextAnalysis = (id) => async (dispatch) => {
     console.log(e);
   }
 };
+
+// generate procedure
+
+export const CreateGenerateProcedure = (procedureData) => async (dispatch) => {
+  try {
+    let config = {
+      method: "post",
+      url: `${baseUrl}/procedures/createprocedure`,
+      headers: {
+        "content-type": "application/json",
+      },
+      data: procedureData,
+    };
+    console.log(procedureData);
+    const data = await axios(config);
+    console.log("proceduregenerated Added : ", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+    return true;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const CreateProcess = (processData) => async (dispatch) => {
+  try {
+    let config = {
+      method: "post",
+      url: `${baseUrl}/procedures/createprocess`,
+      headers: {
+        "content-type": "application/json",
+      },
+      data: processData,
+    };
+    console.log(processData);
+    const data = await axios(config);
+    console.log("process Added : ", data);
+    dispatch(openSnackBar(data?.data?.message, "success"));
+    return true;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+// export const AddProcessToProcedure = (procedureId) => async (dispatch) => {
+//   try {
+//     let config = {
+//       method: "post",
+//       url: `${baseUrl}/procedures/createprocess`,
+//       headers: {
+//         "content-type": "application/json",
+//       },
+//       data: processData,
+//     };
+//     console.log(processData);
+//     const data = await axios(config);
+//     console.log("process Added : ", data);
+//     dispatch(openSnackBar(data?.data?.message, "success"));
+//     return true;
+//   } catch (e) {
+//     console.log(e);
+//   }
+// };

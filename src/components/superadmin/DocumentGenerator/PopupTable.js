@@ -159,13 +159,13 @@ function DataRow({
 
   const onSubmit = (subsectiontitle, subheadingId) => {
     navigate(
-      `/superadmin/documentGenerator/generatedocument/${subsectiontitle}/${subheadingId}`
+      `/superadmin/generator/documentGenerator/generatedocument/${subsectiontitle}/${subheadingId}`
     );
   };
 
   const onSubmitEditDocument = (items) => {
     navigate(
-      `/superadmin/documentGenerator/editsectiondocument/${items?.title}/${items?._id}`
+      `/superadmin/generator/documentGenerator/editsectiondocument/${items?.title}/${items?._id}`
     );
     // alert(procedure);
     // alert(header);

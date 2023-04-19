@@ -78,9 +78,10 @@ const AddFormula = (props) => {
       str.startsWith("*") ||
       str.endsWith("*") ||
       str.startsWith("/") ||
-      str.endsWith("/") ||
-      str.startsWith("%") ||
-      str.endsWith("%")
+      str.endsWith("/")
+      // ||
+      // str.startsWith("%") ||
+      // str.endsWith("%")
     ) {
       return true;
     } else {
@@ -317,6 +318,7 @@ const AddFormula = (props) => {
                       "*",
                       "-",
                       "/",
+                      "%",
                       "1",
                       "2",
                       "3",
@@ -328,6 +330,9 @@ const AddFormula = (props) => {
                       "9",
                       "0",
                       "=",
+                      "min",
+                      "max",
+                      ",",
                       "DEL",
                       // ">",
                       // ">=",

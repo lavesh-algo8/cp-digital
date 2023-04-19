@@ -19,6 +19,9 @@ import GenerateDocumentTitles from "../../../pages/superadmin/DocumentGenerator/
 import AddedCalculatorPage from "../../../pages/superadmin/Calculator/AddedCalculatorPage";
 import EditCalculator from "../../superadmin/Calculator/EditCalculator";
 import Check from "../Check";
+import Generator from "../../../pages/superadmin/Generator/Generator";
+import GenerateProcedure from "../../../pages/superadmin/Generator/GenerateProcedure/GenerateProcedure";
+import ProcedureProcess from "../../../pages/superadmin/Generator/GenerateProcedure/ProcedureProcess";
 
 function Navigation() {
   return (
@@ -32,29 +35,45 @@ function Navigation() {
           <Route path="/superadmin/admins" element={<Admins />} />
           <Route path="/superadmin/dashboard" element={<Dashboard />} />
           <Route
-            path="/superadmin/documentGenerator"
+            path="/superadmin/generator/documentGenerator"
             element={<DocumentGenerator />}
           />
           <Route
-            path="/superadmin/documentGenerator/viewProcedure/:procedureId"
+            path="/superadmin/generator/documentGenerator/viewProcedure/:procedureId"
             element={<PopupTable />}
           />
           <Route
-            path="/superadmin/documentGenerator/editdocument/:procedure/:procedureId"
+            path="/superadmin/generator/documentGenerator/editdocument/:procedure/:procedureId"
             element={<EditDocument />}
           />
           <Route
-            path="/superadmin/documentGenerator/editsectiondocument/:subheadingtitle/:subheadingId"
+            path="/superadmin/generator/documentGenerator/editsectiondocument/:subheadingtitle/:subheadingId"
             element={<EditDocumentTitles />}
           />
           <Route
-            path="/superadmin/documentGenerator/generatenewdocument/:sectiontitle/:procedureId"
+            path="/superadmin/generator/documentGenerator/generatenewdocument/:sectiontitle/:procedureId"
             element={<GenerateNewDocument />}
           />
           <Route
-            path="/superadmin/documentGenerator/generatedocument/:subheadingtitle/:subheadingId"
+            path="/superadmin/generator/documentGenerator/generatedocument/:subheadingtitle/:subheadingId"
             element={<GenerateDocumentTitles />}
           />
+
+          {/*  generator */}
+
+          <Route path="/superadmin/generator" element={<Generator />} />
+          <Route
+            path="/superadmin/generator/generateprocedure"
+            element={<GenerateProcedure />}
+          />
+
+          <Route
+            path="/superadmin/generator/generateprocedure/process"
+            element={<ProcedureProcess />}
+          />
+
+          {/*  generator */}
+
           <Route path="/superadmin/laws" element={<Laws />}>
             <Route path=":category/:act/:actid" element={<Laws />} />
           </Route>

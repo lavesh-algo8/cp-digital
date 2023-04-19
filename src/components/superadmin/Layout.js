@@ -41,6 +41,7 @@ import { Logout } from "@mui/icons-material";
 import { superAdminLogout } from "../../redux/superAdminReducer/superAdminAction";
 import { useDispatch } from "react-redux";
 import NotificationBell from "../common/Notifications/NotificationBell";
+import VerticalSplitIcon from "@mui/icons-material/VerticalSplit";
 
 const drawerWidth = 120;
 
@@ -227,32 +228,6 @@ export default function Layout({ children }) {
             color: "#c9c7c7",
             display: "flex",
             flexDirection: "column",
-            borderLeft: currentLocation.startsWith("/superadmin/procedure")
-              ? "4px solid #192a3a"
-              : "",
-          }}
-          onClick={() => navigate("/superadmin/procedure/shiftingofoffice")}
-        >
-          <ListItemIcon sx={{ display: "flex", justifyContent: "center" }}>
-            <AssignmentIcon
-              sx={{
-                fontSize: 30,
-                border: 0,
-                color: currentLocation.startsWith("/superadmin/procedure")
-                  ? "#192a3a"
-                  : "",
-              }}
-            />
-          </ListItemIcon>
-        </ListItem> */}
-
-        <ListItem
-          button
-          sx={{
-            mt: 3,
-            color: "#c9c7c7",
-            display: "flex",
-            flexDirection: "column",
             borderLeft: currentLocation.startsWith(
               "/superadmin/documentGenerator"
             )
@@ -269,6 +244,32 @@ export default function Layout({ children }) {
                 color: currentLocation.startsWith(
                   "/superadmin/documentGenerator"
                 )
+                  ? "#192a3a"
+                  : "",
+              }}
+            />
+          </ListItemIcon>
+        </ListItem> */}
+
+        <ListItem
+          button
+          sx={{
+            mt: 3,
+            color: "#c9c7c7",
+            display: "flex",
+            flexDirection: "column",
+            borderLeft: currentLocation.startsWith("/superadmin/generator")
+              ? "4px solid #192a3a"
+              : "",
+          }}
+          onClick={() => navigate("/superadmin/generator/generateprocedure")}
+        >
+          <ListItemIcon sx={{ display: "flex", justifyContent: "center" }}>
+            <DifferenceIcon
+              sx={{
+                fontSize: 30,
+                border: 0,
+                color: currentLocation.startsWith("/superadmin/generator")
                   ? "#192a3a"
                   : "",
               }}
