@@ -36,6 +36,8 @@ const initialStore = {
   addedCalculatorsById: [],
   formulaAdded: {},
   textAnalysisType: "",
+  listOfProcedures: [],
+  selectedProcedure: {},
 };
 
 const superAdminReducer = (state = initialStore, action) => {
@@ -263,6 +265,18 @@ const superAdminReducer = (state = initialStore, action) => {
       return {
         ...state,
         textAnalysisType: action.payload,
+      };
+
+    case "GET_PROCEDURES":
+      return {
+        ...state,
+        listOfProcedures: action.payload,
+      };
+
+    case "SET_SELECT_PROCEDURE":
+      return {
+        ...state,
+        selectedProcedure: action.payload,
       };
 
     // case "UPDATE_DOCUMENT":

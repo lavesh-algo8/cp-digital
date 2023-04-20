@@ -21,27 +21,13 @@ import { Controller, useForm } from "react-hook-form";
 import AddIcon from "@mui/icons-material/Add";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  CreateProcess,
-  addDocument,
+  CreateGenerateProcedure,
+  editGenerateProcedure,
   fetchCategory,
-  getDocuments,
+  fetchGenerateProcedure,
 } from "../../../../redux/superAdminReducer/superAdminAction";
 
-const numberOfDays = [
-  { no: "01" },
-  { no: "02" },
-  { no: "03" },
-  { no: "04" },
-  { no: "05" },
-  { no: "06" },
-  { no: "07" },
-  { no: "08" },
-  { no: "09" },
-  { no: "10" },
-  { no: "11" },
-];
-
-const AddProcess = (props) => {
+const EditProcedure = (props) => {
   const { categoryList } = useSelector((state) => state?.SuperAdmin);
 
   const dispatch = useDispatch();
@@ -49,32 +35,75 @@ const AddProcess = (props) => {
     props.setOpenDialog(false); // Use the prop.
   };
   const [numOfDocs, setNumOfDocs] = useState(1);
-  const [newDocumentData, setNewDocumentData] = useState({});
+  const [newDocumentData, setNewDocumentData] = useState({
+    law: props.selectedProcedure?.law_name?.category,
+    act: props.selectedProcedure?.act_name?.act,
+    procedure: props.selectedProcedure?.procedure,
+  });
   const [headings, setHeadings] = useState({});
+  console.log(categoryList);
+
+  console.log(
+    categoryList?.filter((cat) => cat.category === newDocumentData.law)[0]?.acts
+  );
+
+  const ActList = categoryList?.filter(
+    (cat) => cat.category === newDocumentData.law
+  )[0]?.acts;
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    console.log({
+    console.log(newDocumentData);
+    let procedureData = {
       ...newDocumentData,
-    });
-    let finalData = {
-      ...newDocumentData,
+      type: "",
+      processidarr: [],
     };
-    console.log(finalData);
-    // dispatch(CreateProcess(finalData));
-    setNewDocumentData({});
+    console.log(procedureData);
+    const procedureId = props?.selectedProcedure?.procedure_id;
+    await dispatch(editGenerateProcedure(procedureData, procedureId));
+    await dispatch(fetchGenerateProcedure());
     handleDialogClose();
   };
 
   const onChange = (e) => {
-    setNewDocumentData({ ...newDocumentData, [e.target.name]: e.target.value });
+    console.log(e.target.name);
+    if (e.target.name === "law") {
+      console.log("in");
+      setNewDocumentData({
+        ...newDocumentData,
+        act: "",
+        [e.target.name]: e.target.value,
+      });
+    } else {
+      setNewDocumentData({
+        ...newDocumentData,
+        [e.target.name]: e.target.value,
+      });
+    }
   };
 
-  const access = ["Procedures", "Calculators", "Content mangement"];
+  //   useEffect(() => {
+  //     dispatch(fetchCategory());
+  //   }, []);
 
   useEffect(() => {
-    dispatch(fetchCategory());
-  }, []);
+    if (props) {
+      console.log(props);
+      setNewDocumentData({
+        ...newDocumentData,
+        law: props.selectedProcedure?.law_name?.category,
+      });
+      setNewDocumentData({
+        ...newDocumentData,
+        act: props.selectedProcedure?.act_name?.act,
+      });
+      setNewDocumentData({
+        ...newDocumentData,
+        procedure: props.selectedProcedure?.procedure,
+      });
+    }
+  }, [props]);
 
   return (
     <>
@@ -90,7 +119,7 @@ const AddProcess = (props) => {
         fullWidth
         maxWidth="md"
       >
-        <DialogTitle fontWeight={600}>Add Process</DialogTitle>
+        <DialogTitle fontWeight={600}>Edit Procedure</DialogTitle>
         <Box position="absolute" top={5} right={10}>
           <IconButton onClick={handleDialogClose}>
             <CloseIcon />
@@ -108,16 +137,17 @@ const AddProcess = (props) => {
               ></Box>
 
               <Box>
-                <Typography sx={{ mb: 1 }}>Process Name</Typography>
+                <Typography sx={{ mb: 1 }}>Procedure Name</Typography>
                 <TextField
                   size="small"
-                  id="process"
-                  placeholder="Process Name"
+                  id="procedure"
+                  //   label="Procedure"
+                  placeholder="Procedure Name"
                   variant="outlined"
                   fullWidth
-                  name="process"
+                  name="procedure"
                   onChange={onChange}
-                  value={newDocumentData.process}
+                  value={newDocumentData.procedure}
                   required
                 />
               </Box>
@@ -125,55 +155,54 @@ const AddProcess = (props) => {
               <Box sx={{ display: "flex", mt: 3 }}>
                 <FormControl fullWidth size="small">
                   <Typography sx={{ mb: 1 }} id="demo-simple-select-label">
-                    Total No. of Days
-                  </Typography>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="numofdays"
-                    name="numofdays"
-                    onChange={onChange}
-                    value={newDocumentData.numofdays}
-                    required
-                    displayEmpty
-                    renderValue={(value) =>
-                      value || (
-                        <Box sx={{ color: "gray" }}>Select No. of Days</Box>
-                      )
-                    }
-                  >
-                    {numberOfDays.map((item, index) => (
-                      <MenuItem key={item.no} value={item.no}>
-                        {item.no}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-
-                <FormControl fullWidth size="small" sx={{ ml: 2 }}>
-                  <Typography sx={{ mb: 1 }} id="demo-simple-select-label">
-                    Documents
+                    Law
                   </Typography>
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    name="documents"
+                    // label="Law"
+                    name="law"
                     onChange={onChange}
-                    value={newDocumentData.documents}
-                    // required
+                    value={newDocumentData.law}
+                    required
                     displayEmpty
                     renderValue={(value) =>
-                      value || (
-                        <Box sx={{ color: "gray" }}>Select Documents</Box>
-                      )
+                      value || <Box sx={{ color: "gray" }}>Select Law</Box>
                     }
                   >
-                    {categoryList
-                      ?.filter((cat) => cat.category === newDocumentData.law)[0]
-                      ?.acts?.map((desig, index) => (
-                        <MenuItem key={desig.act} value={desig.act}>
-                          {desig.act}
-                        </MenuItem>
-                      ))}
+                    {categoryList.map((desig, index) => (
+                      <MenuItem key={desig.category} value={desig.category}>
+                        {desig.category}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl fullWidth size="small" sx={{ ml: 2 }}>
+                  <Typography sx={{ mb: 1 }} id="demo-simple-select-label">
+                    Act
+                  </Typography>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    // label="Act"
+                    name="act"
+                    onChange={onChange}
+                    value={newDocumentData.act}
+                    required
+                    displayEmpty
+                    renderValue={(value) => {
+                      if (value) {
+                        return value;
+                      } else {
+                        return <Box sx={{ color: "gray" }}>Select Act</Box>;
+                      }
+                    }}
+                  >
+                    {ActList.map((item, index) => (
+                      <MenuItem key={item.act} value={item.act}>
+                        {item.act}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Box>
@@ -301,7 +330,7 @@ const AddProcess = (props) => {
                   }}
                   //   fullWidth
                 >
-                  Save
+                  Update
                 </Button>
               </Box>
             </form>
@@ -313,4 +342,4 @@ const AddProcess = (props) => {
   );
 };
 
-export default AddProcess;
+export default EditProcedure;

@@ -1973,7 +1973,63 @@ export const CreateGenerateProcedure = (procedureData) => async (dispatch) => {
     console.log(procedureData);
     const data = await axios(config);
     console.log("proceduregenerated Added : ", data);
-    dispatch(openSnackBar(data?.data?.message, "success"));
+    dispatch(
+      openSnackBar(
+        data?.data?.message || "Procedure created successfully",
+        "success"
+      )
+    );
+    return true;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const editGenerateProcedure =
+  (formData, procedureId) => async (dispatch) => {
+    try {
+      let config = {
+        method: "put",
+        url: `${baseUrl}/procedures/editprocedure/${procedureId}`,
+        headers: {
+          "content-type": "application/json",
+        },
+        data: formData,
+      };
+
+      console.log(config);
+
+      const resp = await axios(config);
+      console.log(resp);
+      if (resp?.data.message === "Procedure updated successfully") {
+        dispatch(openSnackBar("Procedure updated successfully", "success"));
+        return true;
+      } else {
+        dispatch(openSnackBar(resp?.data.message, "error"));
+        return false;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+export const fetchGenerateProcedure = (procedureData) => async (dispatch) => {
+  try {
+    let config = {
+      method: "get",
+      url: `${baseUrl}/procedures/fetchall`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const data = await axios(config);
+    console.log(data);
+    console.log("Procedure : ", data.data.result);
+
+    await dispatch({
+      type: "GET_PROCEDURES",
+      payload: data.data.result,
+    });
     return true;
   } catch (e) {
     console.log(e);

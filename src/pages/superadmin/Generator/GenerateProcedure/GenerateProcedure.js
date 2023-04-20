@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Generator from "../Generator";
 import {
   Box,
@@ -16,9 +16,22 @@ import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import ProcedureTable from "../../../../components/superadmin/Generator/GenerateProcedure/ProcedureTable";
 import AddProcedure from "../../../../components/superadmin/Generator/GenerateProcedure/AddProcedure";
+import {
+  fetchCategory,
+  fetchGenerateProcedure,
+} from "../../../../redux/superAdminReducer/superAdminAction";
+import { useDispatch } from "react-redux";
+import EditProcedure from "../../../../components/superadmin/Generator/GenerateProcedure/EditProcedure";
 
 const GenerateProcedure = () => {
   const [openDialog, setOpenDialog] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchGenerateProcedure());
+    dispatch(fetchCategory());
+  }, [openDialog]);
+
   return (
     <>
       <Generator>

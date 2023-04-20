@@ -21,17 +21,20 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ProcessTable from "../../../../components/superadmin/Generator/GenerateProcedure/ProcessTable";
 import AddProcess from "../../../../components/superadmin/Generator/GenerateProcedure/AddProcess";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const ProcedureProcess = () => {
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
+  const { selectedProcedure = {} } = useSelector((state) => state?.SuperAdmin);
+
   return (
     <>
       <Generator>
         <Box sx={{ width: "100%", p: 3 }}>
           <Grid container>
             <Grid item lg={4}>
-              <Box sx={{ display: "flex" }}>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Button
                   variant="contained"
                   size="small"
@@ -48,7 +51,7 @@ const ProcedureProcess = () => {
                 </Button>
 
                 <Typography variant="h6" fontWeight={600} sx={{ ml: 3 }}>
-                  Procedure Name | Process
+                  {selectedProcedure?.procedure} | Process
                 </Typography>
               </Box>
             </Grid>

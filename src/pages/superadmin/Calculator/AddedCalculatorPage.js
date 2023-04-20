@@ -37,6 +37,7 @@ const AddedCalculatorPage = () => {
     console.log(formul);
 
     formul.map((formla) => {
+      console.log(formla.formula);
       evaluate(formla.formula, value);
     });
     console.log(value);

@@ -181,22 +181,19 @@ const AddProcedure = (props) => {
                     displayEmpty
                     renderValue={(value) => {
                       if (value) {
-                        return (
-                          // companyUsers.filter(function (el) {
-                          //   return el?._id === value;
-                          // })[0]?.first_name
-                          categoryList
-                            ?.filter(
-                              (cat) => cat.category === newDocumentData.law
-                            )[0]
-                            ?.acts?.map((desig, index) => {
+                        return categoryList
+                          ?.filter(
+                            (cat) => cat.category === newDocumentData.law
+                          )[0]
+                          ?.acts?.map((desig, index) => {
+                            if (desig?._id === value) {
                               return desig?.act;
-                            })
-                        );
+                            } else {
+                              return "";
+                            }
+                          });
                       } else {
-                        return (
-                          <Box sx={{ color: "gray" }}>Select Team Leader</Box>
-                        );
+                        return <Box sx={{ color: "gray" }}>Select Act </Box>;
                       }
                     }}
                   >

@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const ProcessTable = () => {
   const dispatch = useDispatch();
-  const { listOfAdmins = [] } = useSelector((state) => state?.SuperAdmin);
+  const { selectedProcedure = {} } = useSelector((state) => state?.SuperAdmin);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState({});
@@ -35,45 +35,6 @@ const ProcessTable = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  //   const deleteAdminById = async (id) => {
-
-  //     const confirm = window.confirm(
-  //       "Are you sure you want to delete this admin?"
-  //     );
-  //     if (confirm) {
-  //       const resp = await dispatch(deleteAdmin(id));
-  //       if (resp) dispatch(getAdminList());
-  //     }
-  //   };
-
-  //   useEffect(() => {
-  //     dispatch(getAdminList());
-  //   }, [localStorage.getItem("token")]);
-
-  const rows = [
-    {
-      id: "1",
-      id_no: "CORPROA1",
-      admin: "Rahul",
-      email: "rahul@corpro.com",
-      designation: "Executive",
-    },
-    {
-      id: "2",
-      id_no: "CORPROA1",
-      admin: "Rahul",
-      email: "rahul@corpro.com",
-      designation: "Executive",
-    },
-    {
-      id: "3",
-      id_no: "CORPROA1",
-      admin: "Rahul",
-      email: "rahul@corpro.com",
-      designation: "Executive",
-    },
-  ];
 
   const columns = [
     {

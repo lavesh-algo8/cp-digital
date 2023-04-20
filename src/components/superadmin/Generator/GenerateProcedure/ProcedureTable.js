@@ -17,13 +17,20 @@ import DeleteIcon from "@mui/icons-material/Delete";
 // import EditAdminDialog from "./EditAdminDialog";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
+import EditProcedure from "./EditProcedure";
+import DeleteProcedure from "./DeleteProcedure";
+import { useNavigate } from "react-router-dom";
 
 const ProcedureTable = () => {
   const dispatch = useDispatch();
-  const { listOfAdmins = [] } = useSelector((state) => state?.SuperAdmin);
+  const navigate = useNavigate();
+  const { listOfProcedures = [] } = useSelector((state) => state?.SuperAdmin);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openDialog, setOpenDialog] = React.useState(false);
-  const [selectedAdmin, setSelectedAdmin] = useState({});
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openDialogDelete, setOpenDialogDelete] = useState(false);
+
+  const [selectedProcedure, setSelectedProcedure] = useState({});
 
   const open = Boolean(anchorEl);
   const handleOpenDialog = () => {
@@ -36,45 +43,6 @@ const ProcedureTable = () => {
     setAnchorEl(null);
   };
 
-  //   const deleteAdminById = async (id) => {
-
-  //     const confirm = window.confirm(
-  //       "Are you sure you want to delete this admin?"
-  //     );
-  //     if (confirm) {
-  //       const resp = await dispatch(deleteAdmin(id));
-  //       if (resp) dispatch(getAdminList());
-  //     }
-  //   };
-
-  //   useEffect(() => {
-  //     dispatch(getAdminList());
-  //   }, [localStorage.getItem("token")]);
-
-  const rows = [
-    {
-      id: "1",
-      id_no: "CORPROA1",
-      admin: "Rahul",
-      email: "rahul@corpro.com",
-      designation: "Executive",
-    },
-    {
-      id: "2",
-      id_no: "CORPROA1",
-      admin: "Rahul",
-      email: "rahul@corpro.com",
-      designation: "Executive",
-    },
-    {
-      id: "3",
-      id_no: "CORPROA1",
-      admin: "Rahul",
-      email: "rahul@corpro.com",
-      designation: "Executive",
-    },
-  ];
-
   const columns = [
     {
       field: "id",
@@ -82,17 +50,22 @@ const ProcedureTable = () => {
       flex: 0.5,
     },
     {
-      field: "procedure_name",
+      field: "procedure",
       headerName: "Procedure Name",
       flex: 1.3,
     },
     {
-      field: "law",
+      field: "law_name",
       headerName: "Law",
+      valueGetter: (params) => params?.row?.law_name?.category,
       flex: 0.8,
     },
     {
-      field: "act",
+      field: "act_name",
+      valueGetter: (params) =>
+        params?.row?.act_name?.act?.length > 40
+          ? params?.row?.act_name?.act?.slice(0, 40) + "...."
+          : params?.row?.act_name?.act?.slice(0, 40),
       headerName: "Act",
       flex: 0.8,
     },
@@ -104,15 +77,18 @@ const ProcedureTable = () => {
         <GridActionsCellItem
           onClick={() => {
             console.log(params);
-            setSelectedAdmin(params.row);
-            handleOpenDialog();
+            setSelectedProcedure(params.row);
+            setOpenEditDialog(true);
           }}
           icon={<EditIcon />}
           label="Edit"
           showInMenu
         />,
         <GridActionsCellItem
-          //   onClick={() => deleteAdminById(params.row._id)}
+          onClick={() => {
+            setSelectedProcedure(params.row);
+            setOpenDialogDelete(true);
+          }}
           icon={<DeleteIcon />}
           label="Delete"
           showInMenu
@@ -123,6 +99,21 @@ const ProcedureTable = () => {
 
   return (
     <>
+      {openEditDialog && (
+        <EditProcedure
+          openDialog={openEditDialog}
+          setOpenDialog={setOpenEditDialog}
+          selectedProcedure={selectedProcedure}
+        />
+      )}
+
+      {openDialogDelete && (
+        <DeleteProcedure
+          openDialog={openDialogDelete}
+          setOpenDialog={setOpenDialogDelete}
+          procedureDetails={selectedProcedure}
+        />
+      )}
       {/* actio menu : edit/delete */}
       <Menu
         id="basic-menu"
@@ -154,9 +145,23 @@ const ProcedureTable = () => {
         <DataGrid
           hideFooter
           rowsPerPageOptions={[]}
-          rows={[]}
+          rows={
+            listOfProcedures?.map((doc, index) => ({
+              id: index + 1,
+              ...doc,
+            })) || []
+          }
           columns={columns}
           disableSelectionOnClick
+          onRowClick={(e) => {
+            dispatch({
+              type: "SET_SELECT_PROCEDURE",
+              payload: e.row,
+            });
+            navigate(
+              `/superadmin/generator/generateprocedure/${e.row.procedure_id}/process`
+            );
+          }}
           sx={{
             boxShadow: 0,
             border: 0,

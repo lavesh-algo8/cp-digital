@@ -68,7 +68,7 @@ function Navigation() {
           />
 
           <Route
-            path="/superadmin/generator/generateprocedure/process"
+            path="/superadmin/generator/generateprocedure/:procedureId/process"
             element={<ProcedureProcess />}
           />
 
