@@ -405,7 +405,7 @@ export default function Layout({ children }) {
           >
             <Avatar
               variant="rounded"
-              src="arushi.png"
+              src=""
               sx={{
                 height: 35,
                 width: 40,

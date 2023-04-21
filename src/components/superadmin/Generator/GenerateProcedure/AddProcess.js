@@ -58,10 +58,12 @@ const AddProcess = (props) => {
       ...newDocumentData,
     });
     let finalData = {
-      ...newDocumentData,
+      process: newDocumentData.process,
+      numofdays: parseInt(newDocumentData.numofdays),
+      templateidarr: [],
     };
     console.log(finalData);
-    // dispatch(CreateProcess(finalData));
+    dispatch(CreateProcess(finalData, props.procedureId));
     setNewDocumentData({});
     handleDialogClose();
   };

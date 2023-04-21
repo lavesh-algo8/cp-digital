@@ -63,10 +63,10 @@ const CalculatorLayout = ({ children, ids }) => {
 
   useEffect(() => {
     dispatch(fetchAddedCalculators());
-    dispatch({
-      type: "ADD_FORMULA",
-      payload: { formulaText: "" },
-    });
+    // dispatch({
+    //   type: "ADD_FORMULA",
+    //   payload: { formulaText: "" },
+    // });
   }, [openDialog]);
 
   useEffect(() => {

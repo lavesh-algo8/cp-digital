@@ -213,11 +213,11 @@ export const getDocuments = () => async (dispatch) => {
     };
     const data = await axios(config);
     console.log(data);
-    console.log("Procedure : ", data.data.result);
+    console.log("Procedure : ", data.data);
 
     await dispatch({
       type: "GET_DOCUMENTS",
-      payload: data.data.result,
+      payload: data.data,
     });
   } catch (e) {
     console.log(e);
@@ -1922,6 +1922,7 @@ export const AddSimpleCalculator = (calculatorData) => async (dispatch) => {
     dispatch(openSnackBar(data?.data?.message, "success"));
     return true;
   } catch (e) {
+    dispatch(openSnackBar("some error occured", "error"));
     console.log(e);
   }
 };
@@ -2024,11 +2025,11 @@ export const fetchGenerateProcedure = (procedureData) => async (dispatch) => {
     };
     const data = await axios(config);
     console.log(data);
-    console.log("Procedure : ", data.data.result);
+    console.log("Procedure : ", data.data);
 
     await dispatch({
       type: "GET_PROCEDURES",
-      payload: data.data.result,
+      payload: data.data,
     });
     return true;
   } catch (e) {
@@ -2036,11 +2037,11 @@ export const fetchGenerateProcedure = (procedureData) => async (dispatch) => {
   }
 };
 
-export const CreateProcess = (processData) => async (dispatch) => {
+export const CreateProcess = (processData, procedureId) => async (dispatch) => {
   try {
     let config = {
       method: "post",
-      url: `${baseUrl}/procedures/createprocess`,
+      url: `${baseUrl}/processes/createprocess`,
       headers: {
         "content-type": "application/json",
       },
@@ -2048,30 +2049,91 @@ export const CreateProcess = (processData) => async (dispatch) => {
     };
     console.log(processData);
     const data = await axios(config);
-    console.log("process Added : ", data);
-    dispatch(openSnackBar(data?.data?.message, "success"));
+    console.log("process Added : ", data.data);
+    console.log(data.data._id);
+    if (data) {
+      const processId = data.data._id;
+      let config2 = {
+        method: "post",
+        url: `${baseUrl}/procedures/addprocesstoprocedure/${procedureId}`,
+        headers: {
+          "content-type": "application/json",
+        },
+        data: {
+          processidarr: [processId],
+        },
+      };
+      console.log(config2);
+      const data2 = await axios(config2);
+      console.log("process assigned to procedure : ", data2);
+      dispatch(
+        openSnackBar(
+          data2?.data?.message || "process ceated successfully",
+          "success"
+        )
+      );
+      return true;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const fetchProcessesByProcedure = (procedureId) => async (dispatch) => {
+  try {
+    let config = {
+      method: "get",
+      url: `${baseUrl}/procedures/fetchprocessesofprocedure/${procedureId}`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const data = await axios(config);
+    console.log(data);
+    console.log("Specific Processes By Procedure : ", data.data);
+
+    await dispatch({
+      type: "GET_PROCESSES_BY_PROCEDUREID",
+      payload: data.data,
+    });
     return true;
   } catch (e) {
     console.log(e);
   }
 };
 
-// export const AddProcessToProcedure = (procedureId) => async (dispatch) => {
-//   try {
-//     let config = {
-//       method: "post",
-//       url: `${baseUrl}/procedures/createprocess`,
-//       headers: {
-//         "content-type": "application/json",
-//       },
-//       data: processData,
-//     };
-//     console.log(processData);
-//     const data = await axios(config);
-//     console.log("process Added : ", data);
-//     dispatch(openSnackBar(data?.data?.message, "success"));
-//     return true;
-//   } catch (e) {
-//     console.log(e);
-//   }
-// };
+export const deleteProcess = (processId) => async (dispatch) => {
+  try {
+    let config = {
+      method: "delete",
+      url: `${baseUrl}/processes/deleteprocess/${processId}`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const data = await axios(config);
+    console.log("Process Deleted", data);
+    dispatch(openSnackBar(data?.data?.message || "Process deleted", "success"));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const updateProcess = (formData, processId) => async (dispatch) => {
+  try {
+    let config = {
+      method: "put",
+      url: `${baseUrl}/processes/updateprocess/${processId}`,
+      headers: {
+        "content-type": "application/json",
+      },
+      data: formData,
+    };
+    console.log(config);
+    const data = await axios(config);
+    console.log(data);
+    dispatch(openSnackBar("Process updated successfully", "success"));
+  } catch (e) {
+    console.log(e);
+  }
+};

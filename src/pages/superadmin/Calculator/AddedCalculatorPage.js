@@ -76,7 +76,6 @@ const AddedCalculatorPage = () => {
     dispatch(fetchAddedCalculatorsById(id));
     dispatch({
       type: "REMOVE_FORMULA",
-      payload: {},
     });
   }, [id, openDialog]);
 

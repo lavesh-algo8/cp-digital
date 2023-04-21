@@ -22,6 +22,7 @@ import Check from "../Check";
 import Generator from "../../../pages/superadmin/Generator/Generator";
 import GenerateProcedure from "../../../pages/superadmin/Generator/GenerateProcedure/GenerateProcedure";
 import ProcedureProcess from "../../../pages/superadmin/Generator/GenerateProcedure/ProcedureProcess";
+import TemplateGenerator from "../../../pages/superadmin/Generator/Template/TemplateGenerator";
 
 function Navigation() {
   return (
@@ -73,6 +74,13 @@ function Navigation() {
           />
 
           {/*  generator */}
+
+          {/* template */}
+          <Route
+            path="/superadmin/generator/templateGenerator"
+            element={<TemplateGenerator />}
+          />
+          {/* template */}
 
           <Route path="/superadmin/laws" element={<Laws />}>
             <Route path=":category/:act/:actid" element={<Laws />} />

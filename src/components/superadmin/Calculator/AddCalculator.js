@@ -50,15 +50,33 @@ const AddCalculator = (props) => {
     console.log(schemaRef);
     const formData = { ...schemaRef.current, title };
 
-    const formulaList = [];
-    Object.entries(formulaAdded).map((formula, index) => {
-      // formulaList.push(formula{index}.join(" "))
-      console.log(formula[1].join(" "));
-      formulaList.push({
-        formulaName: `formula${index}`,
-        formula: formula[1].join(" "),
-      });
-    });
+    // const formulaList = [];
+    // Object.entries(formulaAdded).map((formula, index) => {
+    //   console.log(formula[1]);
+    //   console.log(formula[1].join(" "));
+    //   formulaList.push({
+    //     formulaName: `formula${index}`,
+    //     formula: formula[1].join(" "),
+    //   });
+    // });
+
+    const formulaList =
+      Object.keys(formulaAdded).length === 0
+        ? []
+        : Object.entries(formulaAdded).map((formula, index) => {
+            if (Array.isArray(formula[1])) {
+              console.log(formula[1].join(" "));
+              return {
+                formulaName: `formula${index}`,
+                formula: formula[1].join(" "),
+              };
+            } else {
+              return {
+                formulaName: `formula${index}`,
+                formula: `Error: formula value is not an array: ${formula[1]}`,
+              };
+            }
+          });
 
     const calculatorData = {
       calculator_name: title,
@@ -71,7 +89,6 @@ const AddCalculator = (props) => {
     if (success) {
       const res = await dispatch({
         type: "REMOVE_FORMULA",
-        payload: {},
       });
       handleDialogClose();
     }

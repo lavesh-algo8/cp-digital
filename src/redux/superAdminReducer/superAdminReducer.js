@@ -38,6 +38,7 @@ const initialStore = {
   textAnalysisType: "",
   listOfProcedures: [],
   selectedProcedure: {},
+  listOfProcesses: [],
 };
 
 const superAdminReducer = (state = initialStore, action) => {
@@ -277,6 +278,12 @@ const superAdminReducer = (state = initialStore, action) => {
       return {
         ...state,
         selectedProcedure: action.payload,
+      };
+
+    case "GET_PROCESSES_BY_PROCEDUREID":
+      return {
+        ...state,
+        listOfProcesses: action.payload,
       };
 
     // case "UPDATE_DOCUMENT":

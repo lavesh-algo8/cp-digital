@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Generator from "../Generator";
 import {
   Box,
@@ -20,13 +20,22 @@ import AddProcedure from "../../../../components/superadmin/Generator/GeneratePr
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ProcessTable from "../../../../components/superadmin/Generator/GenerateProcedure/ProcessTable";
 import AddProcess from "../../../../components/superadmin/Generator/GenerateProcedure/AddProcess";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProcessesByProcedure } from "../../../../redux/superAdminReducer/superAdminAction";
 
 const ProcedureProcess = () => {
   const navigate = useNavigate();
+  const params = useParams();
+  const dispatch = useDispatch();
   const [openDialog, setOpenDialog] = useState(false);
   const { selectedProcedure = {} } = useSelector((state) => state?.SuperAdmin);
+
+  console.log(params);
+
+  useEffect(() => {
+    dispatch(fetchProcessesByProcedure(params.procedureId));
+  }, [params]);
 
   return (
     <>
@@ -108,6 +117,7 @@ const ProcedureProcess = () => {
                 <AddProcess
                   openDialog={openDialog}
                   setOpenDialog={setOpenDialog}
+                  procedureId={selectedProcedure.procedure_id}
                 />
               </Box>
               <Box

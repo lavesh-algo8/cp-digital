@@ -17,13 +17,19 @@ import DeleteIcon from "@mui/icons-material/Delete";
 // import EditAdminDialog from "./EditAdminDialog";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
+import DeleteProcess from "./DeleteProcess";
+import EditProcess from "./EditProcess";
 
 const ProcessTable = () => {
   const dispatch = useDispatch();
-  const { selectedProcedure = {} } = useSelector((state) => state?.SuperAdmin);
+  const { listOfProcesses = [] } = useSelector((state) => state?.SuperAdmin);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState({});
+  const [openDialogDelete, setOpenDialogDelete] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+
+  const [selectedProcessDetails, setSelectedProcessDetails] = useState({});
 
   const open = Boolean(anchorEl);
   const handleOpenDialog = () => {
@@ -43,14 +49,15 @@ const ProcessTable = () => {
       flex: 0.5,
     },
     {
-      field: "procedure_name",
+      field: "process",
       headerName: "Process Name",
       flex: 1.3,
     },
     {
-      field: "days",
+      field: "numOfDays",
       headerName: "Total No. Of Days",
       flex: 0.8,
+      valueGetter: (params) => String(params?.row?.numOfDays)?.padStart(2, "0"),
     },
     {
       field: "documents",
@@ -65,15 +72,18 @@ const ProcessTable = () => {
         <GridActionsCellItem
           onClick={() => {
             console.log(params);
-            setSelectedAdmin(params.row);
-            handleOpenDialog();
+            setSelectedProcessDetails(params.row);
+            setOpenEditDialog(true);
           }}
           icon={<EditIcon />}
           label="Edit"
           showInMenu
         />,
         <GridActionsCellItem
-          //   onClick={() => deleteAdminById(params.row._id)}
+          onClick={() => {
+            setSelectedProcessDetails(params.row);
+            setOpenDialogDelete(true);
+          }}
           icon={<DeleteIcon />}
           label="Delete"
           showInMenu
@@ -84,6 +94,21 @@ const ProcessTable = () => {
 
   return (
     <>
+      {openEditDialog && (
+        <EditProcess
+          openDialog={openEditDialog}
+          setOpenDialog={setOpenEditDialog}
+          processDetails={selectedProcessDetails}
+        />
+      )}
+
+      {openDialogDelete && (
+        <DeleteProcess
+          openDialog={openDialogDelete}
+          setOpenDialog={setOpenDialogDelete}
+          processDetails={selectedProcessDetails}
+        />
+      )}
       {/* actio menu : edit/delete */}
       <Menu
         id="basic-menu"
@@ -115,7 +140,12 @@ const ProcessTable = () => {
         <DataGrid
           hideFooter
           rowsPerPageOptions={[]}
-          rows={[]}
+          rows={
+            listOfProcesses?.map((doc, index) => ({
+              id: index + 1,
+              ...doc,
+            })) || []
+          }
           columns={columns}
           disableSelectionOnClick
           sx={{

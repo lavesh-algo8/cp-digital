@@ -65,12 +65,16 @@ const Generator = ({ children }) => {
                 >
                   {[
                     {
-                      text: "Templates",
+                      text: "Old Procedure",
                       location: "/superadmin/generator/documentGenerator",
                     },
                     {
                       text: "Procedure",
                       location: "/superadmin/generator/generateprocedure",
+                    },
+                    {
+                      text: "Templates",
+                      location: "/superadmin/generator/templateGenerator",
                     },
                   ].map((item, index) => (
                     <ListItemButton
