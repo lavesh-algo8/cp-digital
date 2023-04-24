@@ -288,7 +288,7 @@ const EditCalculator = () => {
                                 color="primary"
                                 variant="contained"
                                 onClick={() => setNumOfDocs(numOfDocs + 1)}
-                                disabled={numOfDocs === 4}
+                                // disabled={numOfDocs === 4}
                               >
                                 <AddIcon />
                               </Button>
