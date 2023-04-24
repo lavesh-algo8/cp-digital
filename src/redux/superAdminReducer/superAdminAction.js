@@ -2137,3 +2137,33 @@ export const updateProcess = (formData, processId) => async (dispatch) => {
     console.log(e);
   }
 };
+
+// Genearte Tempplates
+
+export const addTemplate = (formData, procedureId) => async (dispatch) => {
+  try {
+    let config = {
+      method: "POST",
+      url: `${baseUrl}/templates/createtemplateheadings/${procedureId}`,
+      headers: {
+        "content-type": "application/x-www-form-urlencoded",
+      },
+      data: qs.stringify(formData),
+    };
+
+    const resp = await axios(config);
+    console.log(resp);
+    dispatch(openSnackBar("template successfully created", "success"));
+    return true;
+
+    // if (resp?.data.message === "headings and procedure added successfully") {
+    //   dispatch(openSnackBar("document successfully created", "success"));
+    //   return true;
+    // } else {
+    //   dispatch(openSnackBar(resp?.data.message, "error"));
+    //   return false;
+    // }
+  } catch (e) {
+    console.log(e);
+  }
+};

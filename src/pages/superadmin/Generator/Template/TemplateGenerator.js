@@ -3,10 +3,10 @@ import { Box } from "@mui/system";
 import React, { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 
-import Layout from "../../../../components/superadmin/Layout";
 import DocumentTables from "../../../../components/superadmin/DocumentGenerator/DocumentTables";
-import AddDocument from "../../../../components/superadmin/DocumentGenerator/AddDocument";
 import Generator from "../../Generator/Generator";
+import AddTemplate from "../../../../components/superadmin/Generator/Template/AddTemplate";
+import TemplateTables from "../../../../components/superadmin/Generator/Template/TemplateTables";
 
 function TemplateGenerator() {
   const [openDialogAdd, setOpenDialogAdd] = useState(false);
@@ -43,7 +43,7 @@ function TemplateGenerator() {
                 Add
               </Button>
               {openDialogAdd && (
-                <AddDocument
+                <AddTemplate
                   openDialog={openDialogAdd}
                   setOpenDialog={setOpenDialogAdd}
                 />
@@ -53,7 +53,8 @@ function TemplateGenerator() {
         </Grid>
 
         <Box sx={{ width: "100%", overflow: "hidden", mt: 4 }}>
-          <DocumentTables />
+          {/* <DocumentTables /> */}
+          <TemplateTables />
         </Box>
       </Box>
     </Generator>

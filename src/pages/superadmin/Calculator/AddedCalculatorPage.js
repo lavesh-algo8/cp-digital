@@ -124,37 +124,41 @@ const AddedCalculatorPage = () => {
           </Box>
         </Box>
         <Grid container spacing={3} sx={{ mt: 2 }}>
-          {addedCalculatorsById?.formData?.components?.map((item1, index1) => (
-            <Grid item xs={12} sm={6} key={index1}>
-              <Typography>{item1?.label}</Typography>
-              <TextField
-                variant="outlined"
-                size="small"
-                sx={{ pt: 1 }}
-                placeholder={item1?.placeholder || "Enter " + item1.label}
-                // label={item1?.label}
-                name={item1?.key}
-                id={item1?.id}
-                disabled={alldisable || item1?.disabled}
-                fullWidth
-                type={
-                  item1?.label?.split(" ")[0] === "Date"
-                    ? "date"
-                    : item1?.label?.split(" ")[0] === "Time"
-                    ? "time"
-                    : item1?.type
-                }
-                onChange={updateState(index1)}
-                value={value && value[item1?.key]}
-                InputProps={{
-                  style: {
-                    backgroundColor:
-                      alldisable || item1?.disabled ? "#F5F5F5" : "",
-                  },
-                }}
-              />
-            </Grid>
-          ))}
+          {addedCalculatorsById?.formData?.components?.map((item1, index1) =>
+            item1.type != "button" ? (
+              <Grid item xs={12} sm={6} key={index1}>
+                <Typography>{item1?.label}</Typography>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  sx={{ pt: 1 }}
+                  placeholder={item1?.placeholder || "Enter " + item1.label}
+                  // label={item1?.label}
+                  name={item1?.key}
+                  id={item1?.id}
+                  disabled={alldisable || item1?.disabled}
+                  fullWidth
+                  type={
+                    item1?.label?.split(" ")[0] === "Date"
+                      ? "date"
+                      : item1?.label?.split(" ")[0] === "Time"
+                      ? "time"
+                      : item1?.type
+                  }
+                  onChange={updateState(index1)}
+                  value={value && value[item1?.key]}
+                  InputProps={{
+                    style: {
+                      backgroundColor:
+                        alldisable || item1?.disabled ? "#F5F5F5" : "",
+                    },
+                  }}
+                />
+              </Grid>
+            ) : (
+              ""
+            )
+          )}
         </Grid>
 
         <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
