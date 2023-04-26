@@ -36,6 +36,7 @@ import {
 import { Form } from "@formio/react";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DeleteTemplate from "./DeleteTemplate";
+import EditTemplate from "./EditTemplate";
 
 const disable = true;
 
@@ -113,7 +114,7 @@ const TemplateTables = () => {
       renderCell: (params) => {
         return (
           <>
-            {params?.row?.formDatas ? (
+            {params?.row?.templateformdata ? (
               <Button
                 variant="contained"
                 color="info"
@@ -123,11 +124,11 @@ const TemplateTables = () => {
                 }}
                 onClick={() => {
                   dispatch({
-                    type: "SET_SELECT_DOCUMENT",
-                    payload: params?.row,
+                    type: "SET_SELECT_TEMPLATE",
+                    payload: params.row,
                   });
                   navigate(
-                    `/superadmin/generator/documentGenerator/editdocument/${params?.row?.procedure}/${params?.row?.procedure_id}`
+                    `/superadmin/generator/templateGenerator/${params.row._id}/edittemplatedocument`
                   );
                 }}
               >
@@ -173,7 +174,7 @@ const TemplateTables = () => {
           icon={<EditIcon />}
           onClick={() => {
             setOpenDialogEdit(true);
-            setSelectedRowData(params.row);
+            settemplateDetails(params?.row);
           }}
           label="Edit"
           showInMenu
@@ -207,6 +208,14 @@ const TemplateTables = () => {
         <DeleteTemplate
           openDialog={openDialogDelete}
           setOpenDialog={setOpenDialogDelete}
+          templateDetails={templateDetails}
+        />
+      )}
+
+      {openDialogEdit && (
+        <EditTemplate
+          openDialog={openDialogEdit}
+          setOpenDialog={setOpenDialogEdit}
           templateDetails={templateDetails}
         />
       )}

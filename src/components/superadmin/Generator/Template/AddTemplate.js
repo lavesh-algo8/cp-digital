@@ -45,6 +45,7 @@ const AddTemplate = (props) => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    console.log(headings);
     console.log({
       ...newDocumentData,
     });
@@ -68,7 +69,7 @@ const AddTemplate = (props) => {
     let finalData = {
       law: newDocumentData.law,
       act: newDocumentData.act,
-      procedure: newDocumentData.procedure.procedure,
+      procedure: newDocumentData.procedure,
       type: newDocumentData.type || "",
       templateHeadings,
     };
@@ -119,9 +120,9 @@ const AddTemplate = (props) => {
                 }}
               ></Box>
 
-              <Box sx={{ display: "flex", mt: 3 }}>
+              <Box sx={{ display: "flex" }}>
                 <FormControl fullWidth size="small">
-                  <InputLabel id="demo-simple-select-label">Law</InputLabel>
+                  <InputLabel id="demo-simple-select-label">Law*</InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
@@ -142,7 +143,7 @@ const AddTemplate = (props) => {
 
               <Box sx={{ display: "flex", mt: 3 }}>
                 <FormControl fullWidth size="small">
-                  <InputLabel id="demo-simple-select-label">Act</InputLabel>
+                  <InputLabel id="demo-simple-select-label">Act*</InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
@@ -178,7 +179,7 @@ const AddTemplate = (props) => {
               </Box> */}
 
               <Box sx={{ display: "flex", mt: 3 }}>
-                <FormControl fullWidth size="small">
+                {/* <FormControl fullWidth size="small">
                   <InputLabel id="demo-simple-select-label">
                     Procedure
                   </InputLabel>
@@ -197,7 +198,19 @@ const AddTemplate = (props) => {
                       </MenuItem>
                     ))}
                   </Select>
-                </FormControl>
+                </FormControl> */}
+
+                <TextField
+                  size="small"
+                  id="procedure"
+                  label="Procedure"
+                  variant="outlined"
+                  fullWidth
+                  name="procedure"
+                  required
+                  onChange={onChange}
+                  value={newDocumentData.procedure}
+                />
               </Box>
 
               <Box sx={{ display: "flex", mt: 3 }}>

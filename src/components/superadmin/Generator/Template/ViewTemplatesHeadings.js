@@ -16,7 +16,10 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 // import AddSection from "./AddSection";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import { fetchProcedureHeadings } from "../../../../redux/superAdminReducer/superAdminAction";
+import {
+  fetchProcedureHeadings,
+  getAllTemplates,
+} from "../../../../redux/superAdminReducer/superAdminAction";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import Generator from "../../../../pages/superadmin/Generator/Generator";
 import AddSection from "./AddSection";
@@ -29,13 +32,15 @@ function ViewTemplateHeadings() {
   const { listOfDocuments, selectedDocument, procedureHeadingsList } =
     useSelector((state) => state.SuperAdmin);
 
-  const { selectedTemplate } = useSelector((state) => state.SuperAdmin);
+  const { selectedTemplate, listOfTemplates } = useSelector(
+    (state) => state.SuperAdmin
+  );
   console.log(selectedTemplate);
 
-  const currentDoc = listOfDocuments?.filter(
-    (item) => item?.procedure === selectedDocument?.procedure
+  const currentTemplate = listOfTemplates?.filter(
+    (item) => item?._id === selectedTemplate?._id
   )[0];
-  console.log(currentDoc);
+  console.log(currentTemplate);
   console.log(procedureHeadingsList);
   const navigate = useNavigate();
   const [addSection, SetAddSection] = useState(false);
@@ -47,6 +52,10 @@ function ViewTemplateHeadings() {
   useEffect(() => {
     dispatch(fetchProcedureHeadings(params.procedureId));
   }, [params, addSection, deleteSection, selectedSectionData, editSection]);
+
+  useEffect(() => {
+    dispatch(getAllTemplates());
+  }, [addSection]);
 
   return (
     <>
@@ -93,7 +102,7 @@ function ViewTemplateHeadings() {
                 Action
               </Grid>
             </Grid>
-            {selectedTemplate?.templateHeadings?.map((item, index) => {
+            {currentTemplate?.templateHeadings?.map((item, index) => {
               console.log(item);
               return (
                 <DataRow
@@ -148,22 +157,24 @@ function DataRow({
 
   //   const { listOfDocuments, selectedDocument, procedureHeadingsList } =
   //     useSelector((state) => state.SuperAdmin);
-  //   const currentDoc = listOfDocuments?.filter(
+  //   const currenttemplate = listOfDocuments?.filter(
   //     (item) => item?.procedure === selectedDocument?.procedure
   //   )[0];
-  //   const [procedure, setProcedure] = useState(currentDoc?.procedure);
+  //   const [procedure, setProcedure] = useState(currenttemplate?.procedure);
 
-  const onSubmit = (subsectiontitle) => {
+  const onSubmit = (items, item) => {
+    console.log(items);
+    console.log(item);
     navigate(
-      `/superadmin/generator/templateGenerator/${params.templateId}/${subsectiontitle}`
+      `/superadmin/generator/templateGenerator/${params.templateId}/${item.templateHeading}/${items.sectionHeading}`
     );
   };
 
-  //   const onSubmitEditDocument = (items) => {
-  //     navigate(
-  //       `/superadmin/generator/documentGenerator/editsectiondocument/${items?.title}/${items?._id}`
-  //     );
-  //   };
+  const onSubmitEditDocument = (items) => {
+    // navigate(
+    //   `/superadmin/generator/documentGenerator/editsectiondocument/${items?.title}/${items?._id}`
+    // );
+  };
 
   return (
     <Grid container xs={12} sx={{ margin: "10px 0" }}>
@@ -294,18 +305,17 @@ function DataRow({
                     }}
                     fullWidth
                     onClick={() => {
-                      // dispatch({
-                      //   type: "SET_SELECT_SUB_HEADING_DOCUMENT",
-                      //   payload: items,
-                      // });
-                      // items?.formData
-                      //   ? onSubmitEditDocument(items)
-                      //   : onSubmit(items.title, items._id);
-                      onSubmit(items.sectionHeading);
+                      dispatch({
+                        type: "SET_SELECT_SUB_HEADING_DOCUMENT",
+                        payload: items,
+                      });
+                      items?.formData
+                        ? onSubmitEditDocument(items)
+                        : onSubmit(items, item);
                     }}
                   >
-                    {/* {items?.formData ? "Edit" : "Generate"} Document{" "} */}
-                    {"Generate"} Document{" "}
+                    {items?.formData ? "Edit" : "Generate"} Document{" "}
+                    {/* {"Generate"} Document{" "} */}
                   </Button>
                   <IconButton
                     sx={{ ml: 1 }}
@@ -317,7 +327,7 @@ function DataRow({
                   >
                     <Delete sx={{ color: "white" }} />
                   </IconButton>
-                  {items?.formData ? (
+                  {/* {items?.formData ? (
                     ""
                   ) : (
                     <IconButton
@@ -329,7 +339,7 @@ function DataRow({
                     >
                       <Edit sx={{ color: "white" }} />
                     </IconButton>
-                  )}
+                  )} */}
                 </Grid>
               </Grid>
             </Grid>

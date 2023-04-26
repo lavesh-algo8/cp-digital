@@ -2255,3 +2255,53 @@ export const addSectionToTemplateHeadings =
       console.log(e);
     }
   };
+
+export const fetchtemplatesforprocesses = (law, act) => async (dispatch) => {
+  try {
+    let config = {
+      method: "get",
+      url: `${baseUrl}/templates/fetchtemplatesforprocesses`,
+      headers: {
+        "content-type": "application/json",
+      },
+      params: {
+        law: law,
+        act: act,
+      },
+    };
+    const resp = await axios(config);
+    console.log(resp.data);
+
+    await dispatch({
+      type: "GET_TEMPLATES_FOR_PROCESS",
+      payload: resp.data,
+    });
+
+    return true;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const fetchtemplatebyid = (templateid) => async (dispatch) => {
+  try {
+    let config = {
+      method: "get",
+      url: `${baseUrl}/templates/fetchtemplate/${templateid}`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const resp = await axios(config);
+    console.log(resp.data.result);
+
+    await dispatch({
+      type: "GET_TEMPLATES_BY_ID",
+      payload: resp.data.result,
+    });
+
+    return true;
+  } catch (e) {
+    console.log(e);
+  }
+};

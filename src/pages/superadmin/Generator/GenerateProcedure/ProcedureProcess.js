@@ -35,10 +35,18 @@ const ProcedureProcess = () => {
 
   useEffect(() => {
     dispatch(fetchProcessesByProcedure(params.procedureId));
-  }, [params]);
+  }, [params, openDialog]);
 
   return (
     <>
+      {openDialog && (
+        <AddProcess
+          openDialog={openDialog}
+          setOpenDialog={setOpenDialog}
+          procedureId={selectedProcedure.procedure_id}
+        />
+      )}
+
       <Generator>
         <Box sx={{ width: "100%", p: 3 }}>
           <Grid container>
@@ -114,11 +122,6 @@ const ProcedureProcess = () => {
                   <AddIcon fontSize="12px" />
                   Add Process
                 </Button>
-                <AddProcess
-                  openDialog={openDialog}
-                  setOpenDialog={setOpenDialog}
-                  procedureId={selectedProcedure.procedure_id}
-                />
               </Box>
               <Box
                 sx={{

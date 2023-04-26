@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
+  Checkbox,
   Chip,
   Dialog,
   DialogContent,
@@ -10,6 +11,7 @@ import {
   Grid,
   IconButton,
   InputLabel,
+  ListItemText,
   MenuItem,
   OutlinedInput,
   Select,
@@ -24,6 +26,7 @@ import {
   CreateProcess,
   addDocument,
   fetchCategory,
+  fetchtemplatesforprocesses,
   getDocuments,
 } from "../../../../redux/superAdminReducer/superAdminAction";
 
@@ -42,7 +45,8 @@ const numberOfDays = [
 ];
 
 const AddProcess = (props) => {
-  const { categoryList } = useSelector((state) => state?.SuperAdmin);
+  const { categoryList, selectedProcedure, listOfTemplatesForProcess } =
+    useSelector((state) => state?.SuperAdmin);
 
   const dispatch = useDispatch();
   const handleDialogClose = () => {
@@ -50,7 +54,18 @@ const AddProcess = (props) => {
   };
   const [numOfDocs, setNumOfDocs] = useState(1);
   const [newDocumentData, setNewDocumentData] = useState({});
-  const [headings, setHeadings] = useState({});
+
+  const [documents, setdocuments] = useState([]);
+
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setdocuments(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -60,10 +75,10 @@ const AddProcess = (props) => {
     let finalData = {
       process: newDocumentData.process,
       numofdays: parseInt(newDocumentData.numofdays),
-      templateidarr: [],
+      templateidarr: documents,
     };
     console.log(finalData);
-    dispatch(CreateProcess(finalData, props.procedureId));
+    await dispatch(CreateProcess(finalData, props.procedureId));
     setNewDocumentData({});
     handleDialogClose();
   };
@@ -76,6 +91,15 @@ const AddProcess = (props) => {
 
   useEffect(() => {
     dispatch(fetchCategory());
+  }, []);
+
+  useEffect(() => {
+    dispatch(
+      fetchtemplatesforprocesses(
+        selectedProcedure?.law_name?.category,
+        selectedProcedure?.act_name?.act
+      )
+    );
   }, []);
 
   return (
@@ -156,26 +180,54 @@ const AddProcess = (props) => {
                     Documents
                   </Typography>
                   <Select
+                    multiple
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     name="documents"
-                    onChange={onChange}
-                    value={newDocumentData.documents}
+                    value={documents}
+                    onChange={handleChange}
                     // required
                     displayEmpty
-                    renderValue={(value) =>
-                      value || (
-                        <Box sx={{ color: "gray" }}>Select Documents</Box>
-                      )
-                    }
+                    // renderValue={(value) =>
+                    //   value || (
+                    //     <Box sx={{ color: "gray" }}>Select Documents</Box>
+                    //   )
+                    // }
+
+                    renderValue={(selected) => {
+                      console.log(selected?.length);
+                      if (selected?.length > 0) {
+                        {
+                          return selected?.map((docid, index) => (
+                            <>
+                              {selected?.length > 1
+                                ? index === 0
+                                  ? ""
+                                  : ", "
+                                : ""}
+                              {
+                                listOfTemplatesForProcess?.filter(function (
+                                  el
+                                ) {
+                                  return el?._id === docid;
+                                })[0]?.procedurename
+                              }
+                            </>
+                          ));
+                        }
+                      } else {
+                        return (
+                          <Box sx={{ color: "gray" }}>Select Documents</Box>
+                        );
+                      }
+                    }}
                   >
-                    {categoryList
-                      ?.filter((cat) => cat.category === newDocumentData.law)[0]
-                      ?.acts?.map((desig, index) => (
-                        <MenuItem key={desig.act} value={desig.act}>
-                          {desig.act}
-                        </MenuItem>
-                      ))}
+                    {listOfTemplatesForProcess.map((item, index) => (
+                      <MenuItem key={item._id} value={item._id}>
+                        <Checkbox checked={documents?.indexOf(item._id) > -1} />
+                        <ListItemText primary={item?.procedurename} />
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Box>

@@ -9,6 +9,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -19,10 +20,14 @@ import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
 import DeleteProcess from "./DeleteProcess";
 import EditProcess from "./EditProcess";
+import { useNavigate } from "react-router-dom";
 
 const ProcessTable = () => {
   const dispatch = useDispatch();
-  const { listOfProcesses = [] } = useSelector((state) => state?.SuperAdmin);
+  const navigate = useNavigate();
+  const { listOfProcesses = [], listOfTemplates } = useSelector(
+    (state) => state?.SuperAdmin
+  );
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState({});
@@ -63,6 +68,45 @@ const ProcessTable = () => {
       field: "documents",
       headerName: "Documents",
       flex: 0.8,
+      renderCell: (params) => {
+        console.log(listOfTemplates);
+
+        const names = [];
+        for (let i = 0; i < listOfTemplates?.length; i++) {
+          if (params.row.templateidarr.includes(listOfTemplates[i]?._id)) {
+            if (listOfTemplates[i]?.templateformdata) {
+              names.push({
+                name: listOfTemplates[i]?.templateformdata?.title,
+                _id: listOfTemplates[i]?._id,
+              });
+            }
+            console.log(listOfTemplates[i]);
+          }
+        }
+        console.log(names);
+
+        return (
+          <>
+            {names.map((item, index) => (
+              <Typography
+                sx={{
+                  cursor: "pointer",
+                  color: "blue",
+                }}
+                onClick={() => {
+                  // alert(item._id);
+                  navigate(
+                    `/superadmin/generator/templateGenerator/${item._id}/edittemplatedocument`
+                  );
+                }}
+              >
+                {item.name}
+                {names.length < index + 2 ? "" : " ,"}
+              </Typography>
+            ))}
+          </>
+        );
+      },
     },
     {
       field: "actions",

@@ -41,6 +41,8 @@ const initialStore = {
   listOfProcesses: [],
   listOfTemplates: [],
   selectedTemplate: {},
+  listOfTemplatesForProcess: [],
+  template: {},
 };
 
 const superAdminReducer = (state = initialStore, action) => {
@@ -298,6 +300,18 @@ const superAdminReducer = (state = initialStore, action) => {
       return {
         ...state,
         selectedTemplate: action.payload,
+      };
+
+    case "GET_TEMPLATES_FOR_PROCESS":
+      return {
+        ...state,
+        listOfTemplatesForProcess: action.payload,
+      };
+
+    case "GET_TEMPLATES_BY_ID":
+      return {
+        ...state,
+        template: action.payload,
       };
 
     // case "UPDATE_DOCUMENT":

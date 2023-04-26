@@ -29,11 +29,11 @@ const AddTemplateDocument = (props) => {
     console.log(formData);
     console.log(params);
     const finalData = {
-      formData: formData,
+      formdata: formData,
     };
     console.log(finalData);
     const success = await dispatch(
-      addDocumentTemplate(formData, params.templateId)
+      addDocumentTemplate(finalData, params.templateId)
     );
     console.log(success);
     if (success) {

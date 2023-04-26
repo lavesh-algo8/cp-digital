@@ -31,13 +31,34 @@ const EditTemplate = (props) => {
     (state) => state?.SuperAdmin
   );
 
+  console.log(props);
+
   const dispatch = useDispatch();
   const handleDialogClose = () => {
     props.setOpenDialog(false); // Use the prop.
   };
-  const [numOfDocs, setNumOfDocs] = useState(1);
-  const [newDocumentData, setNewDocumentData] = useState({});
-  const [headings, setHeadings] = useState({});
+  const [numOfDocs, setNumOfDocs] = useState(
+    props.templateDetails?.templateHeadings.length
+  );
+
+  const [newDocumentData, setNewDocumentData] = useState({
+    law: props.templateDetails?.law,
+    act: props.templateDetails?.act,
+    procedure: props.templateDetails?.procedurename,
+    type: props.templateDetails?.type,
+  });
+  const input = props.templateDetails?.templateHeadings;
+
+  const output = {};
+
+  input.forEach((obj, index) => {
+    output[`Template Heading ${index + 1}`] = obj.templateHeading;
+  });
+
+  console.log(output);
+  const [headings, setHeadings] = useState(output);
+
+  console.log(headings);
 
   console.log(
     categoryList?.filter((cat) => cat.category === newDocumentData.law)[0]?.acts
@@ -57,11 +78,14 @@ const EditTemplate = (props) => {
       });
     }
     console.log(subData);
-    let templateHeadings = [];
-    templateHeadings = subData.map((head) => head.heading);
-    console.log(templateHeadings);
-    console.log(templateHeadings.toString());
-    templateHeadings = templateHeadings.toString();
+    let templateHeadingsArray = [];
+    templateHeadingsArray = subData.map((head) => head.heading);
+    console.log(templateHeadingsArray);
+
+    const templateHeadings = templateHeadingsArray.map((heading) => {
+      return { templateHeading: heading.trim(), templateSection: [] };
+    });
+
     let finalData = {
       law: newDocumentData.law,
       act: newDocumentData.act,
@@ -85,6 +109,28 @@ const EditTemplate = (props) => {
   useEffect(() => {
     dispatch(fetchCategory());
   }, []);
+
+  useEffect(() => {
+    if (props) {
+      setNewDocumentData({
+        ...newDocumentData,
+        law: props.templateDetails?.law,
+      });
+      setNewDocumentData({
+        ...newDocumentData,
+        act: props.templateDetails?.act,
+      });
+      setNewDocumentData({
+        ...newDocumentData,
+        procedure: props.templateDetails?.procedure,
+      });
+      setNewDocumentData({
+        ...newDocumentData,
+        type: props.templateDetails?.type,
+      });
+    }
+    setHeadings(output);
+  }, [props]);
 
   return (
     <>
@@ -116,7 +162,7 @@ const EditTemplate = (props) => {
                 }}
               ></Box>
 
-              <Box sx={{ display: "flex", mt: 3 }}>
+              <Box sx={{ display: "flex" }}>
                 <FormControl fullWidth size="small">
                   <InputLabel id="demo-simple-select-label">Law</InputLabel>
                   <Select
@@ -175,7 +221,7 @@ const EditTemplate = (props) => {
               </Box> */}
 
               <Box sx={{ display: "flex", mt: 3 }}>
-                <FormControl fullWidth size="small">
+                {/* <FormControl fullWidth size="small">
                   <InputLabel id="demo-simple-select-label">
                     Procedure
                   </InputLabel>
@@ -194,7 +240,18 @@ const EditTemplate = (props) => {
                       </MenuItem>
                     ))}
                   </Select>
-                </FormControl>
+                </FormControl> */}
+
+                <TextField
+                  size="small"
+                  id="procedure"
+                  label="Type (Optional)"
+                  variant="outlined"
+                  fullWidth
+                  name="procedure"
+                  onChange={onChange}
+                  value={newDocumentData.procedure}
+                />
               </Box>
 
               <Box sx={{ display: "flex", mt: 3 }}>
