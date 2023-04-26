@@ -57,23 +57,26 @@ const AddTemplate = (props) => {
       });
     }
     console.log(subData);
-    let templateHeadings = [];
-    templateHeadings = subData.map((head) => head.heading);
-    console.log(templateHeadings);
-    console.log(templateHeadings.toString());
-    templateHeadings = templateHeadings.toString();
+    let templateHeadingsArray = [];
+    templateHeadingsArray = subData.map((head) => head.heading);
+    console.log(templateHeadingsArray);
+
+    const templateHeadings = templateHeadingsArray.map((heading) => {
+      return { templateHeading: heading.trim(), templateSection: [] };
+    });
+
     let finalData = {
       law: newDocumentData.law,
       act: newDocumentData.act,
       procedure: newDocumentData.procedure.procedure,
-      type: newDocumentData.type,
+      type: newDocumentData.type || "",
       templateHeadings,
     };
-    console.log(finalData, newDocumentData.procedure.procedure_id);
-    await dispatch(
-      addTemplate(finalData, newDocumentData.procedure.procedure_id)
-    );
-    handleDialogClose();
+    console.log(finalData);
+    const res = await dispatch(addTemplate(finalData));
+    if (res) {
+      handleDialogClose();
+    }
   };
 
   const onChange = (e) => {

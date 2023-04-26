@@ -30,10 +30,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   DuplicateProcedure,
   fetchProcedureHeadings,
+  getAllTemplates,
   getDocuments,
 } from "../../../../redux/superAdminReducer/superAdminAction";
 import { Form } from "@formio/react";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import DeleteTemplate from "./DeleteTemplate";
 
 const disable = true;
 
@@ -54,16 +56,16 @@ function CustomToolbar() {
 const TemplateTables = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { listOfDocuments } = useSelector((state) => state.SuperAdmin);
+  const { listOfTemplates } = useSelector((state) => state.SuperAdmin);
   const [selectedRow, setSelectedRow] = React.useState(null);
   const [selectedRowData, setSelectedRowData] = React.useState(null);
   const [openDialogEdit, setOpenDialogEdit] = useState(false);
   const [openDialogDelete, setOpenDialogDelete] = useState(false);
-  const [procedureDetails, setprocedureDetails] = useState("");
+  const [templateDetails, settemplateDetails] = useState("");
   // const [duplicate, setduplicate] = useState(false);
 
-  React.useEffect(() => {
-    dispatch(getDocuments());
+  useEffect(() => {
+    dispatch(getAllTemplates());
   }, [openDialogEdit, openDialogDelete]);
 
   const columns = [
@@ -79,9 +81,9 @@ const TemplateTables = () => {
       renderCell: (params) => {
         return (
           <Typography>
-            {params?.row?.procedure_type
-              ? params?.row?.procedure + " / " + params?.row?.procedure_type
-              : params?.row?.procedure}
+            {params?.row?.type
+              ? params?.row?.procedurename + " / " + params?.row?.type
+              : params?.row?.procedurename}
           </Typography>
         );
       },
@@ -90,16 +92,16 @@ const TemplateTables = () => {
     {
       field: "law_name",
       headerName: "Law",
-      valueGetter: (params) => params?.row?.law_name?.category,
+      valueGetter: (params) => params?.row?.law,
       flex: 0.3,
     },
     {
       field: "act_name",
       headerName: "Act",
       valueGetter: (params) =>
-        params?.row?.act_name?.act?.length > 40
-          ? params?.row?.act_name?.act?.slice(0, 40) + "...."
-          : params?.row?.act_name?.act?.slice(0, 40),
+        params?.row?.act?.length > 40
+          ? params?.row?.act?.slice(0, 40) + "...."
+          : params?.row?.act?.slice(0, 40),
       flex: 0.4,
     },
 
@@ -111,22 +113,7 @@ const TemplateTables = () => {
       renderCell: (params) => {
         return (
           <>
-            {params?.row?.form === null ? (
-              <Button
-                variant="contained"
-                sx={{
-                  textTransform: "none",
-                  width: "25ch",
-                }}
-                onClick={() =>
-                  navigate(
-                    `/superadmin/generator/documentGenerator/generatenewdocument/${params?.row?.procedure}/${params?.row?.procedure_id}`
-                  )
-                }
-              >
-                Generate Document
-              </Button>
-            ) : (
+            {params?.row?.formDatas ? (
               <Button
                 variant="contained"
                 color="info"
@@ -146,6 +133,21 @@ const TemplateTables = () => {
               >
                 Edit Document
               </Button>
+            ) : (
+              <Button
+                variant="contained"
+                sx={{
+                  textTransform: "none",
+                  width: "25ch",
+                }}
+                onClick={() =>
+                  navigate(
+                    `/superadmin/generator/templateGenerator/${params.row._id}/addtemplatedocument`
+                  )
+                }
+              >
+                Generate Document
+              </Button>
             )}
           </>
         );
@@ -157,16 +159,16 @@ const TemplateTables = () => {
       headerName: "Actions",
       type: "actions",
       getActions: (params) => [
-        <GridActionsCellItem
-          icon={<VisibilityIcon />}
-          label="View"
-          showInMenu
-          onClick={() => {
-            console.log(params);
-            handleOpenDialog();
-            setSelectedRow(params.row?.form?.formData);
-          }}
-        />,
+        // <GridActionsCellItem
+        //   icon={<VisibilityIcon />}
+        //   label="View"
+        //   showInMenu
+        //   onClick={() => {
+        //     console.log(params);
+        //     handleOpenDialog();
+        //     setSelectedRow(params.row?.form?.formData);
+        //   }}
+        // />,
         <GridActionsCellItem
           icon={<EditIcon />}
           onClick={() => {
@@ -181,29 +183,9 @@ const TemplateTables = () => {
           label="Delete"
           showInMenu
           onClick={() => {
-            setprocedureDetails(params?.row);
+            settemplateDetails(params?.row);
             setOpenDialogDelete(true);
           }}
-        />,
-        <GridActionsCellItem
-          icon={<ContentCopyIcon />}
-          onClick={async () => {
-            const res = await dispatch(
-              DuplicateProcedure(params?.row?.procedure_id)
-            );
-            // setduplicate(!duplicate);
-            console.log(res);
-            if (res) {
-              await dispatch(getDocuments());
-            }
-          }}
-          label="Duplicate"
-          showInMenu
-        />,
-        <GridActionsCellItem
-          icon={<UploadIcon />}
-          label="Publish"
-          showInMenu
         />,
       ],
     },
@@ -221,6 +203,14 @@ const TemplateTables = () => {
 
   return (
     <>
+      {openDialogDelete && (
+        <DeleteTemplate
+          openDialog={openDialogDelete}
+          setOpenDialog={setOpenDialogDelete}
+          templateDetails={templateDetails}
+        />
+      )}
+
       <DocumentViewer
         openDialog={openDialog}
         handleDialogClose={handleDialogClose}
@@ -241,7 +231,13 @@ const TemplateTables = () => {
           // disableColumnFilter
           // disableColumnSelector
           // disableDensitySelector
-          rows={[]}
+          rows={
+            listOfTemplates?.map((doc, index) => ({
+              id: index + 1 + ".",
+              ...doc,
+            })) || []
+          }
+          getRowId={(row) => row._id}
           components={{
             Toolbar: CustomToolbar,
           }}
@@ -257,11 +253,11 @@ const TemplateTables = () => {
             // console.log(e);
             // alert(e.row.procedure);
             dispatch({
-              type: "SET_SELECT_DOCUMENT",
+              type: "SET_SELECT_TEMPLATE",
               payload: e.row,
             });
             navigate(
-              `/superadmin/generator/documentGenerator/viewProcedure/${e.row.procedure_id}`
+              `/superadmin/generator/templateGenerator/${e.row._id}/viewtemplateheadings`
             );
           }}
           sx={{

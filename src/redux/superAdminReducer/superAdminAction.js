@@ -1844,6 +1844,7 @@ export const editAddedCalculatorsById =
       console.log(calculatorData);
       const data = await axios(config);
       console.log("calculator edited : ", data.data.result);
+      dispatch(openSnackBar("calculator updated successfully", "success"));
       return true;
     } catch (e) {
       console.log(e);
@@ -1919,7 +1920,12 @@ export const AddSimpleCalculator = (calculatorData) => async (dispatch) => {
     console.log(calculatorData);
     const data = await axios(config);
     console.log("calculator Added : ", data);
-    dispatch(openSnackBar(data?.data?.message, "success"));
+    dispatch(
+      openSnackBar(
+        data?.data?.message || "Calculator added successfully",
+        "success"
+      )
+    );
     return true;
   } catch (e) {
     dispatch(openSnackBar("some error occured", "error"));
@@ -2140,30 +2146,112 @@ export const updateProcess = (formData, processId) => async (dispatch) => {
 
 // Genearte Tempplates
 
-export const addTemplate = (formData, procedureId) => async (dispatch) => {
+export const addTemplate = (formData) => async (dispatch) => {
   try {
     let config = {
-      method: "POST",
-      url: `${baseUrl}/templates/createtemplateheadings/${procedureId}`,
+      method: "post",
+      url: `${baseUrl}/templates/createtemplate`,
       headers: {
-        "content-type": "application/x-www-form-urlencoded",
+        "content-type": "application/json",
       },
-      data: qs.stringify(formData),
+      data: formData,
     };
+    console.log(formData);
 
     const resp = await axios(config);
     console.log(resp);
     dispatch(openSnackBar("template successfully created", "success"));
     return true;
-
-    // if (resp?.data.message === "headings and procedure added successfully") {
-    //   dispatch(openSnackBar("document successfully created", "success"));
-    //   return true;
-    // } else {
-    //   dispatch(openSnackBar(resp?.data.message, "error"));
-    //   return false;
-    // }
   } catch (e) {
     console.log(e);
   }
 };
+
+export const getAllTemplates = () => async (dispatch) => {
+  try {
+    let config = {
+      method: "get",
+      url: `${baseUrl}/templates/fetchalltemplates`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const resp = await axios(config);
+    console.log(resp.data);
+
+    await dispatch({
+      type: "GET_TEMPLATES",
+      payload: resp.data,
+    });
+
+    return true;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const deleteTemplate = (templateId) => async (dispatch) => {
+  try {
+    let config = {
+      method: "delete",
+      url: `${baseUrl}/templates/deletetemplate/${templateId}`,
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    const data = await axios(config);
+    console.log("Template Deleted", data);
+    dispatch(
+      openSnackBar(
+        data?.data?.message || "Template deleted successfully",
+        "success"
+      )
+    );
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const addDocumentTemplate =
+  (docData, templateId) => async (dispatch) => {
+    try {
+      let config = {
+        method: "put",
+        url: `${baseUrl}/templates/updatetemplatewithtemplateformdata/${templateId}`,
+        headers: {
+          "content-type": "application/json",
+        },
+        data: docData,
+      };
+      console.log(docData);
+
+      const resp = await axios(config);
+      console.log(resp);
+      dispatch(openSnackBar("document successfully added", "success"));
+      return true;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+export const addSectionToTemplateHeadings =
+  (sectionData, templateId) => async (dispatch) => {
+    try {
+      let config = {
+        method: "put",
+        url: `${baseUrl}/templates/updatetemplatewithsection/${templateId}`,
+        headers: {
+          "content-type": "application/json",
+        },
+        data: sectionData,
+      };
+      console.log(sectionData);
+
+      const resp = await axios(config);
+      console.log(resp);
+      dispatch(openSnackBar("section successfully added", "success"));
+      return true;
+    } catch (e) {
+      console.log(e);
+    }
+  };

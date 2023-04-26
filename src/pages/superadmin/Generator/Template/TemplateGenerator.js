@@ -1,15 +1,22 @@
 import { Button, Card, Grid, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 
 import DocumentTables from "../../../../components/superadmin/DocumentGenerator/DocumentTables";
 import Generator from "../../Generator/Generator";
 import AddTemplate from "../../../../components/superadmin/Generator/Template/AddTemplate";
 import TemplateTables from "../../../../components/superadmin/Generator/Template/TemplateTables";
+import { useDispatch } from "react-redux";
+import { getAllTemplates } from "../../../../redux/superAdminReducer/superAdminAction";
 
 function TemplateGenerator() {
   const [openDialogAdd, setOpenDialogAdd] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllTemplates());
+  }, [openDialogAdd]);
 
   return (
     <Generator>

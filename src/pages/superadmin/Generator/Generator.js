@@ -64,10 +64,10 @@ const Generator = ({ children }) => {
                   }}
                 >
                   {[
-                    {
-                      text: "Old Procedure",
-                      location: "/superadmin/generator/documentGenerator",
-                    },
+                    // {
+                    //   text: "Old Procedure",
+                    //   location: "/superadmin/generator/documentGenerator",
+                    // },
                     {
                       text: "Procedure",
                       location: "/superadmin/generator/generateprocedure",
@@ -106,6 +106,7 @@ const Generator = ({ children }) => {
                   mx: 3,
                   borderRadius: "10px",
                   height: `calc(100vh - ${120}px)`,
+                  overflowY: "scroll",
                 }}
               >
                 {children}

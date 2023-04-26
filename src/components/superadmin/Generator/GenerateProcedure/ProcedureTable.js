@@ -146,10 +146,12 @@ const ProcedureTable = () => {
           hideFooter
           rowsPerPageOptions={[]}
           rows={
-            listOfProcedures?.map((doc, index) => ({
-              id: index + 1,
-              ...doc,
-            })) || []
+            Array.isArray(listOfProcedures)
+              ? listOfProcedures?.map((doc, index) => ({
+                  id: index + 1,
+                  ...doc,
+                })) || []
+              : []
           }
           columns={columns}
           disableSelectionOnClick

@@ -63,12 +63,14 @@ const EditCalculator = () => {
     Object.entries(filteredFoml).map((formula, index) => {
       // formulaList.push(formula{index}.join(" "))
       console.log(formula[1]);
-      console.log(formula[1].join(" "));
-      formulaList.push({
-        formulaName: `formula${index}`,
-        // formula: encodeURIComponent(formula[1].join(" ")),
-        formula: formula[1].join(" "),
-      });
+      console.log(Array.isArray(formula[1]) ? formula[1].join(" ") : "");
+      if (Array.isArray(formula[1])) {
+        formulaList.push({
+          formulaName: `formula${index}`,
+          // formula: encodeURIComponent(formula[1].join(" ")),
+          formula: formula[1].join(" "),
+        });
+      }
     });
 
     const calculatorData = {

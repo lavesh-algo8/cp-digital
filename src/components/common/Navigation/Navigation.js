@@ -23,6 +23,9 @@ import Generator from "../../../pages/superadmin/Generator/Generator";
 import GenerateProcedure from "../../../pages/superadmin/Generator/GenerateProcedure/GenerateProcedure";
 import ProcedureProcess from "../../../pages/superadmin/Generator/GenerateProcedure/ProcedureProcess";
 import TemplateGenerator from "../../../pages/superadmin/Generator/Template/TemplateGenerator";
+import AddTemplateDocument from "../../superadmin/Generator/Template/AddTemplateDocument";
+import ViewTemplateHeadings from "../../superadmin/Generator/Template/ViewTemplatesHeadings";
+import AddSectionDocument from "../../superadmin/Generator/Template/AddSectionDcoument";
 
 function Navigation() {
   return (
@@ -79,6 +82,20 @@ function Navigation() {
           <Route
             path="/superadmin/generator/templateGenerator"
             element={<TemplateGenerator />}
+          />
+          <Route
+            path="/superadmin/generator/templateGenerator/:templateId/addtemplatedocument"
+            element={<AddTemplateDocument />}
+          />
+
+          <Route
+            path="/superadmin/generator/templateGenerator/:templateId/viewtemplateheadings"
+            element={<ViewTemplateHeadings />}
+          />
+
+          <Route
+            path="/superadmin/generator/templateGenerator/:templateId/:sectiontitle"
+            element={<AddSectionDocument />}
           />
           {/* template */}
 
