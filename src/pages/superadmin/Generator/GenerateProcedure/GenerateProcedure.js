@@ -19,6 +19,7 @@ import AddProcedure from "../../../../components/superadmin/Generator/GeneratePr
 import {
   fetchCategory,
   fetchGenerateProcedure,
+  getAllTemplates,
 } from "../../../../redux/superAdminReducer/superAdminAction";
 import { useDispatch } from "react-redux";
 import EditProcedure from "../../../../components/superadmin/Generator/GenerateProcedure/EditProcedure";
@@ -31,6 +32,10 @@ const GenerateProcedure = () => {
     dispatch(fetchGenerateProcedure());
     dispatch(fetchCategory());
   }, [openDialog]);
+
+  useEffect(() => {
+    dispatch(getAllTemplates());
+  }, []);
 
   return (
     <>

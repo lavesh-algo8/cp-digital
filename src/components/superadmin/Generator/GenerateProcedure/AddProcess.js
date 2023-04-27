@@ -222,7 +222,7 @@ const AddProcess = (props) => {
                       }
                     }}
                   >
-                    {listOfTemplatesForProcess.map((item, index) => (
+                    {listOfTemplatesForProcess?.map((item, index) => (
                       <MenuItem key={item._id} value={item._id}>
                         <Checkbox checked={documents?.indexOf(item._id) > -1} />
                         <ListItemText primary={item?.procedurename} />

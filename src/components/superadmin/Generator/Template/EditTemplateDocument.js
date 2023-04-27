@@ -12,6 +12,7 @@ import {
   fetchtemplatebyid,
 } from "../../../../redux/superAdminReducer/superAdminAction";
 import Generator from "../../../../pages/superadmin/Generator/Generator";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 const EditTemplateDocument = () => {
   const { procedureId } = useParams();
@@ -22,7 +23,7 @@ const EditTemplateDocument = () => {
   const navigate = useNavigate();
 
   const [title, setTitle] = useState(template?.templateformdata.title);
-  const [myform, setmyform] = useState(template?.templateformdata);
+  const [myform, setmyform] = useState(template?.templateformdata || {});
   const schemaRef = useRef();
   const params = useParams();
 
@@ -52,8 +53,10 @@ const EditTemplateDocument = () => {
   }, [params.templateId]);
 
   useEffect(() => {
-    setTitle(template?.templateformdata.title);
-    setmyform(template?.templateformdata);
+    if (template) {
+      setTitle(template?.templateformdata.title);
+      setmyform(template?.templateformdata);
+    }
   }, [template]);
 
   return (
@@ -69,10 +72,20 @@ const EditTemplateDocument = () => {
             pr: 2,
           }}
         >
-          <Container
-            sx={{ mt: 2, mb: 3, display: "flex", justifyContent: "center" }}
-          >
-            <Typography variant="h5" fontWeight="bold">
+          <Container sx={{ mt: 2, mb: 3, display: "flex" }}>
+            <Button
+              variant="contained"
+              size="small"
+              sx={{
+                maxWidth: "30px",
+                minWidth: "30px",
+                paddingLeft: "18px",
+              }}
+              onClick={() => navigate(-1)}
+            >
+              <ArrowBackIosIcon fontSize="small" />
+            </Button>
+            <Typography variant="h5" fontWeight="bold" sx={{ ml: 4 }}>
               Edit Template Document
             </Typography>
           </Container>

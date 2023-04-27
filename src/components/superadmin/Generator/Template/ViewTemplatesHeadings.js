@@ -23,6 +23,8 @@ import {
 import { Add, Delete, Edit } from "@mui/icons-material";
 import Generator from "../../../../pages/superadmin/Generator/Generator";
 import AddSection from "./AddSection";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+
 // import EditSection from "./EditSection";
 // import DeleteSection from "./DeleteSection";
 
@@ -69,13 +71,24 @@ function ViewTemplateHeadings() {
             <div
               style={{
                 display: "flex",
+                marginLeft: "10px",
               }}
             >
-              <Button onClick={() => navigate(-1)}>
-                <ArrowBackIcon />
+              <Button
+                variant="contained"
+                size="small"
+                sx={{
+                  maxWidth: "30px",
+                  minWidth: "30px",
+                  paddingLeft: "18px",
+                }}
+                onClick={() => navigate(-1)}
+              >
+                <ArrowBackIosIcon fontSize="small" />
               </Button>
-              <Typography variant="h6" fontWeight={600}>
-                Template
+
+              <Typography variant="h6" fontWeight={600} sx={{ ml: 4 }}>
+                Template : {currentTemplate?.procedurename}
               </Typography>
             </div>
           </Box>
@@ -86,6 +99,7 @@ function ViewTemplateHeadings() {
             sx={{
               backgroundColor: "white",
               p: 2,
+              mt: 2,
             }}
           >
             <Grid container xs={12} sx={{ margin: "12px 0", color: "#224260" }}>
