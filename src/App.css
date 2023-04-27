@@ -39,10 +39,10 @@
 
 /* newly added */
 .btn-primary {
-  background-color: #395874;
-  border-color: #e0e0e0ba;
-  color: rgb(255, 255, 255);
-  font-size: 12px;
+  background-color: #395874 !important;
+  border-color: #e0e0e0ba !important;
+  color: rgb(255, 255, 255) !important;
+  font-size: 12px !important;
 }
 
 /* .rdw-editor-main {

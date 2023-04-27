@@ -28,9 +28,9 @@ function App() {
         main: "#c41d1d",
       },
     },
-    typography: {
-      fontFamily: ["Open Sans"].join(","),
-    },
+    // typography: {
+    //   fontFamily: ["Open Sans"].join(","),
+    // },
   });
 
   return (
