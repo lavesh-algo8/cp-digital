@@ -108,8 +108,20 @@ const AddProcess = (props) => {
 
   const access = ["Procedures", "Calculators", "Content mangement"];
 
+  const cleardocsdata = async () => {
+    await dispatch({
+      type: "EMPTY_TEMPLATES_DOC_ID",
+      payload: [],
+    });
+    await dispatch({
+      type: "EMPTY_TEMPLATES_DOC_ONLY",
+      payload: [],
+    });
+  };
+
   useEffect(() => {
     dispatch(fetchCategory());
+    cleardocsdata();
   }, []);
 
   useEffect(() => {

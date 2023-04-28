@@ -442,7 +442,7 @@ const EditSubCircularDialog = (props) => {
                         {...params}
                         size="small"
                         variant="outlined"
-                        required
+                        // required
                         sx={{
                           mt: 1,
                           "& legend": { display: "none" },
