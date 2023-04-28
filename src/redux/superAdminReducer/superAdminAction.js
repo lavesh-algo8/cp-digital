@@ -2300,7 +2300,7 @@ export const fetchtemplatebyid = (templateid) => async (dispatch) => {
       payload: resp.data.result,
     });
 
-    return true;
+    return resp.data.result;
   } catch (e) {
     console.log(e);
   }

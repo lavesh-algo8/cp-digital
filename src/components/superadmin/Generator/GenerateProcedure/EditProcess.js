@@ -32,6 +32,9 @@ import {
   updateProcess,
 } from "../../../../redux/superAdminReducer/superAdminAction";
 import { useParams } from "react-router-dom";
+import AttachmentIcon from "@mui/icons-material/Attachment";
+import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
+import AllTemplateDocuments from "./DocumentShow/AllTemplateDocuments";
 
 const numberOfDays = [
   { no: "01" },
@@ -50,8 +53,13 @@ const numberOfDays = [
 const EditProcess = (props) => {
   console.log(props);
   const params = useParams();
-  const { categoryList, selectedProcedure, listOfTemplatesForProcess } =
-    useSelector((state) => state?.SuperAdmin);
+  const {
+    categoryList,
+    selectedProcedure,
+    listOfTemplatesForProcess,
+    templateDocIds,
+    templateDocOnly,
+  } = useSelector((state) => state?.SuperAdmin);
   //   alert(String(props.processDetails?.numOfDays));
   const dispatch = useDispatch();
   const handleDialogClose = () => {
@@ -65,6 +73,8 @@ const EditProcess = (props) => {
   const [documents, setdocuments] = useState(
     props.processDetails?.templateidarr || []
   );
+
+  const [openDocuments, setOpenDocuments] = useState(false);
 
   const handleChange = (event) => {
     const {
@@ -84,7 +94,8 @@ const EditProcess = (props) => {
     let finalData = {
       process: newDocumentData.process,
       numofdays: parseInt(newDocumentData.numofdays),
-      templateidarr: documents,
+      tempFormDataArr: templateDocOnly,
+      tempSecFormDataArr: templateDocIds,
     };
     console.log(finalData);
     await dispatch(updateProcess(finalData, props?.processDetails?._id));
@@ -129,6 +140,13 @@ const EditProcess = (props) => {
 
   return (
     <>
+      {openDocuments && (
+        <AllTemplateDocuments
+          openDialog={openDocuments}
+          setOpenDialog={setOpenDocuments}
+        />
+      )}
+
       {/* add admins dialog */}
       <Dialog
         open={props.openDialog} // Use value directly here
@@ -200,7 +218,7 @@ const EditProcess = (props) => {
                   </Select>
                 </FormControl>
 
-                <FormControl fullWidth size="small" sx={{ ml: 2 }}>
+                {/* <FormControl fullWidth size="small" sx={{ ml: 2 }}>
                   <Typography sx={{ mb: 1 }} id="demo-simple-select-label">
                     Documents
                   </Typography>
@@ -254,8 +272,66 @@ const EditProcess = (props) => {
                       </MenuItem>
                     ))}
                   </Select>
-                </FormControl>
+                </FormControl> */}
               </Box>
+
+              <Box sx={{ mt: 4 }}>
+                <Typography sx={{ mb: 1 }}>Documents</Typography>
+                <Button
+                  variant="contained"
+                  endIcon={<AttachmentIcon />}
+                  onClick={() => {
+                    setOpenDocuments(true);
+                  }}
+                >
+                  Attach Documents
+                </Button>
+              </Box>
+
+              <Box sx={{ mt: 2 }}>
+                {templateDocIds?.map((doc, index) => (
+                  <Box sx={{ mt: 1, display: "flex", alignItems: "center" }}>
+                    <InsertDriveFileOutlinedIcon />
+                    <Typography sx={{ pl: 1 }}>{doc.title}</Typography>
+                    <IconButton
+                      sx={{ ml: 1, fontSize: "15px" }}
+                      onClick={async () => {
+                        await dispatch({
+                          type: "REMOVE_TEMPLATES_DOC_ID",
+                          payload: doc,
+                        });
+                      }}
+                    >
+                      <CloseIcon fontSize="15px" />
+                    </IconButton>
+                  </Box>
+                ))}
+
+                {templateDocOnly?.map((doc, item) => (
+                  <Box sx={{ mt: 1, display: "flex", alignItems: "center" }}>
+                    <InsertDriveFileOutlinedIcon />
+                    <Typography sx={{ pl: 1 }}>{doc.title}</Typography>
+                    <IconButton
+                      sx={{ ml: 1, fontSize: "15px" }}
+                      onClick={async () => {
+                        await dispatch({
+                          type: "REMOVE_TEMPLATES_DOC_ONLY",
+                          payload: doc,
+                        });
+                      }}
+                    >
+                      <CloseIcon fontSize="15px" />
+                    </IconButton>
+                  </Box>
+                ))}
+              </Box>
+
+              {/* <Box sx={{ mt: 4 }}>
+                <Typography sx={{ mb: 1 }}>Documents</Typography>
+                <Button variant="contained" endIcon={<AttachmentIcon />}>
+                  Attach Documents
+                </Button>
+              </Box> */}
 
               {/* <Box sx={{ display: "flex", mt: 3 }}>
                 <FormControl fullWidth size="small">

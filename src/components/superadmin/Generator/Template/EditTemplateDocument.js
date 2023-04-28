@@ -21,8 +21,9 @@ const EditTemplateDocument = () => {
   );
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [load, setload] = useState(false);
 
-  const [title, setTitle] = useState(template?.templateformdata.title);
+  const [title, setTitle] = useState(template?.templateformdata?.title);
   const [myform, setmyform] = useState(template?.templateformdata || {});
   const schemaRef = useRef();
   const params = useParams();
@@ -53,11 +54,19 @@ const EditTemplateDocument = () => {
   }, [params.templateId]);
 
   useEffect(() => {
-    if (template) {
-      setTitle(template?.templateformdata.title);
-      setmyform(template?.templateformdata);
-    }
+    gettempData();
   }, [template]);
+
+  const gettempData = async () => {
+    const res = await dispatch(fetchtemplatebyid(params.templateId));
+    console.log(res);
+    if (res) {
+      console.log(res);
+      setTitle(res?.templateformdata?.title);
+      setmyform(res?.templateformdata);
+      setload(true);
+    }
+  };
 
   return (
     <>
@@ -114,13 +123,15 @@ const EditTemplateDocument = () => {
             </Grid>
           </Container>
           <Container maxWidth={false} sx={{ mt: 3, mb: 5 }}>
-            <FormBuilder
-              form={myform}
-              onChange={(schema) => {
-                console.log(JSON.stringify(schema));
-                schemaRef.current = schema;
-              }}
-            />
+            {load && (
+              <FormBuilder
+                form={myform}
+                onChange={(schema) => {
+                  console.log(JSON.stringify(schema));
+                  schemaRef.current = schema;
+                }}
+              />
+            )}
           </Container>
         </Grid>
       </Generator>

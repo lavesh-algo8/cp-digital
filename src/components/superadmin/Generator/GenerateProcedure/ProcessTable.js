@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import DeleteProcess from "./DeleteProcess";
 import EditProcess from "./EditProcess";
 import { useNavigate } from "react-router-dom";
+import ViewDocumentsMapped from "./ViewDocumentsMapped";
 
 const ProcessTable = () => {
   const dispatch = useDispatch();
@@ -34,7 +35,12 @@ const ProcessTable = () => {
   const [openDialogDelete, setOpenDialogDelete] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
+  const [openViewDocDialog, setOpenDocDialog] = useState(false);
+
   const [selectedProcessDetails, setSelectedProcessDetails] = useState({});
+
+  const [tempformdata, settempformdata] = useState([]);
+  const [tempsecformdata, settempsecformdata] = useState([]);
 
   const open = Boolean(anchorEl);
   const handleOpenDialog = () => {
@@ -69,41 +75,37 @@ const ProcessTable = () => {
       headerName: "Documents",
       flex: 0.8,
       renderCell: (params) => {
-        console.log(listOfTemplates);
-
-        const names = [];
-        for (let i = 0; i < listOfTemplates?.length; i++) {
-          if (params.row.templateidarr.includes(listOfTemplates[i]?._id)) {
-            if (listOfTemplates[i]?.templateformdata) {
-              names.push({
-                name: listOfTemplates[i]?.templateformdata?.title,
-                _id: listOfTemplates[i]?._id,
-              });
-            }
-            console.log(listOfTemplates[i]);
-          }
-        }
-        console.log(names);
-
         return (
           <>
-            {names.map((item, index) => (
-              <Typography
-                sx={{
-                  cursor: "pointer",
-                  color: "blue",
-                }}
-                onClick={() => {
-                  // alert(item._id);
-                  navigate(
-                    `/superadmin/generator/templateGenerator/${item._id}/edittemplatedocument`
-                  );
-                }}
-              >
-                {item.name}
-                {names.length < index + 2 ? "" : " ,"}
-              </Typography>
-            ))}
+            {/* {params?.row?.tempSecFormDataArr?.map((item, index) => (
+              <>
+                <Typography
+                  sx={{
+                    cursor: "pointer",
+                    color: "blue",
+                  }}
+                  onClick={() => {
+                    navigate(
+                      `/superadmin/generator/templateGenerator/${item._id}/edittemplatedocument`
+                    );
+                  }}
+                >
+                  {item.title}
+                </Typography>
+                <br />
+              </>
+            ))} */}
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => {
+                settempformdata(params?.row?.tempFormDataArr);
+                settempsecformdata(params?.row?.tempSecFormDataArr);
+                setOpenDocDialog(true);
+              }}
+            >
+              view
+            </Button>
           </>
         );
       },
@@ -114,8 +116,17 @@ const ProcessTable = () => {
       type: "actions",
       getActions: (params) => [
         <GridActionsCellItem
-          onClick={() => {
+          onClick={async () => {
             console.log(params);
+            await dispatch({
+              type: "SET_TEMPLATES_DOC_ID_EDIT",
+              payload: params?.row?.tempSecFormDataArr || [],
+            });
+            await dispatch({
+              type: "SET_TEMPLATES_DOC_ONLY_EDIT",
+              payload: params?.row?.tempFormDataArr || [],
+            });
+
             setSelectedProcessDetails(params.row);
             setOpenEditDialog(true);
           }}
@@ -138,6 +149,15 @@ const ProcessTable = () => {
 
   return (
     <>
+      {openViewDocDialog && (
+        <ViewDocumentsMapped
+          openDialog={openViewDocDialog}
+          setOpenDialog={setOpenDocDialog}
+          tempFormDataArr={tempformdata}
+          tempSecFormDataArr={tempsecformdata}
+        />
+      )}
+
       {openEditDialog && (
         <EditProcess
           openDialog={openEditDialog}

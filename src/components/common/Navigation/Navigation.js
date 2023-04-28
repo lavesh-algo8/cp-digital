@@ -27,6 +27,7 @@ import AddTemplateDocument from "../../superadmin/Generator/Template/AddTemplate
 import ViewTemplateHeadings from "../../superadmin/Generator/Template/ViewTemplatesHeadings";
 import AddSectionDocument from "../../superadmin/Generator/Template/AddSectionDocument";
 import EditTemplateDocument from "../../superadmin/Generator/Template/EditTemplateDocument";
+import EditTemplateSectionDocument from "../../superadmin/Generator/Template/EditTemplateSectionDocument";
 
 function Navigation() {
   return (
@@ -92,6 +93,11 @@ function Navigation() {
           <Route
             path="/superadmin/generator/templateGenerator/:templateId/edittemplatedocument"
             element={<EditTemplateDocument />}
+          />
+
+          <Route
+            path="/superadmin/generator/templateGenerator/:templateId/:sectionId/editSectionDocument"
+            element={<EditTemplateSectionDocument />}
           />
 
           <Route

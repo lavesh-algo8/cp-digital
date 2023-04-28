@@ -43,6 +43,8 @@ const initialStore = {
   selectedTemplate: {},
   listOfTemplatesForProcess: [],
   template: {},
+  templateDocIds: [],
+  templateDocOnly: [],
 };
 
 const superAdminReducer = (state = initialStore, action) => {
@@ -312,6 +314,72 @@ const superAdminReducer = (state = initialStore, action) => {
       return {
         ...state,
         template: action.payload,
+      };
+
+    case "SET_TEMPLATES_DOC_ID":
+      console.log(action.payload);
+      return {
+        ...state,
+        templateDocIds: [...state.templateDocIds, action.payload],
+      };
+
+    case "REMOVE_TEMPLATES_DOC_ID":
+      const objToRemove = action.payload; // The ID of the item to remove
+      console.log(objToRemove);
+      const removed = state.templateDocIds.filter(
+        (doc) => doc.templateSection !== objToRemove.templateSection
+      );
+      console.log(removed);
+      return {
+        ...state,
+        templateDocIds: removed,
+      };
+
+    case "EMPTY_TEMPLATES_DOC_ID":
+      console.log(action.payload);
+      return {
+        ...state,
+        templateDocIds: [],
+      };
+
+    case "SET_TEMPLATES_DOC_ONLY":
+      console.log(action.payload);
+      return {
+        ...state,
+        templateDocOnly: [...state.templateDocOnly, action.payload],
+      };
+
+    case "REMOVE_TEMPLATES_DOC_ONLY":
+      const objToRemoves = action.payload; // The ID of the item to remove
+      console.log(objToRemoves);
+      const removes = state.templateDocOnly.filter(
+        (doc) => doc.templateId !== objToRemoves.templateId
+      );
+      console.log(removes);
+      return {
+        ...state,
+        templateDocOnly: removes,
+      };
+
+    case "EMPTY_TEMPLATES_DOC_ONLY":
+      console.log(action.payload);
+      return {
+        ...state,
+        templateDocOnly: [],
+      };
+
+    case "SET_TEMPLATES_DOC_ID_EDIT":
+      console.log(action.payload);
+      return {
+        ...state,
+        templateDocIds: action.payload,
+      };
+
+    case "SET_TEMPLATES_DOC_ONLY_EDIT":
+      console.log(action.payload);
+      return {
+        ...state,
+        templateDocOnly: action.payload,
       };
 
     // case "UPDATE_DOCUMENT":
