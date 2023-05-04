@@ -99,7 +99,7 @@ const EditNotificationDialog = (props) => {
   const [notificationShortDescription, setnotificationShortDescription] =
     useState("");
   const [dateOfNotification, setdateOfNotification] = useState(new Date());
-  const [value, setValue] = useState(EditorState.createEmpty());
+  const [value, setValue] = useState("");
   const [subsectionName, setsubsectionName] = React.useState([]);
   const [sectionName, setsectionName] = React.useState([]);
   const [chapterName, setchapterName] = React.useState([]);
@@ -796,84 +796,86 @@ const EditNotificationDialog = (props) => {
                   }}
                 /> */}
 
-                <CKEditor
-                  config={{
-                    allowedContent: true,
-                    // forceEnterMode: true,
-                    enterMode: "p",
-                    extraPlugins: ["amendments"],
-                    height: "555px",
-                    resize_enabled: false,
-                    removeButtons: false,
-                  }}
-                  initData={value}
-                  onInstanceReady={() => {
-                    //   alert("Editor is ready!");
-                  }}
-                  onChange={(e) => {
-                    setValue(e.editor.getData());
-                    console.log(e.editor.getData());
-                  }}
-                  onBeforeLoad={(CKEDITOR) => {
-                    if (!CKEDITOR.plugins.registered["timestamp"]) {
-                      CKEDITOR.plugins.add("timestamp", {
-                        init: function (editor) {
-                          editor.addCommand("insertTimestamp", {
-                            exec: function (editor) {
-                              var now = new Date();
-                              alert("yo");
-                              editor.insertHtml(
-                                "The current date and time is: <em>" +
-                                  now.toString() +
-                                  "</em>"
-                              );
-                            },
-                          });
-                          editor.ui.addButton("Timestamp", {
-                            label: "Insert Timestamp",
-                            command: "insertTimestamp",
-                            toolbar: "insert",
-                            icon: "https://cdn4.iconfinder.com/data/icons/24x24-free-pixel-icons/24/Clock.png",
-                          });
-                        },
-                      });
-                    }
-
-                    if (!CKEDITOR.plugins.registered["amendments"]) {
-                      CKEDITOR.plugins.add("amendments", {
-                        init: function (editor) {
-                          editor.addCommand("addAmendments", {
-                            exec: function (editor) {
-                              if (editor.getSelection().getSelectedText()) {
-                                // alert(editor.getSelection().getSelectedText());
-                                // handleClickOpen();
-                                const amentmentText = window.prompt(
-                                  "Type Amendment text here...",
-                                  ""
-                                );
-                                // amentmentText + editor.getSelection().getSelectedText()
+                {value && (
+                  <CKEditor
+                    config={{
+                      allowedContent: true,
+                      // forceEnterMode: true,
+                      enterMode: "p",
+                      extraPlugins: ["amendments"],
+                      height: "555px",
+                      resize_enabled: false,
+                      removeButtons: false,
+                    }}
+                    initData={value}
+                    onInstanceReady={() => {
+                      //   alert("Editor is ready!");
+                    }}
+                    onChange={(e) => {
+                      setValue(e.editor.getData());
+                      console.log(e.editor.getData());
+                    }}
+                    onBeforeLoad={(CKEDITOR) => {
+                      if (!CKEDITOR.plugins.registered["timestamp"]) {
+                        CKEDITOR.plugins.add("timestamp", {
+                          init: function (editor) {
+                            editor.addCommand("insertTimestamp", {
+                              exec: function (editor) {
+                                var now = new Date();
+                                alert("yo");
                                 editor.insertHtml(
-                                  // "<p>This is a new paragraph.</p>"
-                                  " <span class=tooltip>" +
-                                    amentmentText +
-                                    " <span class=tooltiptext>" +
-                                    editor.getSelection().getSelectedText() +
-                                    "</span> </span>"
+                                  "The current date and time is: <em>" +
+                                    now.toString() +
+                                    "</em>"
                                 );
-                              }
-                            },
-                          });
-                          editor.ui.addButton("Amendments", {
-                            label: "Add Amendments",
-                            command: "addAmendments",
-                            toolbar: "insert",
-                            icon: "https://cdn-icons-png.flaticon.com/512/6846/6846310.png",
-                          });
-                        },
-                      });
-                    }
-                  }}
-                />
+                              },
+                            });
+                            editor.ui.addButton("Timestamp", {
+                              label: "Insert Timestamp",
+                              command: "insertTimestamp",
+                              toolbar: "insert",
+                              icon: "https://cdn4.iconfinder.com/data/icons/24x24-free-pixel-icons/24/Clock.png",
+                            });
+                          },
+                        });
+                      }
+
+                      if (!CKEDITOR.plugins.registered["amendments"]) {
+                        CKEDITOR.plugins.add("amendments", {
+                          init: function (editor) {
+                            editor.addCommand("addAmendments", {
+                              exec: function (editor) {
+                                if (editor.getSelection().getSelectedText()) {
+                                  // alert(editor.getSelection().getSelectedText());
+                                  // handleClickOpen();
+                                  const amentmentText = window.prompt(
+                                    "Type Amendment text here...",
+                                    ""
+                                  );
+                                  // amentmentText + editor.getSelection().getSelectedText()
+                                  editor.insertHtml(
+                                    // "<p>This is a new paragraph.</p>"
+                                    " <span class=tooltip>" +
+                                      amentmentText +
+                                      " <span class=tooltiptext>" +
+                                      editor.getSelection().getSelectedText() +
+                                      "</span> </span>"
+                                  );
+                                }
+                              },
+                            });
+                            editor.ui.addButton("Amendments", {
+                              label: "Add Amendments",
+                              command: "addAmendments",
+                              toolbar: "insert",
+                              icon: "https://cdn-icons-png.flaticon.com/512/6846/6846310.png",
+                            });
+                          },
+                        });
+                      }
+                    }}
+                  />
+                )}
               </Grid>
             </Grid>
 

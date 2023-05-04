@@ -200,7 +200,7 @@ const EditArticleDialog = (props) => {
   const [articleName, setarticleName] = useState("");
   const [ArticleWrittenBy, setArticleWrittenBy] = useState("");
   const [dateOfArticle, setdateOfArticle] = useState(new Date());
-  const [value, setValue] = useState(EditorState.createEmpty());
+  const [value, setValue] = useState("");
   const [subsectionName, setsubsectionName] = React.useState([]);
   const [sectionName, setsectionName] = React.useState([]);
   const [chapterName, setchapterName] = React.useState([]);
@@ -989,127 +989,129 @@ const EditArticleDialog = (props) => {
                   }}
                 /> */}
 
-                <CKEditor
-                  ref={editorRef}
-                  onKey={handleKeyDown}
-                  // name="editor"
-                  config={{
-                    allowedContent: true,
-                    forceEnterMode: true,
-                    enterMode: "p",
-                    // extraPlugins: ["amendments", "substitution"],
-                    extraPlugins: ["substitution", "colorbutton"],
-                    height: "235px",
-                    resize_enabled: false,
-                    removeButtons: false,
-                  }}
-                  initData={value}
-                  onInstanceReady={(event) => {
-                    //   alert("Editor is ready!");
-                    editorRef.current = event;
-                  }}
-                  onChange={(e) => {
-                    setValue(e.editor.getData());
-                    extractMarkedWords(e.editor.getData());
-                    console.log(e.editor.getData());
-                  }}
-                  onBeforeLoad={(CKEDITOR) => {
-                    CKEDITOR.dtd.$removeEmpty["span"] = false;
-                    CKEDITOR.dtd.$removeEmpty["i"] = false;
-                    CKEDITOR.dtd.$removeEmpty["b"] = false;
-                    CKEDITOR.dtd.$removeEmpty["u"] = false;
-                    if (!CKEDITOR.plugins.registered["timestamp"]) {
-                      CKEDITOR.plugins.add("timestamp", {
-                        init: function (editor) {
-                          editor.addCommand("insertTimestamp", {
-                            exec: function (editor) {
-                              var now = new Date();
-                              alert("yo");
-                              editor.insertHtml(
-                                "The current date and time is: <em>" +
-                                  now.toString() +
-                                  "</em>"
-                              );
-                            },
-                          });
-                          editor.ui.addButton("Timestamp", {
-                            label: "Insert Timestamp",
-                            command: "insertTimestamp",
-                            toolbar: "insert",
-                            icon: "https://cdn4.iconfinder.com/data/icons/24x24-free-pixel-icons/24/Clock.png",
-                          });
-                        },
-                      });
-                    }
-
-                    // if (!CKEDITOR.plugins.registered["amendments"]) {
-                    //   CKEDITOR.plugins.add("amendments", {
-                    //     init: function (editor) {
-                    //       editor.addCommand("addAmendments", {
-                    //         exec: function (editor) {
-                    //           if (editor.getSelection().getSelectedText()) {
-                    //             // alert(editor.getSelection().getSelectedText());
-                    //             // handleClickOpen();
-                    //             const amentmentText = window.prompt(
-                    //               "Type Amendment text here...",
-                    //               ""
-                    //             );
-                    //             // amentmentText + editor.getSelection().getSelectedText()
-                    //             editor.insertHtml(
-                    //               // "<p>This is a new paragraph.</p>"
-                    //               " <span class=tooltip>" +
-                    //                 amentmentText +
-                    //                 " <span class=tooltiptext>" +
-                    //                 editor.getSelection().getSelectedText() +
-                    //                 "</span> </span>"
-                    //             );
-                    //           }
-                    //         },
-                    //       });
-                    //       editor.ui.addButton("Amendments", {
-                    //         label: "Add Amendments",
-                    //         command: "addAmendments",
-                    //         toolbar: "insert",
-                    //         icon: "https://cdn-icons-png.flaticon.com/512/6846/6846310.png",
-                    //       });
-                    //     },
-                    //   });
-                    // }
-
-                    if (!CKEDITOR.plugins.registered["substitution"]) {
-                      CKEDITOR.plugins.add("substitution", {
-                        init: function (editor) {
-                          console.log(editor);
-                          editor.addCommand("addSubstitution", {
-                            exec: function (editor) {
-                              console.log(editor);
-                              if (editor.getSelection().getSelectedText()) {
-                                console.log(
-                                  editor.getSelection().getSelectedText()
-                                );
+                {value && (
+                  <CKEditor
+                    ref={editorRef}
+                    onKey={handleKeyDown}
+                    // name="editor"
+                    config={{
+                      allowedContent: true,
+                      forceEnterMode: true,
+                      enterMode: "p",
+                      // extraPlugins: ["amendments", "substitution"],
+                      extraPlugins: ["substitution", "colorbutton"],
+                      height: "235px",
+                      resize_enabled: false,
+                      removeButtons: false,
+                    }}
+                    initData={value}
+                    onInstanceReady={(event) => {
+                      //   alert("Editor is ready!");
+                      editorRef.current = event;
+                    }}
+                    onChange={(e) => {
+                      setValue(e.editor.getData());
+                      extractMarkedWords(e.editor.getData());
+                      console.log(e.editor.getData());
+                    }}
+                    onBeforeLoad={(CKEDITOR) => {
+                      CKEDITOR.dtd.$removeEmpty["span"] = false;
+                      CKEDITOR.dtd.$removeEmpty["i"] = false;
+                      CKEDITOR.dtd.$removeEmpty["b"] = false;
+                      CKEDITOR.dtd.$removeEmpty["u"] = false;
+                      if (!CKEDITOR.plugins.registered["timestamp"]) {
+                        CKEDITOR.plugins.add("timestamp", {
+                          init: function (editor) {
+                            editor.addCommand("insertTimestamp", {
+                              exec: function (editor) {
+                                var now = new Date();
+                                alert("yo");
                                 editor.insertHtml(
-                                  "<span style='color: #983301;'>" +
-                                    editor.getSelection().getSelectedText() +
-                                    "</span> <br/>"
-
-                                  // "<font color='#983301'>" +
-                                  //   editor.getSelection().getSelectedText() +
-                                  //   "</font>"
+                                  "The current date and time is: <em>" +
+                                    now.toString() +
+                                    "</em>"
                                 );
-                              }
-                            },
-                          });
-                          editor.ui.addButton("Substitutions", {
-                            label: "Add Substitutions",
-                            command: "addSubstitution",
-                            toolbar: "insert",
-                            icon: "https://cdn-icons-png.flaticon.com/512/3047/3047335.png",
-                          });
-                        },
-                      });
-                    }
-                  }}
-                />
+                              },
+                            });
+                            editor.ui.addButton("Timestamp", {
+                              label: "Insert Timestamp",
+                              command: "insertTimestamp",
+                              toolbar: "insert",
+                              icon: "https://cdn4.iconfinder.com/data/icons/24x24-free-pixel-icons/24/Clock.png",
+                            });
+                          },
+                        });
+                      }
+
+                      // if (!CKEDITOR.plugins.registered["amendments"]) {
+                      //   CKEDITOR.plugins.add("amendments", {
+                      //     init: function (editor) {
+                      //       editor.addCommand("addAmendments", {
+                      //         exec: function (editor) {
+                      //           if (editor.getSelection().getSelectedText()) {
+                      //             // alert(editor.getSelection().getSelectedText());
+                      //             // handleClickOpen();
+                      //             const amentmentText = window.prompt(
+                      //               "Type Amendment text here...",
+                      //               ""
+                      //             );
+                      //             // amentmentText + editor.getSelection().getSelectedText()
+                      //             editor.insertHtml(
+                      //               // "<p>This is a new paragraph.</p>"
+                      //               " <span class=tooltip>" +
+                      //                 amentmentText +
+                      //                 " <span class=tooltiptext>" +
+                      //                 editor.getSelection().getSelectedText() +
+                      //                 "</span> </span>"
+                      //             );
+                      //           }
+                      //         },
+                      //       });
+                      //       editor.ui.addButton("Amendments", {
+                      //         label: "Add Amendments",
+                      //         command: "addAmendments",
+                      //         toolbar: "insert",
+                      //         icon: "https://cdn-icons-png.flaticon.com/512/6846/6846310.png",
+                      //       });
+                      //     },
+                      //   });
+                      // }
+
+                      if (!CKEDITOR.plugins.registered["substitution"]) {
+                        CKEDITOR.plugins.add("substitution", {
+                          init: function (editor) {
+                            console.log(editor);
+                            editor.addCommand("addSubstitution", {
+                              exec: function (editor) {
+                                console.log(editor);
+                                if (editor.getSelection().getSelectedText()) {
+                                  console.log(
+                                    editor.getSelection().getSelectedText()
+                                  );
+                                  editor.insertHtml(
+                                    "<span style='color: #983301;'>" +
+                                      editor.getSelection().getSelectedText() +
+                                      "</span> <br/>"
+
+                                    // "<font color='#983301'>" +
+                                    //   editor.getSelection().getSelectedText() +
+                                    //   "</font>"
+                                  );
+                                }
+                              },
+                            });
+                            editor.ui.addButton("Substitutions", {
+                              label: "Add Substitutions",
+                              command: "addSubstitution",
+                              toolbar: "insert",
+                              icon: "https://cdn-icons-png.flaticon.com/512/3047/3047335.png",
+                            });
+                          },
+                        });
+                      }
+                    }}
+                  />
+                )}
                 {/* <Box sx={{ mt: 3 }}>
                   <Box
                     sx={{
